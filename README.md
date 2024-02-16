@@ -36,11 +36,11 @@ sue0-si"/><br /><sub><b>
 sue0-si</b></sub></a><br /></td>
       <td></td>
     </tr>
-    <!-- <tr>
-      <td align="center" valign="top" width="25%"><a href=""><img src="" width="100px;" alt=""/><br /><sub><b>
-</b></sub></a><br /></td>
+    <tr>
+      <td align="center" valign="top" width="25%"><a href="https://github.com/strangecoderK"><img src="https://avatars.githubusercontent.com/u/151757200?v=4" width="100px;" alt="strangecoderK"/><br /><sub><b>
+strangecoderK</b></sub></a><br /></td>
       <td></td>
-    </tr> -->
+    </tr>
 </table>
 
 ### LINKS
