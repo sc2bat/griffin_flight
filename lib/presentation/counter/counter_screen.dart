@@ -1,23 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:griffin/presentation/counter/counter_state.dart';
 import 'package:griffin/utils/simple_logger.dart';
 
-class MyHomePage extends ConsumerWidget {
-  MyHomePage({Key? key}) : super(key: key);
-
-  final counterProvider = StateNotifierProvider((ref) => Counter());
+class CounterScreen extends ConsumerWidget {
+  const CounterScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final count = ref.watch(counterProvider);
+    final counterViewModel = ref.watch(counterProvider);
 
-    ref.listen(
-      counterProvider,
-      (previous, next) {
-        logger.info('previous, next => $previous , $next');
-        // previous, next => 0 , 1
-      },
-    );
+    ref.listen(counterProvider, (previous, next) {
+      logger.info('previous, next $previous, $next');
+    });
 
     return Scaffold(
       appBar: AppBar(
@@ -34,7 +29,7 @@ class MyHomePage extends ConsumerWidget {
               'You have pushed the button this many times:',
             ),
             Text(
-              '$count',
+              '${counterViewModel.state}',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
             const SizedBox(
@@ -45,14 +40,14 @@ class MyHomePage extends ConsumerWidget {
               children: [
                 FloatingActionButton(
                   onPressed: () {
-                    ref.watch(counterProvider.notifier).increment();
+                    counterViewModel.increment();
                   },
                   tooltip: 'Increment',
                   child: const Icon(Icons.add),
                 ),
                 FloatingActionButton(
                   onPressed: () {
-                    ref.watch(counterProvider.notifier).decrement();
+                    counterViewModel.decrement();
                   },
                   tooltip: 'Decrement',
                   child: const Icon(Icons.remove),
@@ -64,11 +59,4 @@ class MyHomePage extends ConsumerWidget {
       ),
     );
   }
-}
-
-class Counter extends StateNotifier<int> {
-  Counter() : super(0);
-
-  void increment() => state++;
-  void decrement() => state--;
 }
