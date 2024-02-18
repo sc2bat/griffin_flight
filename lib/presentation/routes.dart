@@ -7,7 +7,7 @@ final router = GoRouter(
     GoRoute(
       name: 'counter',
       path: '/counter',
-      builder: (context, state) => const CounterScreen(),
+      builder: (context, state) => CounterScreen(),
       routes: const [],
     ),
     // GoRoute(

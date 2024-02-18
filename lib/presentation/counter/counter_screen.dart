@@ -1,18 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:griffin/presentation/counter/counter_state.dart';
+import 'package:griffin/presentation/counter/counter_view_model.dart';
 import 'package:griffin/utils/simple_logger.dart';
 
 class CounterScreen extends ConsumerWidget {
-  const CounterScreen({Key? key}) : super(key: key);
+  CounterScreen({Key? key}) : super(key: key);
+
+  final counterProvider = StateNotifierProvider((ref) => CounterViewModel());
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final counterViewModel = ref.watch(counterProvider);
+    final counter = ref.watch(counterProvider);
+    final counterNotifier = ref.watch(counterProvider.notifier);
 
-    ref.listen(counterProvider, (previous, next) {
-      logger.info('previous, next $previous, $next');
-    });
+    ref.listen(
+      counterProvider,
+      (previous, next) {
+        logger.info('previous, next $previous, $next');
+      },
+    );
 
     return Scaffold(
       appBar: AppBar(
@@ -29,7 +35,7 @@ class CounterScreen extends ConsumerWidget {
               'You have pushed the button this many times:',
             ),
             Text(
-              '${counterViewModel.state}',
+              '$counter',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
             const SizedBox(
@@ -40,14 +46,14 @@ class CounterScreen extends ConsumerWidget {
               children: [
                 FloatingActionButton(
                   onPressed: () {
-                    counterViewModel.increment();
+                    counterNotifier.increment();
                   },
                   tooltip: 'Increment',
                   child: const Icon(Icons.add),
                 ),
                 FloatingActionButton(
                   onPressed: () {
-                    counterViewModel.decrement();
+                    counterNotifier.decrement();
                   },
                   tooltip: 'Decrement',
                   child: const Icon(Icons.remove),
