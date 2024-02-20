@@ -48,86 +48,91 @@ class TestColumn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const Text('title'),
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Container(
-            height: 300.0,
-            color: Colors.blueAccent,
-            child: const Row(
-              children: [
-                Text('qwerasdf'),
-                Text('qwerasdf'),
-                Text('qwerasdf'),
-                Text('qwerasdf'),
-                Text('qwerasdf'),
-                Text('qwerasdf'),
-                Text('qwerasdf'),
-                Text('qwerasdf'),
-              ],
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('sample test page'),
+      ),
+      body: Column(
+        children: [
+          const Text('title'),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Container(
+              height: 300.0,
+              color: Colors.blueAccent,
+              child: const Row(
+                children: [
+                  Text('qwerasdf'),
+                  Text('qwerasdf'),
+                  Text('qwerasdf'),
+                  Text('qwerasdf'),
+                  Text('qwerasdf'),
+                  Text('qwerasdf'),
+                  Text('qwerasdf'),
+                  Text('qwerasdf'),
+                ],
+              ),
             ),
           ),
-        ),
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Container(
-            height: 300.0,
-            color: Colors.amber,
-            child: const Row(
-              children: [
-                Text('qwerasdf'),
-                Text('qwerasdf'),
-                Text('qwerasdf'),
-                Text('qwerasdf'),
-                Text('qwerasdf'),
-                Text('qwerasdf'),
-                Text('qwerasdf'),
-                Text('qwerasdf'),
-              ],
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Container(
+              height: 300.0,
+              color: Colors.amber,
+              child: const Row(
+                children: [
+                  Text('qwerasdf'),
+                  Text('qwerasdf'),
+                  Text('qwerasdf'),
+                  Text('qwerasdf'),
+                  Text('qwerasdf'),
+                  Text('qwerasdf'),
+                  Text('qwerasdf'),
+                  Text('qwerasdf'),
+                ],
+              ),
             ),
           ),
-        ),
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Container(
-            height: 300.0,
-            color: Colors.blueAccent,
-            child: const Row(
-              children: [
-                Text('qwerasdf'),
-                Text('qwerasdf'),
-                Text('qwerasdf'),
-                Text('qwerasdf'),
-                Text('qwerasdf'),
-                Text('qwerasdf'),
-                Text('qwerasdf'),
-                Text('qwerasdf'),
-              ],
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Container(
+              height: 300.0,
+              color: Colors.blueAccent,
+              child: const Row(
+                children: [
+                  Text('qwerasdf'),
+                  Text('qwerasdf'),
+                  Text('qwerasdf'),
+                  Text('qwerasdf'),
+                  Text('qwerasdf'),
+                  Text('qwerasdf'),
+                  Text('qwerasdf'),
+                  Text('qwerasdf'),
+                ],
+              ),
             ),
           ),
-        ),
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Container(
-            height: 300.0,
-            color: Colors.amber,
-            child: const Row(
-              children: [
-                Text('qwerasdf'),
-                Text('qwerasdf'),
-                Text('qwerasdf'),
-                Text('qwerasdf'),
-                Text('qwerasdf'),
-                Text('qwerasdf'),
-                Text('qwerasdf'),
-                Text('qwerasdf'),
-              ],
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Container(
+              height: 300.0,
+              color: Colors.amber,
+              child: const Row(
+                children: [
+                  Text('qwerasdf'),
+                  Text('qwerasdf'),
+                  Text('qwerasdf'),
+                  Text('qwerasdf'),
+                  Text('qwerasdf'),
+                  Text('qwerasdf'),
+                  Text('qwerasdf'),
+                  Text('qwerasdf'),
+                ],
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
