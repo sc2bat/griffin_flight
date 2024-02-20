@@ -46,6 +46,7 @@ dependencies:
   json_serializable: ^6.7.1
   provider: ^6.1.1
   json_annotation: ^4.8.1
+  dotted_dashed_line: ^0.0.3
 
 dev_dependencies:
   flutter_test:
@@ -75,8 +76,13 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
+<<<<<<< Updated upstream
   # assets:
   #   - images/a_dot_burr.jpeg
+=======
+  assets:
+    - assets/icons/
+>>>>>>> Stashed changes
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
