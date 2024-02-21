@@ -11,4 +11,20 @@ abstract class Env {
   // SAMPLE_AIRPORT_URL
   @EnviedField()
   static const String sampleAirportUrl = _Env.sampleAirportUrl;
+
+// DUMP_AIRPLANE_URL
+  @EnviedField()
+  static const String dumpAirplaneUrl = _Env.dumpAirplaneUrl;
+
+// DUMP_AIRPORT_URL
+  @EnviedField()
+  static const String dumpAirportUrl = _Env.dumpAirportUrl;
+
+// DUMP_FLIGHT_URL
+  @EnviedField()
+  static const String dumpFlightUrl = _Env.dumpFlightUrl;
+
+// DUMP_BOOK_URL
+  @EnviedField()
+  static const String dumpBookUrl = _Env.dumpBookUrl;
 }
