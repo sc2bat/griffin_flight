@@ -6,7 +6,6 @@ class AppColors {
 
   // grey card
   static const Color greyCard = Color(0xff2d303a);
-
   // 오랜지
   static const Color orangeColor = Color(0xffffc78c);
 

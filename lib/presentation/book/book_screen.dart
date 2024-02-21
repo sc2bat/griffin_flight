@@ -3,6 +3,7 @@ import 'package:griffin/presentation/book/flight_details_card.dart';
 import 'package:griffin/presentation/book/flight_icon_widget.dart';
 import 'package:griffin/presentation/common/colors.dart';
 import 'package:griffin/presentation/common/common_button.dart';
+import 'package:griffin/presentation/common/colors.dart';
 
 class BookScreen extends StatelessWidget {
   const BookScreen({super.key});
