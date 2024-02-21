@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  // grey
-  static const Color greyColor = Color(0xff2d303a);
+  // grey 텍스트
+  static const Color greyText = Color(0xff67686f);
 
+  // grey card
+  static const Color greyCard = Color(0xff2d303a);
   // 오랜지
   static const Color orangeColor = Color(0xffffc78c);
 
