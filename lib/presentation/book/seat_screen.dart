@@ -16,7 +16,10 @@ class SeatScreen extends StatelessWidget {
               crossAxisSpacing: 5,
             ),
             itemBuilder: (BuildContext context, int index) {
-              return Container(height: 30, width: 30, color: Colors.blue);
+              return GestureDetector(
+                onTap: () {
+                },
+                  child: Container(height: 30, width: 30, color: Colors.blue));
             }),
       ),
     );

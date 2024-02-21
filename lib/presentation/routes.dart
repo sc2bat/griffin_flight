@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
 import 'package:griffin/presentation/book/book_screen.dart';
+import 'package:griffin/presentation/book/book_data_test_screen.dart';
 import 'package:griffin/presentation/counter/counter_screen.dart';
 import 'package:griffin/presentation/counter/sample_screen.dart';
 import 'package:griffin/presentation/index_screen.dart';
@@ -22,10 +23,16 @@ final router = GoRouter(
       routes: const [],
     ),
     GoRoute(
-      name: 'book',
-      path: '/book',
-      builder: (context, state) => const BookScreen(),
-      routes: const [],
+      name: 'book_data_test',
+      path: '/book_data_test',
+      builder: (context, state) => const BookDataTestScreen(),
+      routes: [
+        GoRoute(
+          name: 'book',
+          path: 'book',
+          builder: (context, state) => const BookScreen(),
+        ),
+      ],
     ),
     GoRoute(
       name: 'pay',
@@ -50,7 +57,7 @@ final router = GoRouter(
 
 List<String> routeList = [
   'search',
-  'book',
+  'book_data_test',
   'pay',
   'sample',
 ];

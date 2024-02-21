@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:griffin/presentation/book/seat_screen.dart';
 import 'package:griffin/presentation/common/flight_card.dart';
 import 'package:griffin/presentation/book/flight_icon_widget.dart';
@@ -61,7 +62,7 @@ class BookScreen extends StatelessWidget {
                     height: MediaQuery.of(context).size.width * 0.12,
                     text: 'Continue',
                     onTap: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => const SeatScreen()));
+                      context.go('/seat');
                     },
                   )
                 ],
