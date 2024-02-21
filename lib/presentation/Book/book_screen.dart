@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:griffin/presentation/book/flight_details_card.dart';
+import 'package:griffin/presentation/book/seat_screen.dart';
+import 'package:griffin/presentation/common/flight_card.dart';
 import 'package:griffin/presentation/book/flight_icon_widget.dart';
 import 'package:griffin/presentation/common/colors.dart';
 import 'package:griffin/presentation/common/common_button.dart';
@@ -39,9 +40,9 @@ class BookScreen extends StatelessWidget {
               ],
             ),
             const Spacer(),
-             Padding(
-               padding: const EdgeInsets.symmetric(horizontal: 16),
-               child: Row(
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
                 children: [
                   const Expanded(
                     child: ListTile(
@@ -59,10 +60,13 @@ class BookScreen extends StatelessWidget {
                     width: MediaQuery.of(context).size.width * 0.3,
                     height: MediaQuery.of(context).size.width * 0.12,
                     text: 'Continue',
-                    onTap: () {},)
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const SeatScreen()));
+                    },
+                  )
                 ],
-                           ),
-             ),
+              ),
+            ),
           ],
         ),
       ),

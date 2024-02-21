@@ -47,6 +47,7 @@ dependencies:
   provider: ^6.1.1
   json_annotation: ^4.8.1
   dotted_dashed_line: ^0.0.3
+  book_my_seat: ^1.0.1
 
 dev_dependencies:
   flutter_test:
