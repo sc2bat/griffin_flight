@@ -25,12 +25,12 @@ final router = GoRouter(
     GoRoute(
       name: 'book_data_test',
       path: '/book_data_test',
-      builder: (context, state) => const BookDataTestScreen(),
+      builder: (context, state) =>  const BookDataTestScreen(),
       routes: [
         GoRoute(
           name: 'book',
           path: 'book',
-          builder: (context, state) => const BookScreen(),
+          builder: (context, state) => BookScreen(title: state.extra as String), //test->book 이동 시 전달
         ),
       ],
     ),

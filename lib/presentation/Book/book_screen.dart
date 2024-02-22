@@ -6,16 +6,30 @@ import 'package:griffin/presentation/book/flight_icon_widget.dart';
 import 'package:griffin/presentation/common/colors.dart';
 import 'package:griffin/presentation/common/common_button.dart';
 
-class BookScreen extends StatelessWidget {
-  const BookScreen({super.key});
+class BookScreen extends StatefulWidget {
+  const BookScreen({super.key, required this.title});
 
+  final String title;
+
+  @override
+  State<BookScreen> createState() => _BookScreenState();
+}
+
+class _BookScreenState extends State<BookScreen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           centerTitle: true,
-          title: const Text('Flight Details'),
+          leading: IconButton(
+            onPressed: () {
+              context.go('/book_data_test', extra: '뒤로 돌아갔다');
+            },
+            icon: const Icon(Icons.arrow_back_ios),
+          ) ,
+          title: const Text('Result Screen'),
         ),
         body: Column(
           children: [
@@ -31,6 +45,7 @@ class BookScreen extends StatelessWidget {
                     FlightDetailsCard(
                       width: MediaQuery.of(context).size.width * 0.8,
                       height: MediaQuery.of(context).size.height * 0.18,
+                      title: widget.title
                     ),
                     const ListTile(
                       title: Text('도착지'),
@@ -62,7 +77,6 @@ class BookScreen extends StatelessWidget {
                     height: MediaQuery.of(context).size.width * 0.12,
                     text: 'Continue',
                     onTap: () {
-                      context.go('/seat');
                     },
                   )
                 ],
