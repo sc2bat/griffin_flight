@@ -7,9 +7,7 @@ import 'package:griffin/presentation/common/colors.dart';
 import 'package:griffin/presentation/common/common_button.dart';
 
 class BookScreen extends StatefulWidget {
-  const BookScreen({super.key, required this.title});
-
-  final String title;
+  const BookScreen({super.key});
 
   @override
   State<BookScreen> createState() => _BookScreenState();
@@ -45,7 +43,6 @@ class _BookScreenState extends State<BookScreen> {
                     FlightDetailsCard(
                       width: MediaQuery.of(context).size.width * 0.8,
                       height: MediaQuery.of(context).size.height * 0.18,
-                      title: widget.title
                     ),
                     const ListTile(
                       title: Text('도착지'),

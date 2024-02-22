@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../common/flight_card.dart';
+
 class BookDataTestScreen extends StatefulWidget {
   const BookDataTestScreen({super.key});
 
@@ -36,7 +38,10 @@ class _BookDataTestScreenState extends State<BookDataTestScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              TextField(controller: _textController),
+              FlightDetailsCard(
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  height: MediaQuery.of(context).size.height * 0.18,
+              ),
               ElevatedButton(
                 onPressed: () {
                   final text = _textController.text;

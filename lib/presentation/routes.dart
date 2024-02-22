@@ -30,7 +30,7 @@ final router = GoRouter(
         GoRoute(
           name: 'book',
           path: 'book',
-          builder: (context, state) => BookScreen(title: state.extra as String), //test->book 이동 시 전달
+          builder: (context, state) => BookScreen(),
         ),
       ],
     ),
