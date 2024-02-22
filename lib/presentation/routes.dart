@@ -4,6 +4,7 @@ import 'package:griffin/presentation/counter/counter_screen.dart';
 import 'package:griffin/presentation/counter/sample_screen.dart';
 import 'package:griffin/presentation/index_screen.dart';
 import 'package:griffin/presentation/pay/pay_screen.dart';
+import 'package:griffin/presentation/search/city_select_page.dart';
 import 'package:griffin/presentation/search/search_screen.dart';
 
 final router = GoRouter(
@@ -19,7 +20,13 @@ final router = GoRouter(
       name: 'search',
       path: '/search',
       builder: (context, state) => const SearchScreen(),
-      routes: const [],
+      routes: [
+        /*GoRoute(
+          name: 'citySelectPage',
+          path: 'citySelectPage',
+          builder: (context, state) => CitySelectPage(),
+        ),*/
+      ],
     ),
     GoRoute(
       name: 'book',
