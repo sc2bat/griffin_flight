@@ -39,9 +39,9 @@ class BookScreen extends StatelessWidget {
               ],
             ),
             const Spacer(),
-             Padding(
-               padding: const EdgeInsets.symmetric(horizontal: 16),
-               child: Row(
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
                 children: [
                   const Expanded(
                     child: ListTile(
@@ -59,10 +59,11 @@ class BookScreen extends StatelessWidget {
                     width: MediaQuery.of(context).size.width * 0.3,
                     height: MediaQuery.of(context).size.width * 0.12,
                     text: 'Continue',
-                    onTap: () {},)
+                    onTap: () {},
+                  )
                 ],
-                           ),
-             ),
+              ),
+            ),
           ],
         ),
       ),

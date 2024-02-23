@@ -1,5 +1,5 @@
 import 'package:go_router/go_router.dart';
-import 'package:griffin/presentation/Book/book_screen.dart';
+import 'package:griffin/presentation/book/book_screen.dart';
 import 'package:griffin/presentation/counter/counter_screen.dart';
 import 'package:griffin/presentation/counter/sample_screen.dart';
 import 'package:griffin/presentation/index_screen.dart';
