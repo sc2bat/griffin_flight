@@ -50,6 +50,8 @@ dependencies:
   http: ^0.13.6
   smooth_page_indicator: ^1.1.0
   dotted_dashed_line: ^0.0.3
+  we_slide: ^2.4.0
+  sliding_up_panel: ^2.0.0+1
   book_my_seat: ^1.0.1
 
 dev_dependencies:

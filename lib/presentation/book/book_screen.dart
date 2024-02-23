@@ -53,9 +53,9 @@ class _BookScreenState extends State<BookScreen> {
               ],
             ),
             const Spacer(),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
+             Padding(
+               padding: const EdgeInsets.symmetric(horizontal: 16),
+               child: Row(
                 children: [
                   const Expanded(
                     child: ListTile(
@@ -77,8 +77,8 @@ class _BookScreenState extends State<BookScreen> {
                     },
                   )
                 ],
-              ),
-            ),
+                           ),
+             ),
           ],
         ),
       ),
