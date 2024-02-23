@@ -1,19 +1,33 @@
 import 'package:flutter/material.dart';
-import 'package:griffin/presentation/book/flight_details_card.dart';
+import 'package:go_router/go_router.dart';
+import 'package:griffin/presentation/book/seat_screen.dart';
+import 'package:griffin/presentation/common/flight_card.dart';
 import 'package:griffin/presentation/book/flight_icon_widget.dart';
 import 'package:griffin/presentation/common/colors.dart';
 import 'package:griffin/presentation/common/common_button.dart';
 
-class BookScreen extends StatelessWidget {
+class BookScreen extends StatefulWidget {
   const BookScreen({super.key});
 
+  @override
+  State<BookScreen> createState() => _BookScreenState();
+}
+
+class _BookScreenState extends State<BookScreen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           centerTitle: true,
-          title: const Text('Flight Details'),
+          leading: IconButton(
+            onPressed: () {
+              context.go('/book_data_test', extra: '뒤로 돌아갔다');
+            },
+            icon: const Icon(Icons.arrow_back_ios),
+          ) ,
+          title: const Text('Result Screen'),
         ),
         body: Column(
           children: [
@@ -39,9 +53,9 @@ class BookScreen extends StatelessWidget {
               ],
             ),
             const Spacer(),
-             Padding(
-               padding: const EdgeInsets.symmetric(horizontal: 16),
-               child: Row(
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
                 children: [
                   const Expanded(
                     child: ListTile(
@@ -59,10 +73,12 @@ class BookScreen extends StatelessWidget {
                     width: MediaQuery.of(context).size.width * 0.3,
                     height: MediaQuery.of(context).size.width * 0.12,
                     text: 'Continue',
-                    onTap: () {},)
+                    onTap: () {
+                    },
+                  )
                 ],
-                           ),
-             ),
+              ),
+            ),
           ],
         ),
       ),
