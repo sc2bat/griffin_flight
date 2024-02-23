@@ -30,7 +30,7 @@ final router = GoRouter(
     GoRoute(
       name: 'pay',
       path: '/pay',
-      builder: (context, state) => const PayScreen(),
+      builder: (context, state) => PayScreen(),
       routes: const [],
     ),
     GoRoute(
