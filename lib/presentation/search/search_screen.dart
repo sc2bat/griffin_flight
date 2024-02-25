@@ -26,17 +26,41 @@ class _SearchScreenState extends State<SearchScreen> {
 
     return SafeArea(
       child: SlidingUpPanel(
+        color: Colors.grey[850]!,
         controller: panelController,
-        panel: Center(
-          child: Text('sliding widget'),
+        panel: Column(
+          children: [
+            Row(
+              children: [
+                Icon(Icons.close),
+                Text(
+                  'FLYING FROM',
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.white,
+                  ),
+                ),
+                Icon(
+                  Icons.airplane_ticket,
+                ),
+                Text(
+                  'FLYING TO',
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
         isDraggable: true,
         backdropEnabled: true,
         maxHeight: _panelHeightOpen,
         minHeight: _panelHeightClosed,
         borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(10),
-          topRight: Radius.circular(10),
+          topLeft: Radius.circular(20),
+          topRight: Radius.circular(20),
         ),
         body: Scaffold(
           appBar: AppBar(
@@ -107,6 +131,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                       Expanded(
                                         child: InkWell(
                                           onTap: () {
+                                            panelController
+                                                .animatePanelToPosition(1.0);
                                             log('From select city');
                                           },
                                           child: Container(
