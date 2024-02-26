@@ -38,7 +38,8 @@ class _SearchScreenState extends State<SearchScreen> {
                     IconButton(
                         onPressed: () {
                           setState(() {
-                            isSelected = false;
+                            panelController.close();
+                            //상위 위젯의 상태를 변경하기 위한 컨트롤러 호출
                           });
                         },
                         icon: Icon(Icons.close)),
@@ -53,14 +54,19 @@ class _SearchScreenState extends State<SearchScreen> {
                           style: TextStyle(
                             fontSize: 15,
                             color: Colors.white,
+                            decoration: TextDecoration.none,
                           ),
                         ),
                       ],
                     ),
                   ),
                 ),
-                Icon(
-                  Icons.airplane_ticket,
+                Transform.rotate(
+                  angle: 90 * math.pi / 180, //아이콘 90도 회전
+                  child: Icon(
+                    Icons.airplanemode_active,
+                    color: Colors.grey,
+                  ),
                 ),
                 Expanded(
                   child: Container(
@@ -71,12 +77,67 @@ class _SearchScreenState extends State<SearchScreen> {
                           style: TextStyle(
                             fontSize: 15,
                             color: Colors.white,
+                            decoration: TextDecoration.none,
                           ),
                         ),
                       ],
                     ),
                   ),
                 ),
+              ],
+            ),
+            Divider(
+              height: 15,
+            ),
+            Gap(20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+
+                Container(
+                  height: 50,
+                  width: 350,
+                  color: Colors.white,
+                  child: Row(
+                    children: [
+                      Container(
+                        child: IconButton(
+                            onPressed: () {
+                              setState(() {
+
+                                //상위 위젯의 상태를 변경하기 위한 컨트롤러 호출
+                              });
+                            },
+                            icon: Icon(Icons.search)),
+                      ),
+                      Container(
+                        child: Material(
+                          child: TextField(
+                            decoration: InputDecoration(
+                                hintText: 'Search Depature Airport/City',
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                                  borderSide:
+                                  BorderSide(width: 1, color: Colors.grey),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                                  borderSide:
+                                  BorderSide(width: 1, color: Colors.grey),
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                                )),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+
+                )
               ],
             ),
           ],
