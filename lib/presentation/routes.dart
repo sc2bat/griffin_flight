@@ -1,8 +1,9 @@
 import 'package:go_router/go_router.dart';
 import 'package:griffin/domain/model/flights_model.dart';
-import 'package:griffin/presentation/book/book_screen.dart';
+import 'package:griffin/presentation/book/book_screen/book_screen.dart';
 import 'package:griffin/presentation/book/book_data_test_screen.dart';
-import 'package:griffin/presentation/book/book_screen_viewmodel.dart';
+import 'package:griffin/presentation/book/book_screen/book_screen_viewmodel.dart';
+import 'package:griffin/presentation/book/travller_detail_screen/traveller_detail_screen.dart';
 import 'package:griffin/presentation/counter/counter_screen.dart';
 import 'package:griffin/presentation/counter/sample_screen.dart';
 import 'package:griffin/presentation/index_screen.dart';
@@ -23,8 +24,7 @@ final router = GoRouter(
       builder: (context, state) => const IndexScreen(),
       routes: const [],
     ),
-    GoRoute
-      (
+    GoRoute(
       name: 'search',
       path: '/search',
       builder: (context, state) => const SearchScreen(),
@@ -36,27 +36,33 @@ final router = GoRouter(
         ),
       ],
     ),
-
     GoRoute(
       name: 'book_data_test',
       path: '/book_data_test',
       builder: (context, state) => const BookDataTestScreen(),
-
       routes: [
         GoRoute(
             name: 'book',
             path: 'book',
             builder: (context, state) {
+              final map = state.extra! as Map<String, dynamic>;
               return ChangeNotifierProvider(
-                  create: (_) => getIt<BookScreenViewModel>(),
-              child: const BookScreen(), //보내는값
+                create: (_) => getIt<BookScreenViewModel>(),
+                child: BookScreen(
+                  departureTime: map['departureTime'] as String,
+                  arrivalTime: map['arrivalTime'] as String,
+                ),
               );
-            }
-        ),
+            },
+            routes: [
+              GoRoute(
+                  name: 'traveller_detail_screen',
+                  path: 'traveller_detail_screen',
+                  builder: (context, state) => const TravellerDetailScreen(),
+                  ),
+            ]),
       ],
     ),
-
-
     GoRoute(
       name: 'pay',
       path: '/pay',

@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:griffin/presentation/book/seat_screen.dart';
 import 'package:griffin/presentation/common/flight_card.dart';
-import 'package:griffin/presentation/book/flight_icon_widget.dart';
+import 'package:griffin/presentation/book/book_screen/flight_icon_widget.dart';
 import 'package:griffin/presentation/common/colors.dart';
 import 'package:griffin/presentation/common/common_button.dart';
-import 'package:provider/provider.dart';
-
-import 'book_screen_viewmodel.dart';
 
 class BookScreen extends StatefulWidget {
-  const BookScreen({super.key});
+  const BookScreen(
+      {super.key, required this.departureTime, required this.arrivalTime});
+
+  final String departureTime;
+  final String arrivalTime;
 
   @override
   State<BookScreen> createState() => _BookScreenState();
@@ -29,7 +29,7 @@ class _BookScreenState extends State<BookScreen> {
               context.go('/book_data_test');
             },
             icon: const Icon(Icons.arrow_back_ios),
-          ) ,
+          ),
           title: const Text('Result Screen'),
         ),
         body: Column(
@@ -46,6 +46,8 @@ class _BookScreenState extends State<BookScreen> {
                     FlightDetailsCard(
                       width: MediaQuery.of(context).size.width * 0.8,
                       height: MediaQuery.of(context).size.height * 0.18,
+                      departureTime: widget.departureTime,
+                      arrivalTime: widget.arrivalTime,
                     ),
                     const ListTile(
                       title: Text('도착지'),
@@ -56,9 +58,9 @@ class _BookScreenState extends State<BookScreen> {
               ],
             ),
             const Spacer(),
-             Padding(
-               padding: const EdgeInsets.symmetric(horizontal: 16),
-               child: Row(
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
                 children: [
                   const Expanded(
                     child: ListTile(
@@ -77,11 +79,13 @@ class _BookScreenState extends State<BookScreen> {
                     height: MediaQuery.of(context).size.width * 0.12,
                     text: 'Continue',
                     onTap: () {
+                      context
+                          .go('/book_data_test/book/traveller_detail_screen');
                     },
                   )
                 ],
-                           ),
-             ),
+              ),
+            ),
           ],
         ),
       ),
