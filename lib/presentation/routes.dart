@@ -8,6 +8,7 @@ import 'package:griffin/presentation/counter/sample_screen.dart';
 import 'package:griffin/presentation/index_screen.dart';
 import 'package:griffin/presentation/pay/pay_screen.dart';
 import 'package:griffin/presentation/search/city_select_page.dart';
+import 'package:griffin/presentation/search/flight_results.dart';
 import 'package:griffin/presentation/search/search_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -28,11 +29,11 @@ final router = GoRouter(
       path: '/search',
       builder: (context, state) => const SearchScreen(),
       routes: [
-/*GoRoute(
-          name: 'citySelectPage',
-          path: 'citySelectPage',
-          builder: (context, state) => CitySelectPage(),
-        ),*/
+        GoRoute(
+          name: 'flightResults',
+          path: 'flightResults',
+          builder: (context, state) => FlightResults(),
+        ),
       ],
     ),
 
