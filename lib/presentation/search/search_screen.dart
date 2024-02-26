@@ -18,6 +18,7 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   PanelController panelController = PanelController();
   bool isSelected = false;
+
   double _panelHeightClosed = 0.0;
 
   @override
@@ -32,22 +33,48 @@ class _SearchScreenState extends State<SearchScreen> {
           children: [
             Row(
               children: [
-                Icon(Icons.close),
-                Text(
-                  'FLYING FROM',
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: Colors.white,
+                Column(
+                  children: [
+                    IconButton(
+                        onPressed: () {
+                          setState(() {
+                            isSelected = false;
+                          });
+                        },
+                        icon: Icon(Icons.close)),
+                  ],
+                ),
+                Expanded(
+                  child: Container(
+                    child: Column(
+                      children: [
+                        Text(
+                          'FLYING FROM',
+                          style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 Icon(
                   Icons.airplane_ticket,
                 ),
-                Text(
-                  'FLYING TO',
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: Colors.white,
+                Expanded(
+                  child: Container(
+                    child: Column(
+                      children: [
+                        Text(
+                          'FLYING TO',
+                          style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],
