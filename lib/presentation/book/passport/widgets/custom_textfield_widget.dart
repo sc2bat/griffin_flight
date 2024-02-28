@@ -4,15 +4,17 @@ import 'package:griffin/presentation/common/colors.dart';
 class CustomTextFieldWidget extends StatefulWidget {
   const CustomTextFieldWidget(
       {super.key,
-        required this.hintText,
-        required this.controller,
-        this.onChanged,
-        this.width});
+      required this.hintText,
+      required this.controller,
+      this.onChanged,
+      this.width,
+      this.height});
 
   final String hintText;
   final TextEditingController controller;
   final void Function(String)? onChanged;
   final double? width;
+  final double? height;
 
   @override
   State<CustomTextFieldWidget> createState() => _CustomTextFieldWidgetState();
@@ -30,7 +32,7 @@ class _CustomTextFieldWidgetState extends State<CustomTextFieldWidget> {
         setState(() {
           textFormFieldText = text;
         });
-        },
+      },
       maxLines: 1,
       style: const TextStyle(decorationThickness: 0),
       decoration: InputDecoration(

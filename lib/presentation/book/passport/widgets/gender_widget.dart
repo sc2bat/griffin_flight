@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
 import 'package:griffin/presentation/common/colors.dart';
 
 class GenderSelectionWiget extends StatefulWidget {
@@ -27,7 +26,7 @@ class _GenderSelectionWigetState extends State<GenderSelectionWiget> {
               : const Icon(Icons.circle_outlined, size: 20),
         ),
         const Text('Male'),
-        const Gap(50),
+        const SizedBox(width: 40),
         IconButton(
           onPressed: () {
             isFemaleSelected = !isFemaleSelected;
