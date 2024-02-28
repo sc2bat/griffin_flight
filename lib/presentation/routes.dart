@@ -8,6 +8,10 @@ import 'package:griffin/presentation/pay/pay_screen.dart';
 import 'package:griffin/presentation/search/city_select_page.dart';
 import 'package:griffin/presentation/search/flight_results.dart';
 import 'package:griffin/presentation/search/search_screen.dart';
+import 'package:griffin/presentation/search/search_view_model.dart';
+import 'package:provider/provider.dart';
+
+import '../di/get_it.dart';
 
 final router = GoRouter(
   initialLocation: '/',
@@ -21,7 +25,10 @@ final router = GoRouter(
     GoRoute(
       name: 'search',
       path: '/search',
-      builder: (context, state) => const SearchScreen(),
+      builder: (context, state) => ChangeNotifierProvider(
+        create: (_) => getIt<SearchViewModel>(),
+        child: const SearchScreen(),
+      ),
       routes: [
         GoRoute(
           name: 'flightResults',
@@ -33,7 +40,7 @@ final router = GoRouter(
     GoRoute(
       name: 'book_data_test',
       path: '/book_data_test',
-      builder: (context, state) =>  const BookDataTestScreen(),
+      builder: (context, state) => const BookDataTestScreen(),
       routes: [
         GoRoute(
           name: 'book',

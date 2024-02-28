@@ -1,12 +1,16 @@
 import 'dart:developer';
-
+import 'package:griffin/utils/simple_logger.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:griffin/presentation/search/search_view_model.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'dart:math' as math;
+
+import '../../data/dtos/airport_dto.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({Key? key}) : super(key: key);
@@ -16,10 +20,11 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
+
+
   PanelController panelController = PanelController();
 
   TextEditingController textEditingController = TextEditingController();
-
 
 
   bool isLoading = false;
@@ -29,7 +34,13 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    double _panelHeightOpen = MediaQuery.of(context).size.height * 0.8;
+    final viewModel = context.watch<SearchViewModel>();
+    final state = viewModel.state;
+
+    double _panelHeightOpen = MediaQuery
+        .of(context)
+        .size
+        .height * 0.8;
 
     return Scaffold(
       body: SafeArea(
@@ -60,7 +71,7 @@ class _SearchScreenState extends State<SearchScreen> {
                             'FLYING FROM',
                             style: TextStyle(
                               fontSize: 15,
-                              color: Colors.white,
+                              color: Colors.deepOrange,
                               decoration: TextDecoration.none,
                             ),
                           ),
@@ -114,22 +125,26 @@ class _SearchScreenState extends State<SearchScreen> {
                           textAlignVertical: TextAlignVertical.center,
                           decoration: InputDecoration(
                             contentPadding:
-                                EdgeInsets.symmetric(vertical: 10.0),
+                            EdgeInsets.symmetric(vertical: 10.0),
                             //필드내 전체적인 정렬
                             hintText: 'Search Depature Airport/City',
                             prefixIcon: IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                  viewModel.searchAirport(textEditingController.text);
+                                  logger.info(state.airportData);
+                                  //검색
+                              },
                               icon: Icon(Icons.search),
                             ),
 
                             enabledBorder: OutlineInputBorder(
                               borderRadius:
-                                  BorderRadius.all(Radius.circular(32.0)),
+                              BorderRadius.all(Radius.circular(32.0)),
                               borderSide: BorderSide(color: Colors.grey),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius:
-                                  BorderRadius.all(Radius.circular(32.0)),
+                              BorderRadius.all(Radius.circular(32.0)),
                               borderSide: BorderSide(color: Colors.grey),
                             ),
                             border: OutlineInputBorder(
@@ -143,6 +158,16 @@ class _SearchScreenState extends State<SearchScreen> {
                   ),
                 ],
               ),
+              Column(
+                children: [
+                  Container(child: Text('리스트 데이터 테스트')),
+                  Container(child: Text('리스트 데이터 테스트')),
+                  Container(child: Text('리스트 데이터 테스트')),
+
+
+                ],
+              )
+
             ],
           ),
           isDraggable: true,
@@ -231,14 +256,14 @@ class _SearchScreenState extends State<SearchScreen> {
                                                 style: TextStyle(
                                                     fontSize: 17,
                                                     fontWeight:
-                                                        FontWeight.bold),
+                                                    FontWeight.bold),
                                               ),
                                             ),
                                           ),
                                         ),
                                       ],
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      CrossAxisAlignment.start,
                                     ),
                                   ),
                                 ),
@@ -269,13 +294,13 @@ class _SearchScreenState extends State<SearchScreen> {
                                                   style: TextStyle(
                                                       fontSize: 17,
                                                       fontWeight:
-                                                          FontWeight.bold)),
+                                                      FontWeight.bold)),
                                             ),
                                           ),
                                         ),
                                       ],
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.end,
+                                      CrossAxisAlignment.end,
                                     ),
                                   ),
                                 ),
@@ -313,13 +338,13 @@ class _SearchScreenState extends State<SearchScreen> {
                                                 style: TextStyle(
                                                     fontSize: 17,
                                                     fontWeight:
-                                                        FontWeight.bold),
+                                                    FontWeight.bold),
                                               ),
                                             ),
                                           ),
                                         ],
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                       ),
                                     ),
                                   ),
@@ -340,12 +365,12 @@ class _SearchScreenState extends State<SearchScreen> {
                                                   style: TextStyle(
                                                       fontSize: 17,
                                                       fontWeight:
-                                                          FontWeight.bold)),
+                                                      FontWeight.bold)),
                                             ),
                                           ),
                                         ],
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.end,
+                                        CrossAxisAlignment.end,
                                       ),
                                     ),
                                   ),
@@ -385,13 +410,13 @@ class _SearchScreenState extends State<SearchScreen> {
                                                 style: TextStyle(
                                                     fontSize: 17,
                                                     fontWeight:
-                                                        FontWeight.bold),
+                                                    FontWeight.bold),
                                               ),
                                             ),
                                           ),
                                         ],
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                       ),
                                     ),
                                   ),
@@ -424,12 +449,12 @@ class _SearchScreenState extends State<SearchScreen> {
                                                   style: TextStyle(
                                                       fontSize: 17,
                                                       fontWeight:
-                                                          FontWeight.bold)),
+                                                      FontWeight.bold)),
                                             ),
                                           ),
                                         ],
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.end,
+                                        CrossAxisAlignment.end,
                                       ),
                                     ),
                                   ),
@@ -464,18 +489,18 @@ class _SearchScreenState extends State<SearchScreen> {
                                 children: [
                                   isSelected == true
                                       ? ShaderMask(
-                                          child: Icon(Icons.circle),
-                                          shaderCallback: (Rect bounds) {
-                                            return LinearGradient(
-                                                    colors: [
-                                                  Color(0xFFF88264),
-                                                  Color(0xFFFFE3C5)
-                                                ],
-                                                    begin: Alignment.topCenter,
-                                                    end: Alignment.bottomCenter)
-                                                .createShader(bounds);
-                                          },
-                                        )
+                                    child: Icon(Icons.circle),
+                                    shaderCallback: (Rect bounds) {
+                                      return LinearGradient(
+                                          colors: [
+                                            Color(0xFFF88264),
+                                            Color(0xFFFFE3C5)
+                                          ],
+                                          begin: Alignment.topCenter,
+                                          end: Alignment.bottomCenter)
+                                          .createShader(bounds);
+                                    },
+                                  )
                                       : Icon(Icons.circle_outlined),
                                   // if (isSelected == false)
                                   //   Icon(Icons.circle_outlined),
@@ -537,10 +562,17 @@ class _SearchScreenState extends State<SearchScreen> {
       ),
     );
   }
-  Future<void> searchCity(String query) async {
-    isLoading = true;
-    //notifyListeners();
+
+// Widget _searchCity() {
+//     return
+// }
+
+// Future<void> searchCity(String query) async {
+//   isLoading = true;
+//   notifyListeners();
 
 
-  }
 }
+
+
+
