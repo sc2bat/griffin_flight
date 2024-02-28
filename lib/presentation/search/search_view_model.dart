@@ -18,12 +18,12 @@ class SearchViewModel extends ChangeNotifier {
 
   SearchScreenState get state => _state;
 
-  Future<void> searchAirport (String query) async {
+  Future<void> searchAirport (String airportName) async {
 
     _state = state.copyWith(isLoading: true);
     notifyListeners();
 
-    final result = await _repository.getAirportDataApi(query);
+    final result = await _repository.getAirportDataApi(airportName);
     switch (result) {
       case Success<List<AirportModel>>():
         _state = state.copyWith(

@@ -8,7 +8,7 @@ import 'package:griffin/domain/repositories/sample_repository.dart';
 
 class AirportRepositoryImpl implements AirportRepository {
   @override
-  Future<Result<List<AirportModel>>> getAirportDataApi(String query) async {
+  Future<Result<List<AirportModel>>> getAirportDataApi(String airportName) async {
     final result = await AirportApi().getAirportApi();
 
     return result.when(
