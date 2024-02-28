@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:griffin/domain/model/airport_model.dart';
 import 'package:griffin/utils/simple_logger.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/cupertino.dart';
@@ -20,12 +21,13 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
+  List<AirportModel> searchAirport = [];
 
+  //검색 결과 저장 리스트
 
   PanelController panelController = PanelController();
 
   TextEditingController textEditingController = TextEditingController();
-
 
   bool isLoading = false;
   bool isSelected = false;
@@ -121,6 +123,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         height: 50,
                         width: 350,
                         child: TextField(
+
                           controller: textEditingController,
                           textAlignVertical: TextAlignVertical.center,
                           decoration: InputDecoration(
@@ -130,13 +133,30 @@ class _SearchScreenState extends State<SearchScreen> {
                             hintText: 'Search Depature Airport/City',
                             prefixIcon: IconButton(
                               onPressed: () {
-                                  viewModel.searchAirport(textEditingController.text);
-                                  logger.info(state.airportData);
-                                  //검색
+                                viewModel
+                                    .searchAirport(textEditingController.text);
+                                logger.info(state.airportData);
+                                //검색
                               },
                               icon: Icon(Icons.search),
                             ),
+                            Consumer<SearchViewModel>(
+                              builder: (context, viewModel, child) {
+                                return Expanded(
+                                  child: ListView.builder(
+                                  itemCount: viewModel.searchAirport(airportName),
+                                  itemBuilder: (context, index) {
+                                    final airport = viewModel
+                                        .searchAirport[index];
+                                    return ListTile(
+                                      title: Text(airport),
+                                    ),
 
+                                  }),),
+
+
+                              },
+                            ),
                             enabledBorder: OutlineInputBorder(
                               borderRadius:
                               BorderRadius.all(Radius.circular(32.0)),
@@ -160,14 +180,16 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
               Column(
                 children: [
-                  Container(child: Text('리스트 데이터 테스트')),
-                  Container(child: Text('리스트 데이터 테스트')),
-                  Container(child: Text('리스트 데이터 테스트')),
-
-
+                  Column(
+                    children: searchAirport.map((airport) {
+                      return Container(
+                        child: Text(airport.airportName),
+                      );
+                    }).toList(),
+                  ),
                 ],
-              )
-
+              ),
+              //도시 검색 결과 리스트 코드
             ],
           ),
           isDraggable: true,
@@ -570,9 +592,4 @@ class _SearchScreenState extends State<SearchScreen> {
 // Future<void> searchCity(String query) async {
 //   isLoading = true;
 //   notifyListeners();
-
-
 }
-
-
-
