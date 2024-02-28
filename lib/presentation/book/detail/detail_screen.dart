@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:griffin/presentation/book/detail/widgets/flight_icon_widget.dart';
 import 'package:griffin/presentation/common/flight_card.dart';
-import 'package:griffin/presentation/book/book_screen/flight_icon_widget.dart';
 import 'package:griffin/presentation/common/colors.dart';
 import 'package:griffin/presentation/common/common_button.dart';
 
-class BookScreen extends StatefulWidget {
-  const BookScreen(
+class DetailScreen extends StatefulWidget {
+  const DetailScreen(
       {super.key, required this.departureTime, required this.arrivalTime});
 
   final String departureTime;
   final String arrivalTime;
 
   @override
-  State<BookScreen> createState() => _BookScreenState();
+  State<DetailScreen> createState() => _BookScreenState();
 }
 
-class _BookScreenState extends State<BookScreen> {
+class _BookScreenState extends State<DetailScreen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(

@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:griffin/presentation/book/travller_detail_screen/custom_textfield.dart';
-import 'package:griffin/presentation/book/travller_detail_screen/gender_selection_widget.dart';
+import 'package:griffin/presentation/book/passport/widgets/custom_textfield_widget.dart';
+import 'package:griffin/presentation/book/passport/widgets/gender_widget.dart';
 
-class TravellerDetailScreen extends StatefulWidget {
-  const TravellerDetailScreen({super.key});
+class PassportScreen extends StatefulWidget {
+  const PassportScreen({super.key});
 
   @override
-  State<TravellerDetailScreen> createState() => _TravellerDetailScreenState();
+  State<PassportScreen> createState() => _PassportScreenState();
 }
 
-class _TravellerDetailScreenState extends State<TravellerDetailScreen> {
+class _PassportScreenState extends State<PassportScreen> {
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
   final emailController = TextEditingController();
@@ -37,7 +37,7 @@ class _TravellerDetailScreenState extends State<TravellerDetailScreen> {
                 children: [
                   Expanded(
                     flex: 1,
-                    child: CustomTextField(
+                    child: CustomTextFieldWidget(
                       hintText: 'test',
                       controller: firstNameController,
                     ),
@@ -45,7 +45,7 @@ class _TravellerDetailScreenState extends State<TravellerDetailScreen> {
                   const Gap(10),
                   Expanded(
                     flex: 1,
-                    child: CustomTextField(
+                    child: CustomTextFieldWidget(
                       hintText: 'test',
                       controller: firstNameController,
                     ),
@@ -53,7 +53,7 @@ class _TravellerDetailScreenState extends State<TravellerDetailScreen> {
                 ],
               ),
             ),
-            CustomTextField(hintText: 'test', controller: emailController)
+            CustomTextFieldWidget(hintText: 'test', controller: emailController)
           ],
         ),
       ),

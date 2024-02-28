@@ -1,7 +1,7 @@
 import 'package:griffin/data/core/result.dart';
 import 'package:griffin/data/data_sources/apis/flight_api.dart';
 import 'package:griffin/data/mappers/flight_mapper.dart';
-import 'package:griffin/domain/model/flights_model.dart';
+import 'package:griffin/domain/model/flights/flights_model.dart';
 import 'package:griffin/domain/repositories/flight_repository.dart';
 
 class FlightRepositoryImpl implements FlightRepository {

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:griffin/presentation/common/colors.dart';
 
-class CustomTextField extends StatefulWidget {
-  const CustomTextField(
+class CustomTextFieldWidget extends StatefulWidget {
+  const CustomTextFieldWidget(
       {super.key,
         required this.hintText,
         required this.controller,
@@ -15,10 +15,10 @@ class CustomTextField extends StatefulWidget {
   final double? width;
 
   @override
-  State<CustomTextField> createState() => _CustomTextFieldState();
+  State<CustomTextFieldWidget> createState() => _CustomTextFieldWidgetState();
 }
 
-class _CustomTextFieldState extends State<CustomTextField> {
+class _CustomTextFieldWidgetState extends State<CustomTextFieldWidget> {
   String textFormFieldText = '';
 
   @override

@@ -1,19 +1,17 @@
 import 'package:go_router/go_router.dart';
-import 'package:griffin/domain/model/flights_model.dart';
-import 'package:griffin/presentation/book/book_screen/book_screen.dart';
 import 'package:griffin/presentation/book/book_data_test_screen.dart';
-import 'package:griffin/presentation/book/book_screen/book_screen_viewmodel.dart';
-import 'package:griffin/presentation/book/travller_detail_screen/traveller_detail_screen.dart';
 import 'package:griffin/presentation/counter/counter_screen.dart';
 import 'package:griffin/presentation/counter/sample_screen.dart';
 import 'package:griffin/presentation/index_screen.dart';
 import 'package:griffin/presentation/pay/pay_screen.dart';
-import 'package:griffin/presentation/search/city_select_page.dart';
 import 'package:griffin/presentation/search/flight_results.dart';
 import 'package:griffin/presentation/search/search_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../di/get_it.dart';
+import 'book/detail/detail_screen.dart';
+import 'book/detail/detail_viewmodel.dart';
+import 'book/passport/passport_screen.dart';
 
 final router = GoRouter(
   initialLocation: '/',
@@ -47,8 +45,8 @@ final router = GoRouter(
             builder: (context, state) {
               final map = state.extra! as Map<String, dynamic>;
               return ChangeNotifierProvider(
-                create: (_) => getIt<BookScreenViewModel>(),
-                child: BookScreen(
+                create: (_) => getIt<DetailViewModel>(),
+                child: DetailScreen(
                   departureTime: map['departureTime'] as String,
                   arrivalTime: map['arrivalTime'] as String,
                 ),
@@ -58,7 +56,7 @@ final router = GoRouter(
               GoRoute(
                   name: 'traveller_detail_screen',
                   path: 'traveller_detail_screen',
-                  builder: (context, state) => const TravellerDetailScreen(),
+                  builder: (context, state) => const PassportScreen(),
                   ),
             ]),
       ],

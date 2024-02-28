@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:griffin/data/repositories/flight_repository_impl.dart';
-import 'package:griffin/domain/model/flights_model.dart';
+import 'package:griffin/domain/model/flights/flights_model.dart';
 import '../../utils/simple_logger.dart';
 import '../common/flight_card.dart';
 

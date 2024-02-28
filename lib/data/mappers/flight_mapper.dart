@@ -1,5 +1,5 @@
 import 'package:griffin/data/dtos/flight_dto.dart';
-import 'package:griffin/domain/model/flights_model.dart';
+import 'package:griffin/domain/model/flights/flights_model.dart';
 
 class FlightMapper {
   static FlightsModel fromDTO(FlightDTO dto) {
