@@ -20,6 +20,9 @@ class _SearchScreenState extends State<SearchScreen> {
 
   TextEditingController textEditingController = TextEditingController();
 
+
+
+  bool isLoading = false;
   bool isSelected = false;
 
   double _panelHeightClosed = 0.0;
@@ -111,24 +114,22 @@ class _SearchScreenState extends State<SearchScreen> {
                           textAlignVertical: TextAlignVertical.center,
                           decoration: InputDecoration(
                             contentPadding:
-                            EdgeInsets.symmetric(vertical: 10.0),
+                                EdgeInsets.symmetric(vertical: 10.0),
                             //필드내 전체적인 정렬
                             hintText: 'Search Depature Airport/City',
-                            prefixIcon: Icon(Icons.search),
-                            suffixIcon: textEditingController.text.isEmpty
-                                ? null
-                                : InkWell(
-                                  onTap: () => textEditingController.clear(),
-                                  child: Icon(Icons.clear),
+                            prefixIcon: IconButton(
+                              onPressed: () {},
+                              icon: Icon(Icons.search),
                             ),
+
                             enabledBorder: OutlineInputBorder(
                               borderRadius:
-                              BorderRadius.all(Radius.circular(32.0)),
+                                  BorderRadius.all(Radius.circular(32.0)),
                               borderSide: BorderSide(color: Colors.grey),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius:
-                              BorderRadius.all(Radius.circular(32.0)),
+                                  BorderRadius.all(Radius.circular(32.0)),
                               borderSide: BorderSide(color: Colors.grey),
                             ),
                             border: OutlineInputBorder(
@@ -229,7 +230,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                                 'Select City',
                                                 style: TextStyle(
                                                     fontSize: 17,
-                                                    fontWeight: FontWeight.bold),
+                                                    fontWeight:
+                                                        FontWeight.bold),
                                               ),
                                             ),
                                           ),
@@ -272,7 +274,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                           ),
                                         ),
                                       ],
-                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
                                     ),
                                   ),
                                 ),
@@ -299,7 +302,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                           Text(
                                             'TRAVEL DATE',
                                             style: TextStyle(
-                                                fontSize: 15, color: Colors.grey),
+                                                fontSize: 15,
+                                                color: Colors.grey),
                                           ),
                                           Expanded(
                                             child: Container(
@@ -308,7 +312,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                                 'SUN 4, oct',
                                                 style: TextStyle(
                                                     fontSize: 17,
-                                                    fontWeight: FontWeight.bold),
+                                                    fontWeight:
+                                                        FontWeight.bold),
                                               ),
                                             ),
                                           ),
@@ -325,7 +330,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                           Text(
                                             'RETURN',
                                             style: TextStyle(
-                                                fontSize: 15, color: Colors.grey),
+                                                fontSize: 15,
+                                                color: Colors.grey),
                                           ),
                                           Expanded(
                                             child: Container(
@@ -368,7 +374,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                           const Text(
                                             'TRAVELLER',
                                             style: TextStyle(
-                                                fontSize: 15, color: Colors.grey),
+                                                fontSize: 15,
+                                                color: Colors.grey),
                                           ),
                                           Expanded(
                                             child: Container(
@@ -377,7 +384,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                                 '1 Adult',
                                                 style: TextStyle(
                                                     fontSize: 17,
-                                                    fontWeight: FontWeight.bold),
+                                                    fontWeight:
+                                                        FontWeight.bold),
                                               ),
                                             ),
                                           ),
@@ -406,7 +414,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                           Text(
                                             'CLASS',
                                             style: TextStyle(
-                                                fontSize: 15, color: Colors.grey),
+                                                fontSize: 15,
+                                                color: Colors.grey),
                                           ),
                                           Expanded(
                                             child: Container(
@@ -527,5 +536,11 @@ class _SearchScreenState extends State<SearchScreen> {
         ),
       ),
     );
+  }
+  Future<void> searchCity(String query) async {
+    isLoading = true;
+    //notifyListeners();
+
+
   }
 }
