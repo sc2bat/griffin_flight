@@ -5,6 +5,9 @@ import 'package:griffin/presentation/common/flight_card.dart';
 import 'package:griffin/presentation/book/flight_icon_widget.dart';
 import 'package:griffin/presentation/common/colors.dart';
 import 'package:griffin/presentation/common/common_button.dart';
+import 'package:provider/provider.dart';
+
+import 'book_screen_viewmodel.dart';
 
 class BookScreen extends StatefulWidget {
   const BookScreen({super.key});
@@ -23,7 +26,7 @@ class _BookScreenState extends State<BookScreen> {
           centerTitle: true,
           leading: IconButton(
             onPressed: () {
-              context.go('/book_data_test', extra: '뒤로 돌아갔다');
+              context.go('/book_data_test');
             },
             icon: const Icon(Icons.arrow_back_ios),
           ) ,
