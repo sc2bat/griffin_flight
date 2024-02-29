@@ -21,7 +21,7 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  List<AirportModel> searchAirport = [];
+  final searchAirport = state.airportData;
 
   //검색 결과 저장 리스트
 
@@ -140,23 +140,23 @@ class _SearchScreenState extends State<SearchScreen> {
                               },
                               icon: Icon(Icons.search),
                             ),
-                            Consumer<SearchViewModel>(
-                              builder: (context, viewModel, child) {
-                                return Expanded(
-                                  child: ListView.builder(
-                                  itemCount: viewModel.searchAirport(airportName),
-                                  itemBuilder: (context, index) {
-                                    final airport = viewModel
-                                        .searchAirport[index];
-                                    return ListTile(
-                                      title: Text(airport),
-                                    ),
-
-                                  }),),
-
-
-                              },
-                            ),
+                            // Consumer<SearchViewModel>(
+                            //   builder: (context, viewModel, child) {
+                            //     return Expanded(
+                            //       child: ListView.builder(
+                            //       itemCount: viewModel.searchAirport(airportName),
+                            //       itemBuilder: (context, index) {
+                            //         final airport = viewModel
+                            //             .searchAirport[index];
+                            //         return ListTile(
+                            //           title: Text(airport),
+                            //         ),
+                            //
+                            //       }),),
+                            //
+                            //
+                            //   },
+                            // ),
                             enabledBorder: OutlineInputBorder(
                               borderRadius:
                               BorderRadius.all(Radius.circular(32.0)),
