@@ -1,29 +1,49 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:griffin/domain/model/payment_model.dart';
 import 'package:griffin/presentation/pay/ticket_widgets.dart';
+import 'package:intl/intl.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class PayScreen extends StatefulWidget {
+  final List<PaymentModel> forPaymentList;
+
   @override
   State<PayScreen> createState() => _PayScreenState();
+
+  const PayScreen({
+    super.key,
+    required this.forPaymentList,
+  });
 }
 
 class _PayScreenState extends State<PayScreen> {
   final controller = PageController(viewportFraction: 0.8, keepPage: true);
 
-  final pages = List.generate(3, (index) => const TicketWidgets());
-
   @override
   Widget build(BuildContext context) {
+    final pages = List.generate(
+        (widget.forPaymentList.length / 2).ceil(),
+        (i) => TicketWidgets(
+            twoTicketList: widget.forPaymentList.sublist(
+                i * 2,
+                (i + 1) * 2 > widget.forPaymentList.length
+                    ? widget.forPaymentList.length
+                    : (i + 1) * 2)));
+    final totalAmount =
+        widget.forPaymentList.fold(0.0, (e, v) => e + v.payAmount!);
     return Scaffold(
-      backgroundColor: Colors.blueGrey,
       body: SafeArea(
         child: SingleChildScrollView(
+          physics: const NeverScrollableScrollPhysics(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.85,
                 child: PageView.builder(
+                  physics: const BouncingScrollPhysics(
+                      decelerationRate: ScrollDecelerationRate.fast),
                   controller: controller,
                   itemCount: pages.length,
                   itemBuilder: (_, index) {
@@ -45,12 +65,19 @@ class _PayScreenState extends State<PayScreen> {
                 child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('총 금액: 000,000원'),
+                      Text(
+                          '총 금액: ${NumberFormat('###,###,###,###').format(totalAmount)}원'),
                       TextButton(
                           onPressed: () {
-                            bootpayPayment(context);
+                            bootpayPayment(context, totalAmount);
                           },
                           child: const Text('결제하기',
+                              style: TextStyle(fontSize: 16.0))),
+                      TextButton(
+                          onPressed: () {
+                            context.push('/myBooks');
+                          },
+                          child: const Text('취소',
                               style: TextStyle(fontSize: 16.0))),
                     ]),
               )

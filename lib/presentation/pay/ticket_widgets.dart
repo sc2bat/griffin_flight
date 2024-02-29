@@ -5,11 +5,16 @@ import 'package:bootpay/model/payload.dart';
 import 'package:bootpay/model/user.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:griffin/domain/model/payment_model.dart';
 import 'package:griffin/presentation/pay/ticket_data.dart';
 import 'package:ticket_widget/ticket_widget.dart';
 
+import '../../utils/simple_logger.dart';
+
 class TicketWidgets extends StatelessWidget {
-  const TicketWidgets({super.key});
+  const TicketWidgets({super.key, required this.twoTicketList});
+
+  final List<PaymentModel> twoTicketList;
 
   @override
   Widget build(BuildContext context) {
@@ -22,26 +27,34 @@ class TicketWidgets extends StatelessWidget {
             height: MediaQuery.of(context).size.height * 0.4,
             isCornerRounded: true,
             padding: const EdgeInsets.all(20),
-            child: const TicketData(),
+            child: TicketData(
+              ticketData: twoTicketList[0],
+            ),
           ),
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.02,
           ),
-          TicketWidget(
-            width: MediaQuery.of(context).size.width * 0.9,
-            height: MediaQuery.of(context).size.height * 0.4,
-            isCornerRounded: true,
-            padding: const EdgeInsets.all(20),
-            child: const TicketData(),
-          ),
+          (twoTicketList.length < 2)
+              ? Container(
+                  height: MediaQuery.of(context).size.height * 0.4,
+                )
+              : TicketWidget(
+                  width: MediaQuery.of(context).size.width * 0.9,
+                  height: MediaQuery.of(context).size.height * 0.4,
+                  isCornerRounded: true,
+                  padding: const EdgeInsets.all(20),
+                  child: TicketData(
+                    ticketData: twoTicketList[1],
+                  ),
+                ),
         ],
       ),
     );
   }
 }
 
-void bootpayPayment(BuildContext context) {
-  Payload payload = getPayload();
+void bootpayPayment(BuildContext context, double totalAmount) {
+  Payload payload = getPayload(totalAmount);
   if (kIsWeb) {
     payload.extra?.openType = "iframe";
   }
@@ -52,21 +65,21 @@ void bootpayPayment(BuildContext context) {
     showCloseButton: false,
     // closeButton: Icon(Icons.close, size: 35.0, color: Colors.black54),
     onCancel: (String data) {
-      print('------- onCancel: $data');
+      logger.info('------- onCancel: $data');
     },
     onError: (String data) {
-      print('------- onError: $data');
+      logger.info('------- onError: $data');
     },
     onClose: () {
-      print('------- onClose');
+      logger.info('------- onClose');
       Bootpay().dismiss(context); //명시적으로 부트페이 뷰 종료 호출
       //TODO - 원하시는 라우터로 페이지 이동
     },
     onIssued: (String data) {
-      print('------- onIssued: $data');
+      logger.info('------- onIssued: $data');
     },
     onConfirm: (String data) {
-      print('------- onConfirm: $data');
+      logger.info('------- onConfirm: $data');
       /**
           1. 바로 승인하고자 할 때
           return true;
@@ -84,18 +97,18 @@ void bootpayPayment(BuildContext context) {
       return true;
     },
     onDone: (String data) {
-      print('------- onDone: $data');
+      logger.info('------- onDone: $data');
     },
   );
 }
 
-Payload getPayload() {
+Payload getPayload(double totalAmount) {
   Payload payload = Payload();
   Item item1 = Item();
-  item1.name = "미키 '마우스"; // 주문정보에 담길 상품명
+  item1.name = "항공 티켓"; // 주문정보에 담길 상품명
   item1.qty = 1; // 해당 상품의 주문 수량
   item1.id = "ITEM_CODE_MOUSE"; // 해당 상품의 고유 키
-  item1.price = 500; // 상품의 가격
+  item1.price = totalAmount; // 상품의 가격
 
   payload.androidApplicationId =
       '65cee8dee57a7e001de37229'; // android application id

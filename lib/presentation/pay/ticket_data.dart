@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 
+import '../../domain/model/payment_model.dart';
+
 class TicketData extends StatelessWidget {
   const TicketData({
     Key? key,
+    required this.ticketData,
   }) : super(key: key);
+  final PaymentModel ticketData;
 
   @override
   Widget build(BuildContext context) {
@@ -22,19 +26,19 @@ class TicketData extends StatelessWidget {
               ),
               child: const Center(
                 child: Text(
-                  'Business Class',
+                  'Economy Class',
                   style: TextStyle(color: Colors.green),
                 ),
               ),
             ),
-            const Row(
+            Row(
               children: [
                 Text(
-                  'LHR',
-                  style: TextStyle(
+                  ticketData.departureCode!,
+                  style: const TextStyle(
                       color: Colors.black, fontWeight: FontWeight.bold),
                 ),
-                Padding(
+                const Padding(
                   padding: EdgeInsets.only(left: 8.0),
                   child: Icon(
                     Icons.flight_takeoff,
@@ -42,10 +46,10 @@ class TicketData extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(left: 8.0),
+                  padding: const EdgeInsets.only(left: 8.0),
                   child: Text(
-                    'ISL',
-                    style: TextStyle(
+                    ticketData.arrivalCode!,
+                    style: const TextStyle(
                         color: Colors.black, fontWeight: FontWeight.bold),
                   ),
                 )
@@ -69,19 +73,19 @@ class TicketData extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ticketDetailsWidget(
-                  'Passengers', 'Hafiz M Mujahid', 'Date', '28-08-2022'),
+                  'Passengers', ticketData.passengerName!, 'Date', ticketData.flightDate!),
               Padding(
-                padding: const EdgeInsets.only(top: 12.0, right: 52.0),
-                child: ticketDetailsWidget('Flight', '76836A45', 'Seat', '21B'),
+                padding: const EdgeInsets.only(top: 25.0),
+                child: ticketDetailsWidget('Flight', ticketData.flightId!.toString(), 'Seat', ticketData.classSeat!),
               ),
             ],
           ),
         ),
-        const Padding(
-          padding: EdgeInsets.only(top: 10.0, left: 75.0, right: 75.0),
+        Padding(
+          padding: const EdgeInsets.only(top: 10.0, left: 75.0, right: 75.0),
           child: Text(
-            '0000 +9230 2884 5163',
-            style: TextStyle(
+            '예약자명: ${ticketData.userName}',
+            style: const TextStyle(
               color: Colors.black,
             ),
           ),
@@ -118,7 +122,7 @@ Widget ticketDetailsWidget(String firstTitle, String firstDesc,
       Padding(
         padding: const EdgeInsets.only(right: 20.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
               secondTitle,
