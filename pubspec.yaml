@@ -87,6 +87,7 @@ flutter:
   # assets:
   #   - images/a_dot_burr.jpeg
   assets:
+    - .env
     - assets/icons/
     - assets/fonts/
   #   - images/a_dot_ham.jpeg
