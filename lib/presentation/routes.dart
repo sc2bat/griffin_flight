@@ -1,6 +1,8 @@
 import 'package:go_router/go_router.dart';
+import 'package:griffin/domain/model/flights_model.dart';
 import 'package:griffin/presentation/book/book_screen.dart';
 import 'package:griffin/presentation/book/book_data_test_screen.dart';
+import 'package:griffin/presentation/book/book_screen_viewmodel.dart';
 import 'package:griffin/presentation/counter/counter_screen.dart';
 import 'package:griffin/presentation/counter/sample_screen.dart';
 import 'package:griffin/presentation/index_screen.dart';
@@ -22,7 +24,8 @@ final router = GoRouter(
       builder: (context, state) => const IndexScreen(),
       routes: const [],
     ),
-    GoRoute(
+    GoRoute
+      (
       name: 'search',
       path: '/search',
       builder: (context, state) => ChangeNotifierProvider(
@@ -37,18 +40,26 @@ final router = GoRouter(
         ),
       ],
     ),
+
     GoRoute(
       name: 'book_data_test',
       path: '/book_data_test',
       builder: (context, state) => const BookDataTestScreen(),
       routes: [
         GoRoute(
-          name: 'book',
-          path: 'book',
-          builder: (context, state) => BookScreen(),
+            name: 'book',
+            path: 'book',
+            builder: (context, state) {
+              return ChangeNotifierProvider(
+                  create: (_) => getIt<BookScreenViewModel>(),
+              child: const BookScreen(), //보내는값
+              );
+            }
         ),
       ],
     ),
+
+
     GoRoute(
       name: 'pay',
       path: '/pay',
