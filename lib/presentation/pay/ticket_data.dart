@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:qr_flutter/qr_flutter.dart';
+
+import '../../domain/model/payment_model.dart';
 
 class TicketData extends StatelessWidget {
   const TicketData({
     Key? key,
+    required this.ticketData,
   }) : super(key: key);
+  final PaymentModel ticketData;
 
   @override
   Widget build(BuildContext context) {
@@ -22,19 +27,19 @@ class TicketData extends StatelessWidget {
               ),
               child: const Center(
                 child: Text(
-                  'Business Class',
+                  'Economy Class',
                   style: TextStyle(color: Colors.green),
                 ),
               ),
             ),
-            const Row(
+            Row(
               children: [
                 Text(
-                  'LHR',
-                  style: TextStyle(
+                  ticketData.departureCode!,
+                  style: const TextStyle(
                       color: Colors.black, fontWeight: FontWeight.bold),
                 ),
-                Padding(
+                const Padding(
                   padding: EdgeInsets.only(left: 8.0),
                   child: Icon(
                     Icons.flight_takeoff,
@@ -42,10 +47,10 @@ class TicketData extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(left: 8.0),
+                  padding: const EdgeInsets.only(left: 8.0),
                   child: Text(
-                    'ISL',
-                    style: TextStyle(
+                    ticketData.arrivalCode!,
+                    style: const TextStyle(
                         color: Colors.black, fontWeight: FontWeight.bold),
                   ),
                 )
@@ -53,39 +58,56 @@ class TicketData extends StatelessWidget {
             )
           ],
         ),
-        const Padding(
-          padding: EdgeInsets.only(top: 20.0),
-          child: Text(
-            'Flight Ticket',
-            style: TextStyle(
-                color: Colors.black,
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold),
-          ),
-        ),
         Padding(
-          padding: const EdgeInsets.only(top: 25.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          padding: const EdgeInsets.only(top: 16.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              ticketDetailsWidget(
-                  'Passengers', 'Hafiz M Mujahid', 'Date', '28-08-2022'),
-              Padding(
-                padding: const EdgeInsets.only(top: 12.0, right: 52.0),
-                child: ticketDetailsWidget('Flight', '76836A45', 'Seat', '21B'),
+              const Text(
+                'Flight Ticket',
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold),
+              ),
+              QrImageView(
+                data: '예약번호: ${ticketData.bookId}',
+                version: QrVersions.auto,
+                size: MediaQuery.of(context).size.height * 0.07,
               ),
             ],
           ),
         ),
-        const Padding(
-          padding: EdgeInsets.only(top: 10.0, left: 75.0, right: 75.0),
-          child: Text(
-            '0000 +9230 2884 5163',
-            style: TextStyle(
-              color: Colors.black,
-            ),
+        Padding(
+          padding: const EdgeInsets.only(top: 16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ticketDetailsWidget('Passengers', ticketData.passengerName!,
+                  'Date', ticketData.flightDate!),
+              Padding(
+                padding: const EdgeInsets.only(top: 16.0),
+                child: ticketDetailsWidget(
+                    'Flight',
+                    ticketData.flightId!.toString(),
+                    'Seat',
+                    ticketData.classSeat!),
+              ),
+            ],
           ),
         ),
+        // Padding(
+        //   padding: const EdgeInsets.only(top: 3, left: 12, right: 12.0),
+        //   child: Row(
+        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //     children: [
+        //       Text(
+        //         '예약자명: ${ticketData.userName}',
+        //         style: const TextStyle(color: Colors.black),
+        //       ),
+        //     ],
+        //   ),
+        // ),
       ],
     );
   }
@@ -118,7 +140,7 @@ Widget ticketDetailsWidget(String firstTitle, String firstDesc,
       Padding(
         padding: const EdgeInsets.only(right: 20.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
               secondTitle,
