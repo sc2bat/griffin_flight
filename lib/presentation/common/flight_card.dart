@@ -19,9 +19,9 @@ class FlightDetailsCard extends StatelessWidget {
   final double height;
   final String? departureAirportCode;
   final String? arrivalAirportCode;
-  final int? departureTime;
-  final int? arrivalTime;
-  final int? flightTime;
+  final String? departureTime;
+  final String? arrivalTime;
+  final String? flightTime;
   final String? direct;
   final int? price;
   final String? airlineName;

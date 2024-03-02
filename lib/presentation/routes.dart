@@ -2,17 +2,21 @@ import 'package:go_router/go_router.dart';
 import 'package:griffin/di/get_it.dart';
 import 'package:griffin/domain/model/payment_model.dart';
 import 'package:griffin/domain/repositories/payment_repository.dart';
-import 'package:griffin/presentation/book/book_data_test_screen.dart';
+import 'package:griffin/domain/model/flights_model.dart';
 import 'package:griffin/presentation/book/book_screen.dart';
+import 'package:griffin/presentation/book/book_data_test_screen.dart';
+import 'package:griffin/presentation/book/book_screen_viewmodel.dart';
 import 'package:griffin/presentation/counter/counter_screen.dart';
 import 'package:griffin/presentation/counter/sample_screen.dart';
 import 'package:griffin/presentation/index_screen.dart';
 import 'package:griffin/presentation/mybooks/my_books_view_model.dart';
 import 'package:griffin/presentation/pay/pay_screen.dart';
+import 'mybooks/my_books_screen.dart';
+import 'package:griffin/presentation/search/city_select_page.dart';
+import 'package:griffin/presentation/search/flight_results.dart';
 import 'package:griffin/presentation/search/search_screen.dart';
 import 'package:provider/provider.dart';
 
-import 'mybooks/my_books_screen.dart';
 
 final router = GoRouter(
   initialLocation: '/',
@@ -23,30 +27,39 @@ final router = GoRouter(
       builder: (context, state) => const IndexScreen(),
       routes: const [],
     ),
-    GoRoute(
+    GoRoute
+      (
       name: 'search',
       path: '/search',
       builder: (context, state) => const SearchScreen(),
       routes: [
-        /*GoRoute(
-          name: 'citySelectPage',
-          path: 'citySelectPage',
-          builder: (context, state) => CitySelectPage(),
-        ),*/
+        GoRoute(
+          name: 'flightResults',
+          path: 'flightResults',
+          builder: (context, state) => FlightResults(),
+        ),
       ],
     ),
+
     GoRoute(
       name: 'book_data_test',
       path: '/book_data_test',
       builder: (context, state) => const BookDataTestScreen(),
       routes: [
         GoRoute(
-          name: 'book',
-          path: 'book',
-          builder: (context, state) => BookScreen(),
+            name: 'book',
+            path: 'book',
+            builder: (context, state) {
+              return ChangeNotifierProvider(
+                  create: (_) => getIt<BookScreenViewModel>(),
+              child: const BookScreen(), //보내는값
+              );
+            }
         ),
       ],
     ),
+
+
     GoRoute(
       name: 'myBooks',
       path: '/myBooks',

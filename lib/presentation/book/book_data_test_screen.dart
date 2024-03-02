@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-
+import 'package:griffin/data/repositories/flight_repository_impl.dart';
+import 'package:griffin/domain/model/flights_model.dart';
+import 'package:griffin/presentation/book/book_screen_viewmodel.dart';
+import '../../data/core/result.dart';
+import '../../utils/simple_logger.dart';
 import '../common/flight_card.dart';
+import 'package:provider/provider.dart';
 
 class BookDataTestScreen extends StatefulWidget {
   const BookDataTestScreen({super.key});
@@ -11,12 +16,25 @@ class BookDataTestScreen extends StatefulWidget {
 }
 
 class _BookDataTestScreenState extends State<BookDataTestScreen> {
-  final _textController = TextEditingController();
+  List<FlightsModel> list = [];
+
+  void getData() async {
+    final result = await FlightRepositoryImpl().getFlightDataApi();
+    result.when(
+      success: (data) {
+        logger.info(data.length);
+        list = data;
+        // logger.info(list);
+        // logger.info(list[0].departureTime);
+      },
+      error: (error) => logger.info(error),
+    );
+  }
 
   @override
-  void dispose() {
-    _textController.dispose();
-    super.dispose();
+  void initState() {
+    getData();
+    super.initState();
   }
 
   @override
@@ -28,7 +46,7 @@ class _BookDataTestScreenState extends State<BookDataTestScreen> {
           centerTitle: true,
           leading: IconButton(
             onPressed: () {
-              context.go('/book_data_test', extra: '뒤로 돌아갔다');
+              context.go('/');
             },
             icon: const Icon(Icons.arrow_back_ios),
           ),
@@ -39,15 +57,15 @@ class _BookDataTestScreenState extends State<BookDataTestScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               FlightDetailsCard(
-                  width: MediaQuery.of(context).size.width * 0.8,
-                  height: MediaQuery.of(context).size.height * 0.18,
+                width: MediaQuery.of(context).size.width * 0.8,
+                height: MediaQuery.of(context).size.height * 0.18,
+                departureTime: list[0].departureTime,
+                arrivalTime: list[0].arrivalTime,
+
               ),
               ElevatedButton(
                 onPressed: () {
-                  final text = _textController.text;
-                  if (text.isNotEmpty) {
-                    context.go('/book_data_test/book', extra: text);
-                  }
+                  context.go('/book_data_test/book');
                 },
                 child: const Text('완료'),
               ),
