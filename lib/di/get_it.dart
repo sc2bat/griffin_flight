@@ -43,7 +43,7 @@ void setupDependencies() {
       ),
     )
     ..registerFactory<MyBooksViewModel>(
-          () => MyBooksViewModel(paymentRepository: getIt<PaymentRepository>()),
+          () => MyBooksViewModel(paymentRepository: getIt<PaymentRepository>()))
     ..registerFactory<BookScreenViewModel>(
           () => BookScreenViewModel(),
     );

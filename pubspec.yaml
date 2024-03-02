@@ -55,6 +55,7 @@ dependencies:
   book_my_seat: ^1.0.1
   roundcheckbox: ^2.0.5
   gap: ^3.0.1
+  qr_flutter: ^4.1.0
 
 
 dev_dependencies:

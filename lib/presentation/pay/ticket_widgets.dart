@@ -11,12 +11,12 @@ class TicketWidgets extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       child: Column(
         children: [
           TicketWidget(
             width: MediaQuery.of(context).size.width * 0.9,
-            height: MediaQuery.of(context).size.height * 0.4,
+            height: MediaQuery.of(context).size.height * 0.38,
             isCornerRounded: true,
             padding: const EdgeInsets.all(20),
             child: TicketData(
@@ -32,7 +32,7 @@ class TicketWidgets extends StatelessWidget {
                 )
               : TicketWidget(
                   width: MediaQuery.of(context).size.width * 0.9,
-                  height: MediaQuery.of(context).size.height * 0.4,
+                  height: MediaQuery.of(context).size.height * 0.38,
                   isCornerRounded: true,
                   padding: const EdgeInsets.all(20),
                   child: TicketData(
