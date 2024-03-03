@@ -3,9 +3,9 @@ import 'package:griffin/di/get_it.dart';
 import 'package:griffin/domain/model/payment_model.dart';
 import 'package:griffin/domain/repositories/payment_repository.dart';
 import 'package:griffin/domain/model/flights_model.dart';
-import 'package:griffin/presentation/book/book_screen.dart';
-import 'package:griffin/presentation/book/book_data_test_screen.dart';
-import 'package:griffin/presentation/book/book_screen_viewmodel.dart';
+import 'package:griffin/presentation/book/book/book_screen.dart';
+import 'package:griffin/presentation/book/passport/passport_screen.dart';
+import 'package:griffin/presentation/book/seat/seat_screen.dart';
 import 'package:griffin/presentation/counter/counter_screen.dart';
 import 'package:griffin/presentation/counter/sample_screen.dart';
 import 'package:griffin/presentation/index_screen.dart';
@@ -42,20 +42,21 @@ final router = GoRouter(
     ),
 
     GoRoute(
-      name: 'book_data_test',
-      path: '/book_data_test',
-      builder: (context, state) => const BookDataTestScreen(),
+      name: 'book',
+      path: '/book',
+      builder: (context, state) => const BookScreen(),
       routes: [
         GoRoute(
-            name: 'book',
-            path: 'book',
-            builder: (context, state) {
-              return ChangeNotifierProvider(
-                  create: (_) => getIt<BookScreenViewModel>(),
-              child: const BookScreen(), //보내는값
-              );
-            }
-        ),
+            name: 'passport',
+            path: 'passport',
+            builder: (context, state) => const PassportScreen(),
+            routes: [
+              GoRoute(
+                name: 'seat',
+                path: 'seat',
+                builder: (context, state) => const SeatScreen(),
+              ),
+            ]),
       ],
     ),
 
@@ -92,7 +93,7 @@ final router = GoRouter(
 
 List<String> routeList = [
   'search',
-  'book_data_test',
+  'book',
   'myBooks',
   'pay',
   'sample',
