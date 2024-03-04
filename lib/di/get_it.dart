@@ -6,11 +6,15 @@ import 'package:griffin/domain/use_cases/sample_use_case.dart';
 import 'package:griffin/presentation/book/book_screen_viewmodel.dart';
 import 'package:griffin/presentation/counter/sample_view_model.dart';
 
+import '../data/repositories/airport_repository_impl.dart';
 import '../data/repositories/payment_repository_impl.dart';
+import '../domain/repositories/airport_repository.dart';
 import '../domain/repositories/payment_repository.dart';
 import '../data/repositories/flight_repository_impl.dart';
+import '../domain/use_cases/get_airport_usecase.dart';
 import '../presentation/counter/counter_view_model.dart';
 import '../presentation/mybooks/my_books_view_model.dart';
+import '../presentation/search/providers/airport_provider.dart';
 
 final getIt = GetIt.instance;
 
@@ -47,4 +51,13 @@ void setupDependencies() {
     ..registerFactory<BookScreenViewModel>(
           () => BookScreenViewModel(),
     );
+
+  // ----------------- Airport Start -----------------
+  // Airport Repositories
+  getIt.registerLazySingleton<AirportRepository>(() => AirportRepositoryImpl());
+  // Airport Usecase
+  getIt.registerLazySingleton(() => GetAirportUsecase(repository: getIt<AirportRepository>()));
+  // Airport Provider
+  getIt.registerFactory(() => AirportProvider(getAirportUsecase: getIt<GetAirportUsecase>()),);
+  // ----------------- Airport End -----------------
 }

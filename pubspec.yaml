@@ -56,6 +56,8 @@ dependencies:
   roundcheckbox: ^2.0.5
   gap: ^3.0.1
   qr_flutter: ^4.1.0
+  get: ^4.6.6
+  lottie:
 
 
 dev_dependencies:
@@ -72,7 +74,7 @@ dev_dependencies:
   envied_generator: ^0.5.3
   build_runner: ^2.4.8
   mockito: ^5.4.4
-  get: ^4.6.6
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -91,6 +93,7 @@ flutter:
   assets:
     - assets/icons/
     - assets/fonts/
+    - assets/lottie/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

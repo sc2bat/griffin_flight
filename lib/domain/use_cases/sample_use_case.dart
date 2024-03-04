@@ -5,6 +5,7 @@ import 'package:griffin/domain/repositories/sample_repository.dart';
 
 class SampleUseCase {
   final SampleRepository _sampleRepository;
+
   SampleUseCase({
     required SampleRepository sampleRepository,
   }) : _sampleRepository = sampleRepository;
