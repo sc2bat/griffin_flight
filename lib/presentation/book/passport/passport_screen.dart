@@ -16,7 +16,10 @@ class PassportScreen extends StatefulWidget {
   State<PassportScreen> createState() => _PassportScreenState();
 }
 
-class _PassportScreenState extends State<PassportScreen> {
+class _PassportScreenState extends State<PassportScreen>
+    with TickerProviderStateMixin {
+  late final TabController _tabController;
+  final int _numberOfPeople = 2;
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
   final emailController = TextEditingController();
@@ -30,7 +33,18 @@ class _PassportScreenState extends State<PassportScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(
+      length: _numberOfPeople,
+      vsync: this,
+      animationDuration: const Duration(milliseconds: 150),
+    );
+  }
+
+  @override
   void dispose() {
+    _tabController.dispose();
     firstNameController.dispose();
     lastNameController.dispose();
     emailController.dispose();
@@ -56,110 +70,135 @@ class _PassportScreenState extends State<PassportScreen> {
           },
           icon: const Icon(Icons.arrow_back_ios),
         ),
+        bottom: _numberOfPeople > 1
+            ? TabBar(
+                controller: _tabController,
+                tabs: List.generate(
+                  _numberOfPeople,
+                  (index) => Tab(text: 'Person ${index + 1}'),
+                ),
+                isScrollable: true,
+                indicatorColor: AppColors.greenColor,
+                labelColor: AppColors.greenColor,
+                labelStyle: const TextStyle(fontWeight: FontWeight.bold),
+                labelPadding: EdgeInsets.only(
+                    right: MediaQuery.of(context).size.width * 0.2),
+                unselectedLabelColor: AppColors.greyText,
+                overlayColor:
+                    const MaterialStatePropertyAll(Colors.transparent),
+                splashFactory: NoSplash.splashFactory,
+              )
+            : null,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                const SizedBox(height: 10),
-                const GenderSelectionWiget(),
-                const SizedBox(height: 20),
-                Row(
+      body: TabBarView(
+        controller: _tabController,
+        children: List.generate(
+          _numberOfPeople,
+          (index) => Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Form(
+              key: _formKey,
+              child: SingleChildScrollView(
+                child: Column(
                   children: [
-                    Expanded(
-                      child: CustomTextFieldWidget(
-                        hintText: 'FIRST NAME',
-                        controller: firstNameController,
+                    const SizedBox(height: 10),
+                    const GenderSelectionWiget(),
+                    const SizedBox(height: 20),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: CustomTextFieldWidget(
+                            hintText: 'FIRST NAME',
+                            controller: firstNameController,
+                          ),
+                        ),
+                        const SizedBox(width: 15),
+                        Expanded(
+                          child: CustomTextFieldWidget(
+                            hintText: 'LAST NAME',
+                            controller: lastNameController,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 30),
+                    CustomTextFieldWidget(
+                      hintText: 'EMAIL',
+                      controller: emailController,
+                    ),
+                    const SizedBox(height: 8),
+                    const Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Your ticket will be sent to above email',
+                        style: TextStyle(color: AppColors.greyText),
                       ),
                     ),
-                    const SizedBox(width: 15),
-                    Expanded(
-                      child: CustomTextFieldWidget(
-                        hintText: 'LAST NAME',
-                        controller: lastNameController,
+                    const SizedBox(height: 30),
+                    PhoneTextFieldWidget(
+                      controller: phoneNumberController,
+                    ),
+                    const SizedBox(height: 30),
+                    const Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: CountryTextFieldWidget(
+                            textStyle: TextStyle(
+                                fontSize: 16, color: AppColors.greyText),
+                            initialCountryValue: "NATIONALITY",
+                          ),
+                        ),
+                        SizedBox(width: 15),
+                        Expanded(
+                          child: SizedBox(
+                              height: 40,
+                              child: DatePIckButtonWidget(title: 'DOB')),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 28),
+                    const Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'PASSPORT DETAILS',
+                        style: TextStyle(color: AppColors.greyText),
                       ),
+                    ),
+                    const SizedBox(height: 8),
+                    CustomTextFieldWidget(
+                      hintText: 'PASSPORT NUMBER',
+                      controller: passportController,
+                      keyboardType: TextInputType.number,
+                    ),
+                    const SizedBox(height: 30),
+                    const Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: CountryTextFieldWidget(
+                              textStyle: TextStyle(
+                                  fontSize: 16, color: AppColors.greyText),
+                              initialCountryValue: "ISSUING COUNTRY"),
+                        ),
+                        SizedBox(width: 15),
+                        Expanded(
+                          child: SizedBox(
+                            height: 40,
+                            child: DatePIckButtonWidget(title: 'EXPIRY'),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    TotalFareBarWidget(
+                      onTap: () {
+                        context.go('/book/passport/seat');
+                      },
                     ),
                   ],
                 ),
-                const SizedBox(height: 30),
-                CustomTextFieldWidget(
-                  hintText: 'EMAIL',
-                  controller: emailController,
-                ),
-                const SizedBox(height: 8),
-                const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Your ticket will be sent to above email',
-                    style: TextStyle(color: AppColors.greyText),
-                  ),
-                ),
-                const SizedBox(height: 30),
-                PhoneTextFieldWidget(
-                  controller: phoneNumberController,
-                ),
-                const SizedBox(height: 30),
-                const Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: CountryTextFieldWidget(
-                        textStyle:
-                            TextStyle(fontSize: 16, color: AppColors.greyText),
-                        initialCountryValue: "NATIONALITY",
-                      ),
-                    ),
-                    SizedBox(width: 15),
-                    Expanded(
-                      child: SizedBox(
-                          height: 40,
-                          child: DatePIckButtonWidget(title: 'DOB')),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 30),
-                const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'PASSPORT DETAILS',
-                    style: TextStyle(color: AppColors.greyText),
-                  ),
-                ),
-                const SizedBox(height: 8),
-                CustomTextFieldWidget(
-                  hintText: 'PASSPORT NUMBER',
-                  controller: passportController,
-                  keyboardType: TextInputType.number,
-                ),
-                const SizedBox(height: 30),
-                const Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: CountryTextFieldWidget(
-                          textStyle: TextStyle(
-                              fontSize: 16, color: AppColors.greyText),
-                          initialCountryValue: "ISSUING COUNTRY"),
-                    ),
-                    SizedBox(width: 15),
-                    Expanded(
-                      child: SizedBox(
-                        height: 40,
-                        child: DatePIckButtonWidget(title: 'EXPIRY'),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 40),
-                TotalFareBarWidget(
-                  onTap: () {
-                    context.go('/book/passport/seat');
-                  },
-                ),
-              ],
+              ),
             ),
           ),
         ),

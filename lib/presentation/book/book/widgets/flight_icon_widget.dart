@@ -16,7 +16,7 @@ class FlightIconWidget extends StatelessWidget {
                 width: MediaQuery.of(context).size.width*0.02,
                 height: MediaQuery.of(context).size.height*0.2),
             DottedDashedLine(
-              height: MediaQuery.of(context).size.height*0.27,
+              height: MediaQuery.of(context).size.height*0.22,
               width: MediaQuery.of(context).size.width*0.02,
               axis: Axis.vertical,
               dashColor: AppColors.greyText,
