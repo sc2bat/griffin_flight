@@ -38,16 +38,38 @@ class _BookScreenState extends State<BookScreen> {
                 Expanded(
                   child: Column(children: [
                     const ListTile(
-                      title: Text('출발지'),
-                      subtitle: Text('출발지정보'),
+                      title: Text('DEL'),
+                      subtitle: Text('Departure'),
                     ),
                     FlightDetailsCard(
                       width: MediaQuery.of(context).size.width * 0.8,
-                      height: MediaQuery.of(context).size.height * 0.18,
+                      height: MediaQuery.of(context).size.height * 0.15,
                     ),
                     const ListTile(
-                      title: Text('도착지'),
-                      subtitle: Text('도착지정보'),
+                      title: Text('JFK'),
+                      subtitle: Text('Arrival'),
+                    ),
+                  ]),
+                ),
+              ],
+            ),
+            const SizedBox(height: 32),
+            Row(
+              children: [
+                const FlightIconWidget(),
+                Expanded(
+                  child: Column(children: [
+                    const ListTile(
+                      title: Text('JFK'),
+                      subtitle: Text('Departure'),
+                    ),
+                    FlightDetailsCard(
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      height: MediaQuery.of(context).size.height * 0.15,
+                    ),
+                    const ListTile(
+                      title: Text('DEL'),
+                      subtitle: Text('Arrival'),
                     ),
                   ]),
                 ),
