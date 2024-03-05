@@ -58,6 +58,7 @@ dependencies:
   qr_flutter: ^4.1.0
   intl_phone_number_input: ^0.7.4
   csc_picker: ^0.2.7
+  shared_preferences: ^2.1.1
 
 
 dev_dependencies:
