@@ -7,3 +7,4 @@ abstract interface class PassportRepository {
   Future<Result<void>> updatePassport(PassportModel passport);
   Future<Result<void>> deletePassport(PassportModel passport);
 }
+

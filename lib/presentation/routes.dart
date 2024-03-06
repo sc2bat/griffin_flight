@@ -5,6 +5,7 @@ import 'package:griffin/domain/repositories/payment_repository.dart';
 import 'package:griffin/domain/model/flights_model.dart';
 import 'package:griffin/presentation/book/book/book_screen.dart';
 import 'package:griffin/presentation/book/passport/passport_screen.dart';
+import 'package:griffin/presentation/book/passport/passport_view_model.dart';
 import 'package:griffin/presentation/book/seat/seat_screen.dart';
 import 'package:griffin/presentation/counter/counter_screen.dart';
 import 'package:griffin/presentation/counter/sample_screen.dart';
@@ -40,7 +41,6 @@ final router = GoRouter(
         ),
       ],
     ),
-
     GoRoute(
       name: 'book',
       path: '/book',
@@ -49,7 +49,9 @@ final router = GoRouter(
         GoRoute(
             name: 'passport',
             path: 'passport',
-            builder: (context, state) => const PassportScreen(),
+            builder: (context, state) => ChangeNotifierProvider(
+              create: (_) => getIt<PassportViewModel>(),
+                child: const PassportScreen()),
             routes: [
               GoRoute(
                 name: 'seat',
@@ -59,8 +61,6 @@ final router = GoRouter(
             ]),
       ],
     ),
-
-
     GoRoute(
       name: 'myBooks',
       path: '/myBooks',
