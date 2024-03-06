@@ -14,6 +14,12 @@ import 'package:griffin/presentation/sign/sign_view_model.dart';
 import 'package:griffin/presentation/splash/splash_view_model.dart';
 
 import '../data/repositories/flight_repository_impl.dart';
+import '../data/repositories/airport_repository_impl.dart';
+import '../data/repositories/payment_repository_impl.dart';
+import '../domain/repositories/airport_repository.dart';
+import '../domain/repositories/payment_repository.dart';
+import '../data/repositories/flight_repository_impl.dart';
+import '../domain/use_cases/get_airport_usecase.dart';
 import '../data/repositories/passport_repository_imple.dart';
 import '../data/repositories/payment_repository_impl.dart';
 import '../domain/repositories/passport_repository.dart';
@@ -24,6 +30,7 @@ import '../presentation/book/book/book_viewmodel.dart';
 import '../presentation/book/passport/passport_view_model.dart';
 import '../presentation/counter/counter_view_model.dart';
 import '../presentation/mybooks/my_books_view_model.dart';
+import '../presentation/search/providers/airport_provider.dart';
 
 final getIt = GetIt.instance;
 
@@ -99,4 +106,13 @@ void setupDependencies() {
     ..registerFactory<PassportViewModel>(
       () => PassportViewModel(passportUsecase: getIt<PassportUsecase>()),
     );
+
+  // ----------------- Airport Start -----------------
+  // Airport Repositories
+  getIt.registerLazySingleton<AirportRepository>(() => AirportRepositoryImpl());
+  // Airport Usecase
+  getIt.registerLazySingleton(() => GetAirportUsecase(repository: getIt<AirportRepository>()));
+  // Airport Provider
+  getIt.registerFactory(() => AirportProvider(getAirportUsecase: getIt<GetAirportUsecase>()),);
+  // ----------------- Airport End -----------------
 }
