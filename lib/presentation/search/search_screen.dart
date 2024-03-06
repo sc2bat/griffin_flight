@@ -5,7 +5,8 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:griffin/presentation/common/colors.dart';
 import 'package:griffin/presentation/common/date_pick_button_widget.dart';
-import 'package:griffin/presentation/search/search_screen_view_model.dart';
+import 'package:griffin/presentation/search/search_state.dart';
+import 'package:griffin/presentation/search/search_view_model.dart';
 import 'package:griffin/utils/simple_logger.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
@@ -19,32 +20,36 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  int currentPersonValue = 1;
-
-  //여행객 증가, 감소 초기값
+  late PanelController _panelController;
+  late TextEditingController _textEditingController;
 
   final ValueNotifier<DateTime> _dateTimeNotifier =
       ValueNotifier<DateTime>(DateTime.now());
 
-  //travel date 초기값 설정
-
-  // final searchAirport = state.airportData;
-
-  //검색 결과 저장 리스트
-
-  PanelController panelController = PanelController();
-
-  TextEditingController textEditingController = TextEditingController();
-
-  bool isLoading = false;
-  bool isSelected = false;
-
   final double _panelHeightClosed = 0.0;
 
   @override
+  void initState() {
+    Future.microtask(() {
+      final searchViewModel = context.read<SearchViewModel>();
+      searchViewModel.init();
+    });
+    _panelController = PanelController();
+    _textEditingController = TextEditingController();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _panelController.close();
+    _textEditingController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final searchViewModel = context.watch<SearchScreenViewModel>();
-    // final state = viewModel.state;
+    final SearchViewModel searchViewModel = context.watch<SearchViewModel>();
+    final SearchState state = searchViewModel.state;
 
     double panelHeightOpen = MediaQuery.of(context).size.height * 0.8;
 
@@ -52,7 +57,7 @@ class _SearchScreenState extends State<SearchScreen> {
       body: SafeArea(
         child: SlidingUpPanel(
           color: Colors.black,
-          controller: panelController,
+          controller: _panelController,
           panel: Column(
             children: [
               Row(
@@ -62,7 +67,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       IconButton(
                           onPressed: () {
                             setState(() {
-                              panelController.close();
+                              _panelController.close();
                               //상위 위젯의 상태를 변경하기 위한 컨트롤러 호출
                             });
                           },
@@ -127,43 +132,21 @@ class _SearchScreenState extends State<SearchScreen> {
                         height: 50,
                         width: 350,
                         child: TextField(
-                          controller: textEditingController,
+                          controller: _textEditingController,
                           textAlignVertical: TextAlignVertical.center,
                           onChanged: (value) {},
-                          //onSubmitted: (value) {
-                          //  print(value);
-                          //},
+                          onSubmitted: (value) {
+                            logger.info(value);
+                          },
                           decoration: InputDecoration(
                             contentPadding:
                                 const EdgeInsets.symmetric(vertical: 10.0),
                             //필드내 전체적인 정렬
                             hintText: 'Search Depature Airport/City',
                             prefixIcon: IconButton(
-                              onPressed: () {
-                                // viewModel
-                                //     .searchAirport(textEditingController.text);
-                                // logger.info(state.airportData);
-                                //검색
-                              },
+                              onPressed: () {},
                               icon: const Icon(Icons.search),
                             ),
-                            // Consumer<SearchViewModel>(
-                            //   builder: (context, viewModel, child) {
-                            //     return Expanded(
-                            //       child: ListView.builder(
-                            //       itemCount: viewModel.searchAirport(airportName),
-                            //       itemBuilder: (context, index) {
-                            //         final airport = viewModel
-                            //             .searchAirport[index];
-                            //         return ListTile(
-                            //           title: Text(airport),
-                            //         ),
-                            //
-                            //       }),),
-                            //
-                            //
-                            //   },
-                            // ),
                             enabledBorder: const OutlineInputBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(32.0)),
@@ -185,37 +168,42 @@ class _SearchScreenState extends State<SearchScreen> {
                   ),
                 ],
               ),
-
               Expanded(
                 child: Container(
-                    height: 300,
-                    alignment: Alignment.center,
-                    // color: Colors.amber,
-                    child: Container(
-                        child: Center(
-                      child: Lottie.asset('assets/lottie/search_loading.json',
-                          repeat: true, width: 100, fit: BoxFit.fitWidth),
-                    )
-                        /*: ListView.builder(
-                              itemCount: 2,
-
-                              itemBuilder: (context, index) {
-
-                                return InkWell(
-                                  onTap: () {
-                                    // 선택한 값을 넣어주기.
-
-
-                                    // panelController 닫기.
-                                    setState(() {});
-                                  },
+                  height: 300,
+                  alignment: Alignment.center,
+                  // color: Colors.amber,
+                  child: Container(
+                    child: state.isLoading
+                        ? Center(
+                            child: Lottie.asset(
+                                'assets/lottie/search_loading.json',
+                                repeat: true,
+                                width: 100,
+                                fit: BoxFit.fitWidth),
+                          )
+                        : ListView.builder(
+                            itemCount: state.airportList.length,
+                            itemBuilder: (context, index) {
+                              final item = state.airportList[index];
+                              return InkWell(
+                                onTap: () {
+                                  searchViewModel
+                                      .saveFromAirport(item.airportId);
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 16.0),
                                   child: ListTile(
-                                    title: Text('airportName'),
+                                    title: Text(item.airportCode),
+                                    subtitle: Text(item.airportName),
                                   ),
-                                );
-                              },
-                            ),*/
-                        )),
+                                ),
+                              );
+                            },
+                          ),
+                  ),
+                ),
               ),
               // Column(
               //   children: [
@@ -261,9 +249,9 @@ class _SearchScreenState extends State<SearchScreen> {
                       ),
                     ),
                     const Gap(30),
-                    const Text(
-                      'Hi samanda',
-                      style: TextStyle(fontSize: 30),
+                    Text(
+                      'Hi ${state.userAccountModel != null ? state.userAccountModel!.userName : ''}',
+                      style: const TextStyle(fontSize: 30),
                     ),
                     const Gap(10),
                     const Text(
@@ -308,7 +296,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                         Expanded(
                                           child: InkWell(
                                             onTap: () {
-                                              panelController
+                                              _panelController
                                                   .animatePanelToPosition(1.0);
                                               logger.info('From select city');
                                             },
@@ -412,12 +400,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                                           1),
                                                   title: 'Select Date',
                                                   onDatedSelected:
-                                                      (selectedDate) {
-                                                    setState(() {
-                                                      _dateTimeNotifier.value =
-                                                          selectedDate;
-                                                    });
-                                                  },
+                                                      searchViewModel
+                                                          .saveTravelDate,
                                                 )),
                                           ],
                                         ),
@@ -457,10 +441,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                                   lastDate: DateTime(2025),
                                                   title: 'Select Date',
                                                   onDatedSelected:
-                                                      (selectedDate) {
-                                                    logger
-                                                        .info('$selectedDate');
-                                                  },
+                                                      searchViewModel
+                                                          .saveReturnDate,
                                                 ),
                                               ),
                                             ],
@@ -511,12 +493,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                                         .remove_circle_outline),
                                                   ),
                                                   onTap: () {
-                                                    setState(() {
-                                                      if (currentPersonValue >
-                                                          1) {
-                                                        currentPersonValue--;
-                                                      }
-                                                    });
+                                                    searchViewModel
+                                                        .decreasePerson();
                                                   },
                                                 ),
                                                 const Gap(10),
@@ -524,8 +502,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                                   alignment:
                                                       Alignment.centerLeft,
                                                   child: Text(
-                                                    currentPersonValue
-                                                        .toString(),
+                                                    '${state.currentPersonValue}',
                                                     style: const TextStyle(
                                                         fontSize: 17,
                                                         fontWeight:
@@ -540,9 +517,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                                         .add_circle_outline),
                                                   ),
                                                   onTap: () {
-                                                    setState(() {
-                                                      currentPersonValue++;
-                                                    });
+                                                    searchViewModel
+                                                        .increasePerson();
                                                   },
                                                 ),
                                               ],
@@ -589,10 +565,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                                   icon: const SizedBox.shrink(),
                                                   //드롭다운 밑줄/화살표 가려줌
 
-                                                  value: searchViewModel
-                                                      .selectClass,
-                                                  items: searchViewModel
-                                                      .selectedClassList
+                                                  value: state.selectClass,
+                                                  items: state.selectedClassList
                                                       .map((e) {
                                                     return DropdownMenuItem<
                                                             String>(
@@ -604,30 +578,14 @@ class _SearchScreenState extends State<SearchScreen> {
                                                         ));
                                                   }).toList(),
                                                   onChanged: (value) {
-                                                    setState(() {
+                                                    if (value != null) {
                                                       searchViewModel
-                                                              .selectedClass =
-                                                          value!;
-                                                    });
+                                                          .onChangeClass(value);
+                                                    }
                                                   },
                                                   isExpanded: true,
                                                 ),
                                               ),
-
-                                              // const DropdownMenu(
-                                              //
-                                              //   dropdownMenuEntries: [
-                                              //     DropdownMenuEntry(
-                                              //         value: Colors.black,
-                                              //         label: 'Economy'),
-                                              //     DropdownMenuEntry(
-                                              //         value: Colors.black,
-                                              //         label: 'Business'),
-                                              //     DropdownMenuEntry(
-                                              //         value: Colors.black,
-                                              //         label: 'First'),
-                                              //   ],
-                                              // ),
                                             ),
                                           ),
                                         ],
@@ -643,27 +601,13 @@ class _SearchScreenState extends State<SearchScreen> {
                             height: 0.2,
                           ),
                           InkWell(
-                            onTap: () {
-                              isSelected = !isSelected;
-                              // 라디오버튼 기능 변수 변경
-                              // isSelected = isSelected == true ? false : true;
-                              //
-                              // if (isSelected == true) {
-                              //   isSelected = false;
-                              // } else {
-                              //   isSelected = true;
-                              // }
-
-                              setState(() {});
-
-                              logger.info('isSelectd : $isSelected');
-                            },
+                            onTap: () => searchViewModel.onTapDirect(),
                             child: Container(
                               height: 60,
                               padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                               child: Row(
                                 children: [
-                                  isSelected == true
+                                  state.isSelected == true
                                       ? ShaderMask(
                                           child: const Icon(Icons.circle),
                                           shaderCallback: (Rect bounds) {
@@ -678,11 +622,6 @@ class _SearchScreenState extends State<SearchScreen> {
                                           },
                                         )
                                       : const Icon(Icons.circle_outlined),
-                                  // if (isSelected == false)
-                                  //   Icon(Icons.circle_outlined),
-                                  // if (isSelected == true)
-                                  //   Icon(Icons.circle),
-                                  // 라디오 버튼 ui가 값이 변하는 구문
                                   const Gap(10),
                                   const Text(
                                     'Show direct flight only',
@@ -736,17 +675,6 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
         ),
       ),
-    );
-  }
-
-  Widget travelPerson(VoidCallback callback) {
-    return TextButton(
-      onPressed: () {
-        setState(() {
-          callback();
-        });
-      },
-      child: const Text(''),
     );
   }
 }

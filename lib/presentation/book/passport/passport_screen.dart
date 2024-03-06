@@ -3,13 +3,12 @@ import 'package:go_router/go_router.dart';
 import 'package:griffin/presentation/book/passport/passport_view_model.dart';
 import 'package:griffin/presentation/book/passport/widgets/country_textfield_widget.dart';
 import 'package:griffin/presentation/book/passport/widgets/custom_textfield_widget.dart';
-import 'package:griffin/presentation/common/date_pick_button_widget.dart';
 import 'package:griffin/presentation/book/passport/widgets/gender_widget.dart';
 import 'package:griffin/presentation/book/passport/widgets/phone_textfield_widget.dart';
+import 'package:griffin/presentation/common/date_pick_button_widget.dart';
 import 'package:griffin/presentation/common/total_fare_bar_widget.dart';
-import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:provider/provider.dart';
-import '../../../utils/simple_logger.dart';
+
 import '../../common/colors.dart';
 
 class PassportScreen extends StatefulWidget {

@@ -8,11 +8,12 @@ import 'package:griffin/domain/repositories/sample_repository.dart';
 import 'package:griffin/domain/repositories/session_repository.dart';
 import 'package:griffin/domain/repositories/sign_repository.dart';
 import 'package:griffin/domain/repositories/user_repository.dart';
+import 'package:griffin/domain/use_cases/airport/airport_list_use_case.dart';
 import 'package:griffin/domain/use_cases/sample_use_case.dart';
 import 'package:griffin/domain/use_cases/sign/save_session_use_case.dart';
 import 'package:griffin/domain/use_cases/sign/sign_in_use_case.dart';
 import 'package:griffin/domain/use_cases/sign/sign_up_use_case.dart';
-import 'package:griffin/domain/use_cases/splash/splash_get_session_use_case.dart';
+import 'package:griffin/domain/use_cases/splash/get_session_use_case.dart';
 import 'package:griffin/domain/use_cases/splash/splash_get_user_info_use_case.dart';
 import 'package:griffin/presentation/counter/sample_view_model.dart';
 import 'package:griffin/presentation/mypage/mypage_view_model.dart';
@@ -27,14 +28,12 @@ import '../domain/repositories/airport_repository.dart';
 import '../domain/repositories/passport_repository.dart';
 import '../domain/repositories/payment_repository.dart';
 import '../domain/use_cases/detail_use_case.dart';
-import '../domain/use_cases/get_airport_usecase.dart';
 import '../domain/use_cases/passport_use_case.dart';
 import '../presentation/book/book/book_viewmodel.dart';
 import '../presentation/book/passport/passport_view_model.dart';
 import '../presentation/counter/counter_view_model.dart';
 import '../presentation/mybooks/my_books_view_model.dart';
-import '../presentation/search/providers/airport_provider.dart';
-import '../presentation/search/search_screen_view_model.dart';
+import '../presentation/search/search_view_model.dart';
 
 final getIt = GetIt.instance;
 
@@ -66,8 +65,6 @@ void setupDependencies() {
       PassportRepositoryImpl(),
     );
 
-
-
   // use case
   getIt
     ..registerSingleton<SampleUseCase>(
@@ -75,8 +72,8 @@ void setupDependencies() {
         sampleRepository: getIt<SampleRepository>(),
       ),
     )
-    ..registerSingleton<SplashGetSessionUseCase>(
-      SplashGetSessionUseCase(
+    ..registerSingleton<GetSessionUseCase>(
+      GetSessionUseCase(
         sessionRepository: getIt<SessionRepository>(),
       ),
     )
@@ -100,6 +97,11 @@ void setupDependencies() {
         userRepository: getIt<UserRepository>(),
       ),
     )
+    ..registerSingleton<AirportListUseCase>(
+      AirportListUseCase(
+        airportRepository: getIt<AirportRepository>(),
+      ),
+    )
     ..registerSingleton<PassportUsecase>(
       PassportUsecase(
         passportRepository: getIt<PassportRepository>(),
@@ -111,8 +113,10 @@ void setupDependencies() {
     ..registerFactory<CounterViewModel>(
       () => CounterViewModel(),
     )
-    ..registerFactory<SearchScreenViewModel>(
-          () => SearchScreenViewModel(airportRepository: getIt<AirportRepository>(),
+    ..registerFactory<SearchViewModel>(
+      () => SearchViewModel(
+        getSessionUseCase: getIt<GetSessionUseCase>(),
+        airportListUseCase: getIt<AirportListUseCase>(),
       ),
     )
     ..registerFactory<SampleViewModel>(
@@ -122,7 +126,7 @@ void setupDependencies() {
     )
     ..registerFactory<SplashViewModel>(
       () => SplashViewModel(
-        splashGetSessionUseCase: getIt<SplashGetSessionUseCase>(),
+        getSessionUseCase: getIt<GetSessionUseCase>(),
         splashGetUserInfoUseCase: getIt<SplashGetUserInfoUseCase>(),
       ),
     )
@@ -137,12 +141,19 @@ void setupDependencies() {
       () => MypageViewModel(),
     )
     ..registerFactory<MyBooksViewModel>(
-        () => MyBooksViewModel(paymentRepository: getIt<PaymentRepository>()))
+      () => MyBooksViewModel(
+        paymentRepository: getIt<PaymentRepository>(),
+      ),
+    )
     ..registerFactory<BookViewModel>(
-      () => BookViewModel(detailUseCase: getIt<DetailUseCase>()),
+      () => BookViewModel(
+        detailUseCase: getIt<DetailUseCase>(),
+      ),
     )
     ..registerFactory<PassportViewModel>(
-      () => PassportViewModel(passportUsecase: getIt<PassportUsecase>()),
+      () => PassportViewModel(
+        passportUsecase: getIt<PassportUsecase>(),
+      ),
     );
 
   // ----------------- Airport Start -----------------

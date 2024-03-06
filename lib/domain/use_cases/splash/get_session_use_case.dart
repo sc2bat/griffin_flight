@@ -3,8 +3,8 @@ import 'package:griffin/data/mappers/user_mapper.dart';
 import 'package:griffin/domain/model/user/user_account_model.dart';
 import 'package:griffin/domain/repositories/session_repository.dart';
 
-class SplashGetSessionUseCase {
-  SplashGetSessionUseCase({
+class GetSessionUseCase {
+  GetSessionUseCase({
     required SessionRepository sessionRepository,
   }) : _sessionRepository = sessionRepository;
   final SessionRepository _sessionRepository;
