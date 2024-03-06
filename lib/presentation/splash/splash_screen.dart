@@ -3,14 +3,14 @@ import 'package:go_router/go_router.dart';
 import 'package:griffin/presentation/splash/splash_view_model.dart';
 import 'package:provider/provider.dart';
 
-class SplashScree extends StatefulWidget {
-  const SplashScree({super.key});
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
 
   @override
-  State<SplashScree> createState() => _SplashScreeState();
+  State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreeState extends State<SplashScree> {
+class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     Future.microtask(() {

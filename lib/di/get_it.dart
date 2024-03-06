@@ -10,6 +10,7 @@ import 'package:griffin/domain/use_cases/sample_use_case.dart';
 import 'package:griffin/domain/use_cases/splash/splash_get_session_use_case.dart';
 import 'package:griffin/domain/use_cases/splash/splash_get_user_info_use_case.dart';
 import 'package:griffin/presentation/counter/sample_view_model.dart';
+import 'package:griffin/presentation/sign/sign_view_model.dart';
 import 'package:griffin/presentation/splash/splash_view_model.dart';
 
 import '../data/repositories/flight_repository_impl.dart';
@@ -86,6 +87,9 @@ void setupDependencies() {
         splashGetSessionUseCase: getIt<SplashGetSessionUseCase>(),
         splashGetUserInfoUseCase: getIt<SplashGetUserInfoUseCase>(),
       ),
+    )
+    ..registerFactory<SignViewModel>(
+      () => SignViewModel(),
     )
     ..registerFactory<MyBooksViewModel>(
         () => MyBooksViewModel(paymentRepository: getIt<PaymentRepository>()))

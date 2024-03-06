@@ -12,6 +12,8 @@ import 'package:griffin/presentation/mybooks/my_books_view_model.dart';
 import 'package:griffin/presentation/pay/pay_screen.dart';
 import 'package:griffin/presentation/search/flight_results.dart';
 import 'package:griffin/presentation/search/search_screen.dart';
+import 'package:griffin/presentation/sign/sign_screen.dart';
+import 'package:griffin/presentation/sign/sign_view_model.dart';
 import 'package:griffin/presentation/splash/splash_screen.dart';
 import 'package:griffin/presentation/splash/splash_view_model.dart';
 import 'package:provider/provider.dart';
@@ -32,14 +34,17 @@ final router = GoRouter(
       path: '/splash',
       builder: (_, __) => ChangeNotifierProvider(
         create: (_) => getIt<SplashViewModel>(),
-        child: const SplashScree(),
+        child: const SplashScreen(),
       ),
       routes: const [],
     ),
     GoRoute(
       name: 'sign',
       path: '/sign',
-      builder: (context, state) => const IndexScreen(),
+      builder: (context, state) => ChangeNotifierProvider(
+        create: (_) => getIt<SignViewModel>(),
+        child: const SignScreen(),
+      ),
       routes: const [],
     ),
     GoRoute(
