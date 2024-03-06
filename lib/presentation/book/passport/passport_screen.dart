@@ -5,8 +5,8 @@ import 'package:griffin/presentation/book/passport/widgets/custom_textfield_widg
 import 'package:griffin/presentation/book/passport/widgets/date_pick_button_widget.dart';
 import 'package:griffin/presentation/book/passport/widgets/gender_widget.dart';
 import 'package:griffin/presentation/book/passport/widgets/phone_textfield_widget.dart';
-import 'package:griffin/presentation/common/common_button.dart';
 import 'package:griffin/presentation/common/total_fare_bar_widget.dart';
+
 import '../../common/colors.dart';
 
 class PassportScreen extends StatefulWidget {
@@ -139,21 +139,23 @@ class _PassportScreenState extends State<PassportScreen>
                       controller: phoneNumberController,
                     ),
                     const SizedBox(height: 30),
-                    const Row(
+                    Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Expanded(
+                        const Expanded(
                           child: CountryTextFieldWidget(
                             textStyle: TextStyle(
                                 fontSize: 16, color: AppColors.greyText),
                             initialCountryValue: "NATIONALITY",
                           ),
                         ),
-                        SizedBox(width: 15),
+                        const SizedBox(width: 15),
                         Expanded(
                           child: SizedBox(
                               height: 40,
-                              child: DatePIckButtonWidget(title: 'DOB')),
+                              child: DatePIckButtonWidget(
+                                title: 'DOB',
+                              )),
                         ),
                       ],
                     ),
@@ -185,7 +187,9 @@ class _PassportScreenState extends State<PassportScreen>
                         Expanded(
                           child: SizedBox(
                             height: 40,
-                            child: DatePIckButtonWidget(title: 'EXPIRY'),
+                            child: DatePIckButtonWidget(
+                              title: 'EXPIRY',
+                            ),
                           ),
                         ),
                       ],
