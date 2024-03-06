@@ -1,6 +1,7 @@
 import 'package:go_router/go_router.dart';
 import 'package:griffin/di/get_it.dart';
 import 'package:griffin/domain/model/payment_model.dart';
+import 'package:griffin/domain/repositories/airport_repository.dart';
 import 'package:griffin/domain/repositories/payment_repository.dart';
 import 'package:griffin/domain/model/flights_model.dart';
 import 'package:griffin/presentation/book/book/book_screen.dart';
@@ -11,12 +12,12 @@ import 'package:griffin/presentation/counter/sample_screen.dart';
 import 'package:griffin/presentation/index_screen.dart';
 import 'package:griffin/presentation/mybooks/my_books_view_model.dart';
 import 'package:griffin/presentation/pay/pay_screen.dart';
+import 'package:griffin/presentation/search/search_screen_view_model.dart';
 import 'mybooks/my_books_screen.dart';
 import 'package:griffin/presentation/search/city_select_page.dart';
 import 'package:griffin/presentation/search/flight_results.dart';
 import 'package:griffin/presentation/search/search_screen.dart';
 import 'package:provider/provider.dart';
-
 
 final router = GoRouter(
   initialLocation: '/',
@@ -27,11 +28,12 @@ final router = GoRouter(
       builder: (context, state) => const IndexScreen(),
       routes: const [],
     ),
-    GoRoute
-      (
+    GoRoute(
       name: 'search',
       path: '/search',
-      builder: (context, state) => const SearchScreen(),
+      builder: (context, state) => ChangeNotifierProvider(
+          create: (_) => getIt<SearchScreenViewModel>(),
+          child: const SearchScreen()),
       routes: [
         GoRoute(
           name: 'flightResults',
@@ -40,7 +42,6 @@ final router = GoRouter(
         ),
       ],
     ),
-
     GoRoute(
       name: 'book',
       path: '/book',
@@ -59,13 +60,12 @@ final router = GoRouter(
             ]),
       ],
     ),
-
-
     GoRoute(
       name: 'myBooks',
       path: '/myBooks',
       builder: (context, state) => ChangeNotifierProvider(
-          create: (_) => MyBooksViewModel(paymentRepository: getIt<PaymentRepository>()),
+          create: (_) =>
+              MyBooksViewModel(paymentRepository: getIt<PaymentRepository>()),
           child: const MyBooksScreen()),
       routes: const [],
     ),
