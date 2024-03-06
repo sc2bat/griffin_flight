@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:griffin/presentation/common/colors.dart';
 
-class GenderSelectionWiget extends StatefulWidget {
-  const GenderSelectionWiget({super.key});
+enum Gender { male, female, none }
+
+class GenderSelectionWidget extends StatefulWidget {
+  const GenderSelectionWidget({super.key, required this.onGenderSelected});
+
+  final Function(Gender) onGenderSelected;
 
   @override
-  State<GenderSelectionWiget> createState() => _GenderSelectionWigetState();
+  State<GenderSelectionWidget> createState() => _GenderSelectionWidgetState();
 }
 
-class _GenderSelectionWigetState extends State<GenderSelectionWiget> {
-  bool isMaleSelected = false;
-  bool isFemaleSelected = false;
+class _GenderSelectionWidgetState extends State<GenderSelectionWidget> {
+  Gender selectedGender = Gender.male;
 
   @override
   Widget build(BuildContext context) {
@@ -18,23 +21,34 @@ class _GenderSelectionWigetState extends State<GenderSelectionWiget> {
       children: [
         IconButton(
           onPressed: () {
-            isMaleSelected = !isMaleSelected;
+            selectedGender = Gender.male;
+            widget.onGenderSelected(selectedGender);
             setState(() {});
           },
-          icon: isMaleSelected
-              ? const Icon(Icons.check_circle, color: AppColors.orangeColor)
-              : const Icon(Icons.circle_outlined, size: 20),
+          icon: Icon(
+            selectedGender == Gender.male
+                ? Icons.check_circle
+                : Icons.circle_outlined,
+            size: 20,
+            color: selectedGender == Gender.male ? AppColors.orangeColor : null,
+          ),
         ),
         const Text('Male'),
         const SizedBox(width: 40),
         IconButton(
           onPressed: () {
-            isFemaleSelected = !isFemaleSelected;
+            selectedGender = Gender.female;
+            widget.onGenderSelected(selectedGender);
             setState(() {});
           },
-          icon: isFemaleSelected
-              ? const Icon(Icons.check_circle, color: AppColors.orangeColor)
-              : const Icon(Icons.circle_outlined, size: 20),
+          icon: Icon(
+            selectedGender == Gender.female
+                ? Icons.check_circle
+                : Icons.circle_outlined,
+            size: 20,
+            color:
+                selectedGender == Gender.female ? AppColors.orangeColor : null,
+          ),
         ),
         const Text('Female')
       ],
