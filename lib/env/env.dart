@@ -31,8 +31,16 @@ abstract class Env {
   // GRIFFIN_GET_URL
   @EnviedField()
   static const String griffinGetUrl = _Env.griffinGetUrl;
-
-// GRIFFIN_POST_URL
+  
+  // GRIFFIN_POST_URL
   @EnviedField()
   static const String griffinPostUrl = _Env.griffinPostUrl;
+
+  // ANDROID_APPLICATION_ID
+  @EnviedField()
+  static const String androidApplicationId = _Env.androidApplicationId;
+
+  // IOS_APPLICATION_ID
+  @EnviedField()
+  static const String iosApplicationId = _Env.iosApplicationId;
 }

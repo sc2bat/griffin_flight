@@ -1,12 +1,13 @@
-import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:bootpay/bootpay.dart';
 import 'package:bootpay/model/extra.dart';
 import 'package:bootpay/model/item.dart';
 import 'package:bootpay/model/payload.dart';
 import 'package:bootpay/model/user.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:griffin/domain/model/payment_model.dart';
+import 'package:griffin/env/env.dart';
 import 'package:griffin/presentation/pay/ticket_widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -155,8 +156,8 @@ Payload getPayload(double totalAmount) {
   item1.price = totalAmount; // 상품의 가격
 
   payload.androidApplicationId =
-  '65cee8dee57a7e001de37229'; // android application id
-  payload.iosApplicationId = '65cee8dee57a7e001de3722a'; // ios application id
+      Env.androidApplicationId; // android application id
+  payload.iosApplicationId = Env.iosApplicationId; // ios application id
 
   payload.pg = '나이스페이';
   // payload.method = '카드';

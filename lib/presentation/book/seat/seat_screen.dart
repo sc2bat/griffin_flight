@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class SeatScreen extends StatelessWidget {
   const SeatScreen({super.key});
@@ -7,6 +8,16 @@ class SeatScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        appBar:  AppBar(
+          centerTitle: true,
+          leading: IconButton(
+            onPressed: () {
+              context.go('/book/passport');
+            },
+            icon: const Icon(Icons.arrow_back_ios),
+          ),
+          title: const Text('Select Seats'),
+        ),
         body: GridView.builder(
             padding: const EdgeInsets.all(16.0),
             itemCount: 9,
