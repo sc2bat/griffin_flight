@@ -152,9 +152,6 @@ class _PassportScreenState extends State<PassportScreen>
                     children: [
                       Expanded(
                         child: CountryTextFieldWidget(
-                          textStyle: const TextStyle(
-                              fontSize: 16, color: AppColors.greyText),
-                          initialCountryValue: "NATIONALITY",
                           onCountrySelected: (country) {},
                         ),
                       ),

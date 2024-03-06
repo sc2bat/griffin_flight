@@ -13,7 +13,7 @@ class GenderSelectionWidget extends StatefulWidget {
 }
 
 class _GenderSelectionWidgetState extends State<GenderSelectionWidget> {
-  Gender selectedGender = Gender.none;
+  Gender selectedGender = Gender.male;
 
   @override
   Widget build(BuildContext context) {

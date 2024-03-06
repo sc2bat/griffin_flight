@@ -7,13 +7,9 @@ import '../../../common/colors.dart';
 class CountryTextFieldWidget extends StatefulWidget {
   const CountryTextFieldWidget({
     super.key,
-    required this.initialCountryValue,
-    required this.textStyle,
     required this.onCountrySelected,
   });
 
-  final String initialCountryValue;
-  final TextStyle textStyle;
   final void Function(String) onCountrySelected;
 
   @override
@@ -21,21 +17,20 @@ class CountryTextFieldWidget extends StatefulWidget {
 }
 
 class _CountryTextFieldWidgetState extends State<CountryTextFieldWidget> {
-  String? countryValue;
-  TextStyle? currentTextStyle;
+  String countryValue = "NATIONALITY";
+  TextStyle currentTextStyle =
+      const TextStyle(fontSize: 16, color: AppColors.greyText);
   bool isEmpty = true;
+  final GlobalKey<CSCPickerState> _cscPickerKey = GlobalKey();
 
   @override
   void initState() {
     super.initState();
-    countryValue = widget.initialCountryValue;
-    currentTextStyle = widget.textStyle;
     isEmpty = true;
   }
 
   @override
   Widget build(BuildContext context) {
-    GlobalKey<CSCPickerState> _cscPickerKey = GlobalKey();
     return Center(
       child: Column(children: [
         CSCPicker(
@@ -57,9 +52,9 @@ class _CountryTextFieldWidgetState extends State<CountryTextFieldWidget> {
             logger.info('$isEmpty');
             setState(() {
               countryValue = value;
-              // currentTextStyle =
-              //     const TextStyle(fontSize: 16, color: Colors.white);
-              // isEmpty = false;
+              currentTextStyle =
+                  const TextStyle(fontSize: 16, color: Colors.white);
+              isEmpty = false;
               logger.info('$isEmpty');
             });
             widget.onCountrySelected(value);
