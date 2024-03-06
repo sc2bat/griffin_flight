@@ -36,6 +36,20 @@ abstract class Env {
   @EnviedField()
   static const String griffinPostUrl = _Env.griffinPostUrl;
 
+  // GRIFFIN_ACCOUNT_URL
+  @EnviedField()
+  static const String griffinAccountUrl = _Env.griffinAccountUrl;
+
+  // SAMPLE_ACCOUNT_INFO
+  @EnviedField()
+  static const String sampleAccountUserid = _Env.sampleAccountUserid;
+  @EnviedField()
+  static const String sampleAccountUsername = _Env.sampleAccountUsername;
+  @EnviedField()
+  static const String sampleAccountEmail = _Env.sampleAccountEmail;
+  @EnviedField()
+  static const String sampleAccountPassword = _Env.sampleAccountPassword;
+
   // ANDROID_APPLICATION_ID
   @EnviedField()
   static const String androidApplicationId = _Env.androidApplicationId;
