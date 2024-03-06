@@ -3,11 +3,13 @@ import 'package:go_router/go_router.dart';
 import 'package:griffin/presentation/book/passport/passport_view_model.dart';
 import 'package:griffin/presentation/book/passport/widgets/country_textfield_widget.dart';
 import 'package:griffin/presentation/book/passport/widgets/custom_textfield_widget.dart';
-import 'package:griffin/presentation/book/passport/widgets/date_pick_button_widget.dart';
+import 'package:griffin/presentation/common/date_pick_button_widget.dart';
 import 'package:griffin/presentation/book/passport/widgets/gender_widget.dart';
 import 'package:griffin/presentation/book/passport/widgets/phone_textfield_widget.dart';
 import 'package:griffin/presentation/common/total_fare_bar_widget.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:provider/provider.dart';
+import '../../../utils/simple_logger.dart';
 import '../../common/colors.dart';
 
 class PassportScreen extends StatefulWidget {
@@ -25,10 +27,8 @@ class _PassportScreenState extends State<PassportScreen>
   final lastNameController = TextEditingController();
   final emailController = TextEditingController();
   final phoneNumberController = TextEditingController();
-  final nationalityController = TextEditingController();
-  final dobController = TextEditingController();
   final validationCodeController = TextEditingController();
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  List<GlobalKey<FormState>> _formKeys = [];
 
   @override
   void initState() {
@@ -38,6 +38,8 @@ class _PassportScreenState extends State<PassportScreen>
       vsync: this,
       animationDuration: const Duration(milliseconds: 150),
     );
+    _formKeys =
+        List.generate(_numberOfPeople, (index) => GlobalKey<FormState>());
   }
 
   @override
@@ -47,8 +49,6 @@ class _PassportScreenState extends State<PassportScreen>
     lastNameController.dispose();
     emailController.dispose();
     phoneNumberController.dispose();
-    nationalityController.dispose();
-    dobController.dispose();
     validationCodeController.dispose();
     super.dispose();
   }
@@ -95,12 +95,14 @@ class _PassportScreenState extends State<PassportScreen>
             padding: const EdgeInsets.all(16.0),
             child: Form(
               autovalidateMode: AutovalidateMode.always,
-              key: _formKey,
+              key: _formKeys[index],
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   const SizedBox(height: 10),
-                  const GenderSelectionWiget(),
+                  GenderSelectionWidget(
+                    onGenderSelected: (Gender gender) {},
+                  ),
                   const SizedBox(height: 20),
                   Row(
                     children: [
@@ -139,33 +141,48 @@ class _PassportScreenState extends State<PassportScreen>
                   ),
                   const SizedBox(height: 30),
                   PhoneTextFieldWidget(
-                    controller: phoneNumberController,
-                  ),
+                      controller: phoneNumberController,
+                      onPhoneNumberChanged: (number) {},
+                      validator: (String? number) {
+                        return viewModel.phoneNumberValidate(number);
+                      }),
                   const SizedBox(height: 30),
-                  const Row(
+                  Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Expanded(
                         child: CountryTextFieldWidget(
-                          textStyle: TextStyle(
+                          textStyle: const TextStyle(
                               fontSize: 16, color: AppColors.greyText),
                           initialCountryValue: "NATIONALITY",
+                          onCountrySelected: (country) {},
                         ),
                       ),
-                      SizedBox(width: 15),
+                      const SizedBox(width: 15),
                       Expanded(
                         child: SizedBox(
-                            height: 40,
-                            child: DatePIckButtonWidget(title: 'DOB')),
-                      ),
+                          height: 41,
+                          child: DatePickButtonWidget(
+                            title: 'DOB',
+                            textAlign: Alignment.centerLeft,
+                            lastDate: DateTime.now(),
+                            selectedTextStyle: const TextStyle(
+                                fontSize: 16, color: Colors.white),
+                            defaultTextStyle: const TextStyle(
+                                fontSize: 16, color: AppColors.greyText),
+                            firstDate: DateTime(1800),
+                            onDatedSelected: (selectedDate) {},
+                          ),
+                        ),
+                      )
                     ],
                   ),
                   const Spacer(),
-                  TotalFareBarWidget(
-                    onTap: () {
+                  TotalFareBarWidget(onTap: () {
+                    if (_formKeys[index].currentState?.validate() ?? false) {
                       context.go('/book/passport/seat');
-                    },
-                  ),
+                    }
+                  }),
                 ],
               ),
             ),
