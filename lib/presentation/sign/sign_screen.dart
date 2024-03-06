@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:griffin/presentation/sign/sign_view_model.dart';
 import 'package:provider/provider.dart';
@@ -15,10 +17,24 @@ class SignScreen extends StatefulWidget {
 class _SignScreenState extends State<SignScreen>
     with SingleTickerProviderStateMixin {
   late TabController tabController;
+
+  StreamSubscription? _streamSubscription;
+
   @override
   void initState() {
     Future.microtask(() {
       final signViewModel = context.read<SignViewModel>();
+
+      _streamSubscription =
+          signViewModel.getSignUiEventStreamController.listen((event) {
+        event.when(showSnackBar: (message) {
+          final snackBar = SnackBar(
+            content: Text(message),
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        });
+      });
+
       signViewModel.init();
     });
 
@@ -32,12 +48,15 @@ class _SignScreenState extends State<SignScreen>
 
   @override
   void dispose() {
+    _streamSubscription?.cancel();
     tabController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final signViewModel = context.watch<SignViewModel>();
+    final signState = signViewModel.signState;
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -59,9 +78,16 @@ class _SignScreenState extends State<SignScreen>
         ),
         body: TabBarView(
           controller: tabController,
-          children: const [
-            SignInCard(),
-            SignUpCard(),
+          children: [
+            SignInCard(
+                signInFunction: (userName, password) =>
+                    signViewModel.signIn(userName, password)),
+            SignUpCard(
+                state: signState,
+                tabAnimateTo: () => tabController.animateTo(0),
+                signUpFunction: (email, userName, password1, password2) =>
+                    signViewModel.signUp(
+                        email, userName, password1, password2)),
           ],
         ),
       ),

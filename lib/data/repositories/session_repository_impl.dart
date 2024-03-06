@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:griffin/data/core/result.dart';
 import 'package:griffin/data/dtos/user_dto.dart';
+import 'package:griffin/data/mappers/user_mapper.dart';
 import 'package:griffin/domain/model/user/user_account_model.dart';
 import 'package:griffin/domain/repositories/session_repository.dart';
 import 'package:griffin/utils/simple_logger.dart';
@@ -28,6 +29,7 @@ class SessionRepositoryImpl implements SessionRepository {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       final String? session = prefs.getString('session');
       if (session != null) {
+        logger.info(session);
         UserDTO userDTO = UserDTO.fromJson(jsonDecode(session));
         return Result.success(userDTO);
       }
@@ -47,14 +49,38 @@ class SessionRepositoryImpl implements SessionRepository {
   }
 
   @override
-  Future<Result<void>> updateSession(UserAccountModel userAccountModel) {
-    // TODO: implement updateSession
-    throw UnimplementedError();
+  Future<Result<void>> updateSession(UserAccountModel userAccountModel) async {
+    try {
+      UserDTO userDTO = UserMapper.mapModelToDTO(userAccountModel);
+
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final String session = jsonEncode(userDTO.toJson());
+
+      await prefs.setString('session', session);
+      return const Result.success(null);
+    } catch (e) {
+      logger.info('SessionRepositoryImpl storeSession');
+      return Result.error('storeSession error => $e');
+    }
   }
 
   @override
-  Future<Result<void>> deleteSession() {
-    // TODO: implement deleteSession
-    throw UnimplementedError();
+  Future<Result<void>> deleteSession() async {
+    try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      UserDTO userDTO = UserDTO(
+          userId: 0,
+          userName: 'guest',
+          email: 'guest@guest.com',
+          createdAt: DateTime.now(),
+          isDeleted: 0);
+      final String session = jsonEncode(userDTO.toJson());
+
+      await prefs.setString('session', session);
+      return const Result.success(null);
+    } catch (e) {
+      logger.info('SessionRepositoryImpl storeSession');
+      return Result.error('getSession error => $e');
+    }
   }
 }

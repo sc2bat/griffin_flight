@@ -6,5 +6,6 @@ part 'sign_state.freezed.dart';
 class SignState with _$SignState {
   const factory SignState({
     @Default(false) bool isLoading,
+    @Default(false) bool isSignUp,
   }) = _SignState;
 }
