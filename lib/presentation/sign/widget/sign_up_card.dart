@@ -1,8 +1,21 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:griffin/presentation/sign/sign_state.dart';
 import 'package:griffin/utils/simple_logger.dart';
 
 class SignUpCard extends StatefulWidget {
-  const SignUpCard({super.key});
+  const SignUpCard({
+    super.key,
+    required this.state,
+    required this.signUpFunction,
+    required this.tabAnimateTo,
+  });
+
+  final SignState state;
+  final Function(
+          String email, String userName, String password1, String password2)
+      signUpFunction;
+  final Function() tabAnimateTo;
 
   @override
   State<SignUpCard> createState() => _SignUpCardState();
@@ -20,6 +33,7 @@ class _SignUpCardState extends State<SignUpCard> {
   bool _isPasswordVisible = false;
   bool _isConfirmPasswordValid = false;
   bool _isConfirmPasswordVisible = false;
+  bool _isButtonClicked = false;
 
   @override
   void initState() {
@@ -58,6 +72,7 @@ class _SignUpCardState extends State<SignUpCard> {
                 onChanged: (value) {
                   setState(() {
                     _isEmailValid = _validateEmail(value);
+                    _isButtonClicked = false;
                   });
                 },
               ),
@@ -71,6 +86,7 @@ class _SignUpCardState extends State<SignUpCard> {
                 onChanged: (value) {
                   setState(() {
                     _isUsernameValid = _validateUsername(value);
+                    _isButtonClicked = false;
                   });
                 },
               ),
@@ -96,8 +112,8 @@ class _SignUpCardState extends State<SignUpCard> {
                 ),
                 onChanged: (value) {
                   setState(() {
-                    logger.info(_isPasswordValid);
                     _isPasswordValid = _validatePassword(value);
+                    _isButtonClicked = false;
                   });
                 },
               ),
@@ -126,15 +142,47 @@ class _SignUpCardState extends State<SignUpCard> {
                   setState(() {
                     _isConfirmPasswordValid =
                         _passwordMatch(value, _passwordController.text);
+                    _isButtonClicked = false;
                   });
                 },
               ),
               const SizedBox(height: 20),
               ElevatedButton(
-                onPressed: () {
-                  // Handle signup logic here
-                },
-                child: const Text('Signup'),
+                onPressed: _isButtonClicked
+                    ? null
+                    : () {
+                        logger.info('qwerasdf');
+                        if (_isEmailValid &&
+                            _isUsernameValid &&
+                            _isPasswordValid &&
+                            _isConfirmPasswordValid) {
+                          widget.signUpFunction(
+                            _emailController.text,
+                            _usernameController.text,
+                            _passwordController.text,
+                            _confirmPasswordController.text,
+                          );
+                          setState(() {
+                            _isButtonClicked = true;
+                            _emailController.text = '';
+                            _usernameController.text = '';
+                            _passwordController.text = '';
+                            _confirmPasswordController.text = '';
+                          });
+                          widget.tabAnimateTo();
+                        }
+                      },
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                    (Set<MaterialState> states) {
+                      if (states.contains(MaterialState.disabled)) {
+                        return Colors.black54;
+                      }
+                      return Colors.blue;
+                    },
+                  ),
+                ),
+                child: const Text('SignUp'),
               ),
             ],
           ),
@@ -144,7 +192,7 @@ class _SignUpCardState extends State<SignUpCard> {
   }
 
   bool _validateEmail(String email) {
-    return email.isNotEmpty;
+    return email.isNotEmpty && EmailValidator.validate(email);
   }
 
   bool _validateUsername(String username) {
