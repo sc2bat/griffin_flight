@@ -15,6 +15,7 @@ import 'package:griffin/domain/use_cases/sign/sign_up_use_case.dart';
 import 'package:griffin/domain/use_cases/splash/splash_get_session_use_case.dart';
 import 'package:griffin/domain/use_cases/splash/splash_get_user_info_use_case.dart';
 import 'package:griffin/presentation/counter/sample_view_model.dart';
+import 'package:griffin/presentation/mypage/mypage_view_model.dart';
 import 'package:griffin/presentation/sign/sign_view_model.dart';
 import 'package:griffin/presentation/splash/splash_view_model.dart';
 
@@ -121,6 +122,9 @@ void setupDependencies() {
         signInUseCase: getIt<SignInUseCase>(),
         saveSessionUseCase: getIt<SaveSessionUseCase>(),
       ),
+    )
+    ..registerFactory<MypageViewModel>(
+      () => MypageViewModel(),
     )
     ..registerFactory<MyBooksViewModel>(
         () => MyBooksViewModel(paymentRepository: getIt<PaymentRepository>()))
