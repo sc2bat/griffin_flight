@@ -1,9 +1,8 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:json_annotation/json_annotation.dart';
+// ignore_for_file: invalid_annotation_target
 
+import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'payment_model.freezed.dart';
-
 part 'payment_model.g.dart';
 
 @freezed
@@ -23,11 +22,8 @@ class PaymentModel with _$PaymentModel {
     @JsonKey(name: 'departure_name') String? departureName,
     @JsonKey(name: 'arrival_code') String? arrivalCode,
     @JsonKey(name: 'arrival_name') String? arrivalName,
-
   }) = _PaymentModel;
 
-  factory PaymentModel.fromJson(Map<String, dynamic> json) => _$PaymentModelFromJson(json);
+  factory PaymentModel.fromJson(Map<String, dynamic> json) =>
+      _$PaymentModelFromJson(json);
 }
-
-
-

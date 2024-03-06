@@ -1,8 +1,4 @@
-import 'dart:math';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 
@@ -22,30 +18,35 @@ class _FlightResultsState extends State<FlightResults> {
           onTap: () {
             context.pop();
           },
-          child: Icon(Icons.close),
+          child: const Icon(Icons.close),
         ),
-        actions: [],
+        actions: const [],
       ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(25.0),
           child: Center(
-            child: Column(
-              children: [
-                _flightResultCard(),
-                _flightResultCard(),
-              ],
-            )
-          ),
+              child: Column(
+            children: [
+              _flightResultCard(),
+              _flightResultCard(),
+            ],
+          )),
         ),
       ),
     );
   }
-  Widget _flightResultCard () {
+
+  Widget _flightResultCard() {
     return Padding(
       padding: const EdgeInsets.fromLTRB(0, 4, 0, 4),
       child: Container(
         padding: const EdgeInsets.all(20.0),
+        height: 200,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: Colors.grey[850],
+        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -56,13 +57,13 @@ class _FlightResultsState extends State<FlightResults> {
                   Expanded(
                     child: Container(
                       alignment: Alignment.centerLeft,
-                      child: Text('DEL - JFK'),
+                      child: const Text('DEL - JFK'),
                     ),
                   ),
                   Expanded(
                     child: Container(
                       alignment: Alignment.centerRight,
-                      child: Text('FASTEST'),
+                      child: const Text('FASTEST'),
                     ),
                   ),
                 ],
@@ -74,7 +75,7 @@ class _FlightResultsState extends State<FlightResults> {
                 children: [
                   Expanded(
                     child: Container(
-                      child: Column(
+                      child: const Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -87,7 +88,7 @@ class _FlightResultsState extends State<FlightResults> {
                   Expanded(
                     child: Container(
                       alignment: Alignment.centerRight,
-                      child: Text(
+                      child: const Text(
                         '45,168',
                         style: TextStyle(
                             fontSize: 23, fontWeight: FontWeight.bold),
@@ -102,20 +103,15 @@ class _FlightResultsState extends State<FlightResults> {
               height: 50,
               child: Row(
                 children: [
-                  Icon(Icons.airline_seat_flat),
+                  const Icon(Icons.airline_seat_flat),
                   const Gap(10),
                   Container(
-                    child: Text('United Airline'),
+                    child: const Text('United Airline'),
                   ),
                 ],
               ),
             )
           ],
-        ),
-        height: 200,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          color: Colors.grey[850],
         ),
       ),
     );

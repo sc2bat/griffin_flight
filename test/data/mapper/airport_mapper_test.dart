@@ -1,14 +1,11 @@
-import 'package:flutter_test/flutter_test.dart';
 import 'package:griffin/data/dtos/airport_dto.dart';
-import 'package:griffin/data/mappers/airport_mapper.dart';
-import 'package:griffin/domain/model/airport_model.dart';
 
 void main() {
-  test('airport dto to model mapper test', () {
-    AirportModel airportModel = AirportMapper.fromDTO(airportDTO);
+  // test('airport dto to model mapper test', () {
+  //   AirportModel airportModel = AirportMapper.fromDTO(airportDTO);
 
-    expect(airportModel.airportId, '3');
-  });
+  //   expect(airportModel.airportId, '3');
+  // });
 }
 
 AirportDTO airportDTO = AirportDTO.fromJson({

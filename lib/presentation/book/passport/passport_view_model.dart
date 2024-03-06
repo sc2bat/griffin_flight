@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:griffin/domain/use_cases/passport_use_case.dart';
-import 'package:intl_phone_number_input/intl_phone_number_input.dart';
-
-import '../../../utils/simple_logger.dart';
 
 class PassportViewModel extends ChangeNotifier {
   final PassportUsecase _passportUsecase;
 
   PassportViewModel({required PassportUsecase passportUsecase})
       : _passportUsecase = passportUsecase;
-
 
 // FirstName 유효성 검사
   String? firstNameValidate(String? value) {
@@ -19,7 +15,6 @@ class PassportViewModel extends ChangeNotifier {
     return null;
   }
 
-
 // LastName 유효성 검사
   String? lastNameValidate(String? value) {
     if (value == null || value.isEmpty) {
@@ -28,11 +23,10 @@ class PassportViewModel extends ChangeNotifier {
     return null;
   }
 
-
 // Email 유효성 검사
   String? emailValidate(String? value) {
     final RegExp emailRegExp =
-    RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$');
+        RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$');
     if (value == null || value.isEmpty) {
       return 'Email is required.';
     }
@@ -42,9 +36,8 @@ class PassportViewModel extends ChangeNotifier {
     return null;
   }
 
-
   // phoneNumber 유효성 검사
-  String? phoneNumberValidate (String? number) {
+  String? phoneNumberValidate(String? number) {
     if (number == null || number.isEmpty) {
       return 'Phone number is required.';
     }

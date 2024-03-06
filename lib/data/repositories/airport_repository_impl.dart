@@ -1,8 +1,13 @@
+import 'dart:convert';
+
 import 'package:griffin/data/core/result.dart';
 import 'package:griffin/data/data_sources/apis/airport_api.dart';
+import 'package:griffin/data/dtos/airport_dto.dart';
 import 'package:griffin/data/mappers/airport_mapper.dart';
 import 'package:griffin/domain/model/airport_model.dart';
 import 'package:griffin/domain/repositories/airport_repository.dart';
+import 'package:griffin/env/env.dart';
+import 'package:http/http.dart' as http;
 
 class AirportRepositoryImpl implements AirportRepository {
   @override
@@ -10,7 +15,6 @@ class AirportRepositoryImpl implements AirportRepository {
     // AirportApi 클래스의 getAirportFromGit 함수를 호출해서 Aiport들의 정보를 받아옴.
     // AirportDTO 객체의 리스트를 줌.
     final result = await AirportApi().getAirportData();
-
 
     return result.when(
       success: (data) {
@@ -28,7 +32,6 @@ class AirportRepositoryImpl implements AirportRepository {
           //   tempList.add(tempAirportModel);
           // }
 
-
           return Result.success(airportModelList);
         } catch (e) {
           return Result.error('airportRepositoryImpl $e');
@@ -38,5 +41,26 @@ class AirportRepositoryImpl implements AirportRepository {
         return Result.error(message);
       },
     );
+  }
+
+  @override
+  Future<Result<List<AirportDTO>>> getAirportListData() async {
+    try {
+      String url = '${Env.griffinGetUrl}/airports/';
+
+      final response = await http.get(Uri.parse(url));
+
+      if (response.statusCode == 200) {
+        final List<dynamic> jsonData = jsonDecode(response.body);
+        List<AirportDTO> airportDTOList =
+            jsonData.map((e) => AirportDTO.fromJson(e)).toList();
+
+        return Result.success(airportDTOList);
+      } else {
+        return Result.error('response.statusCode => ${response.statusCode}');
+      }
+    } catch (e) {
+      return Result.error('getAirportListData error => $e');
+    }
   }
 }

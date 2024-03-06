@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:griffin/domain/use_cases/splash/splash_get_session_use_case.dart';
+import 'package:griffin/domain/use_cases/splash/get_session_use_case.dart';
 import 'package:griffin/domain/use_cases/splash/splash_get_user_info_use_case.dart';
 import 'package:griffin/presentation/splash/sign_status.dart';
 import 'package:griffin/presentation/splash/splash_state.dart';
@@ -9,12 +9,12 @@ import 'package:griffin/utils/simple_logger.dart';
 
 class SplashViewModel with ChangeNotifier {
   SplashViewModel({
-    required SplashGetSessionUseCase splashGetSessionUseCase,
+    required GetSessionUseCase getSessionUseCase,
     required SplashGetUserInfoUseCase splashGetUserInfoUseCase,
-  })  : _splashGetSessionUseCase = splashGetSessionUseCase,
+  })  : _splashGetSessionUseCase = getSessionUseCase,
         _splashGetUserInfoUseCase = splashGetUserInfoUseCase;
 
-  final SplashGetSessionUseCase _splashGetSessionUseCase;
+  final GetSessionUseCase _splashGetSessionUseCase;
   final SplashGetUserInfoUseCase _splashGetUserInfoUseCase;
 
   SplashState _splashState = const SplashState();
