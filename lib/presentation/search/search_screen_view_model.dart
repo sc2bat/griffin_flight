@@ -6,6 +6,10 @@ import '../../data/repositories/airport_repository_impl.dart';
 
 class SearchScreenViewModel with ChangeNotifier {
   final AirportRepository airportRepository;
+   List<String> selectedClassList = [
+    'Economy', 'Business', 'First'
+  ];//좌석 등급 리스트
+
 
   SearchScreenViewModel({
     required this.airportRepository,
@@ -14,9 +18,18 @@ class SearchScreenViewModel with ChangeNotifier {
   //   await AirportRepositoryImpl().getAirportDataApi();
   //   notifyListeners();
   //}
-  SearchState _state = SearchState();
+  final SearchState _state = SearchState();
 
   SearchState get state => _state;
+
+  String _selectClass = 'Economy';
+
+  String get selectClass => _selectClass;
+
+  set selectedClass(String value) {
+    _selectClass = value.toString();
+
+  }
 
   // List<Air>
   //

@@ -1,23 +1,24 @@
 import 'dart:developer';
+import 'dart:math' as math;
+
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
-import 'package:griffin/domain/model/airport_model.dart';
+import 'package:go_router/go_router.dart';
+import 'package:griffin/presentation/book/passport/widgets/date_pick_button_widget.dart';
+import 'package:griffin/presentation/common/colors.dart';
 import 'package:griffin/presentation/search/providers/airport_provider.dart';
 import 'package:griffin/presentation/search/search_screen_view_model.dart';
 import 'package:griffin/utils/simple_logger.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:gap/gap.dart';
-import 'package:go_router/go_router.dart';
 
 // import 'package:griffin/presentation/search/search_view_model.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
-import 'dart:math' as math;
 
-import '../../data/dtos/airport_dto.dart';
 import '../../di/get_it.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -28,6 +29,15 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
+  int currentPersonValue = 1;
+
+  //여행객 증가, 감소 초기값
+
+  ValueNotifier<DateTime> _dateTimeNotifier =
+      ValueNotifier<DateTime>(DateTime.now());
+
+  //travel date 초기값 설정
+
   // final searchAirport = state.airportData;
 
   //검색 결과 저장 리스트
@@ -41,29 +51,14 @@ class _SearchScreenState extends State<SearchScreen> {
 
   double _panelHeightClosed = 0.0;
 
-  AirportProvider? airportProvider;
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    init();
-    super.initState();
-  }
 
-  init() async {
-    airportProvider = getIt<AirportProvider>();
-    // 임시로.
-    await Future.delayed(const Duration(seconds: 3));
 
-    // get_it을 통해 AirportProvider 인스턴스를 가져온 후 데이터를 불러옵니다.
-    await airportProvider!.fetchAirports();
 
-    log('message + ${airportProvider!.airports.length}');
-  }
 
   @override
   Widget build(BuildContext context) {
-    // final viewModel = context.watch<SearchScreenViewModel>();
+    final searchViewModel = context.watch<SearchScreenViewModel>();
     // final state = viewModel.state;
 
     double _panelHeightOpen = MediaQuery.of(context).size.height * 0.8;
@@ -86,12 +81,12 @@ class _SearchScreenState extends State<SearchScreen> {
                               //상위 위젯의 상태를 변경하기 위한 컨트롤러 호출
                             });
                           },
-                          icon: Icon(Icons.close)),
+                          icon: const Icon(Icons.close)),
                     ],
                   ),
                   Expanded(
                     child: Container(
-                      child: Column(
+                      child: const Column(
                         children: [
                           Text(
                             'FLYING FROM',
@@ -107,14 +102,14 @@ class _SearchScreenState extends State<SearchScreen> {
                   ),
                   Transform.rotate(
                     angle: 90 * math.pi / 180, //아이콘 90도 회전
-                    child: Icon(
+                    child: const Icon(
                       Icons.airplanemode_active,
                       color: Colors.grey,
                     ),
                   ),
                   Expanded(
                     child: Container(
-                      child: Column(
+                      child: const Column(
                         children: [
                           Text(
                             'FLYING TO',
@@ -130,10 +125,10 @@ class _SearchScreenState extends State<SearchScreen> {
                   ),
                 ],
               ),
-              Divider(
+              const Divider(
                 height: 15,
               ),
-              Gap(20),
+              const Gap(20),
               Column(
                 children: [
                   Row(
@@ -150,14 +145,14 @@ class _SearchScreenState extends State<SearchScreen> {
                           controller: textEditingController,
                           textAlignVertical: TextAlignVertical.center,
                           onChanged: (value) {
-                            airportProvider!.searchAirports(value);
+
                           },
                           //onSubmitted: (value) {
                           //  print(value);
                           //},
                           decoration: InputDecoration(
                             contentPadding:
-                                EdgeInsets.symmetric(vertical: 10.0),
+                                const EdgeInsets.symmetric(vertical: 10.0),
                             //필드내 전체적인 정렬
                             hintText: 'Search Depature Airport/City',
                             prefixIcon: IconButton(
@@ -167,7 +162,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                 // logger.info(state.airportData);
                                 //검색
                               },
-                              icon: Icon(Icons.search),
+                              icon: const Icon(Icons.search),
                             ),
                             // Consumer<SearchViewModel>(
                             //   builder: (context, viewModel, child) {
@@ -186,19 +181,19 @@ class _SearchScreenState extends State<SearchScreen> {
                             //
                             //   },
                             // ),
-                            enabledBorder: OutlineInputBorder(
+                            enabledBorder: const OutlineInputBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(32.0)),
                               borderSide: BorderSide(color: Colors.grey),
                             ),
-                            focusedBorder: OutlineInputBorder(
+                            focusedBorder: const OutlineInputBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(32.0)),
                               borderSide: BorderSide(color: Colors.grey),
                             ),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(32.0),
-                              borderSide: BorderSide(color: Colors.grey),
+                              borderSide: const BorderSide(color: Colors.grey),
                             ),
                           ),
                         ),
@@ -207,52 +202,42 @@ class _SearchScreenState extends State<SearchScreen> {
                   ),
                 ],
               ),
-              InkWell(
-                  onTap: () {
-                    airportProvider!.f.value = airportProvider!.f.value + 1;
-                  },
-                  child: Obx(
-                    () => Text(
-                      airportProvider!.f.value.toString(),
-                      style: TextStyle(color: Colors.white, fontSize: 50),
-                    ),
-                  )),
+
               Expanded(
                 child: Container(
                     height: 300,
                     alignment: Alignment.center,
                     // color: Colors.amber,
-                    child: Obx(
-                      () => airportProvider!.isLoading
-                          ? Center(
+                    child: Container(
+
+                          child: Center(
                               child: Lottie.asset(
                                   'assets/lottie/search_loading.json',
                                   repeat: true,
                                   width: 100,
                                   fit: BoxFit.fitWidth),
                             )
-                          : ListView.builder(
-                              itemCount:
-                                  airportProvider!.searchResultAirports.length,
+                          /*: ListView.builder(
+                              itemCount: 2,
+
                               itemBuilder: (context, index) {
-                                final airport = airportProvider!
-                                    .searchResultAirports[index];
+
                                 return InkWell(
                                   onTap: () {
                                     // 선택한 값을 넣어주기.
-                                    // airportProvider!.selectFlyingFrom = airport;
-                                    // airportProvider!.selectFlyingTo = airport;
+
 
                                     // panelController 닫기.
                                     setState(() {});
                                   },
                                   child: ListTile(
-                                    title: Text(airport.airportName),
+                                    title: Text('airportName'),
                                   ),
                                 );
                               },
-                            ),
-                    )),
+                            ),*/
+                    )
+    ),
               ),
               // Column(
               //   children: [
@@ -272,70 +257,72 @@ class _SearchScreenState extends State<SearchScreen> {
           backdropEnabled: true,
           maxHeight: _panelHeightOpen,
           minHeight: _panelHeightClosed,
-          borderRadius: BorderRadius.only(
+          borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(20),
             topRight: Radius.circular(20),
           ),
           body: Container(
-            padding: EdgeInsets.fromLTRB(0, 50, 0, 0),
+            padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
             child: SingleChildScrollView(
               child: Padding(
-                padding: EdgeInsets.all(20),
+                padding: const EdgeInsets.all(20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
                       height: 50,
                       width: 50,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         shape: BoxShape.circle, color: Colors.white,
                         //boxdecoration이 있으면 color는 내부에다가
                       ),
-                      child: Icon(
+                      child: const Icon(
                         Icons.person,
                         color: Colors.black,
                         size: 30,
                       ),
                     ),
                     const Gap(30),
-                    Text(
+                    const Text(
                       'Hi samanda',
                       style: TextStyle(fontSize: 30),
                     ),
                     const Gap(10),
-                    Text(
+                    const Text(
                       'where are you flying to?',
                       style: TextStyle(fontSize: 30),
                     ),
                     const Gap(20),
                     Container(
-                      padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                      padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
                       decoration: BoxDecoration(
-                        color: Colors.grey[850],
+                        color: AppColors.greyCard,
                         borderRadius: BorderRadius.circular(20),
                       ),
                       alignment: Alignment.center,
                       child: Column(
                         children: [
-                          Text(
+                          const Text(
                             'Round trip',
                             style: TextStyle(fontSize: 20),
                           ),
-                          Gap(10),
-                          Divider(
+                          const Gap(10),
+                          const Divider(
                             color: Colors.white12,
                             height: 0.2,
                           ),
                           Container(
                             height: 90,
-                            padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
+                            padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
                             child: Row(
                               children: [
                                 Expanded(
                                   child: Container(
                                     child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
-                                        Text(
+                                        const Text(
                                           'FROM',
                                           style: TextStyle(
                                               fontSize: 15, color: Colors.grey),
@@ -345,19 +332,13 @@ class _SearchScreenState extends State<SearchScreen> {
                                             onTap: () {
                                               panelController
                                                   .animatePanelToPosition(1.0);
-                                              log('From select city');
+                                              logger.info('From select city');
                                             },
                                             child: Container(
                                               alignment: Alignment.centerLeft,
-                                              child: Text(
-                                                airportProvider!
-                                                            .selectFlyingFrom ==
-                                                        null
-                                                    ? 'Select City'
-                                                    : airportProvider!
-                                                        .selectFlyingFrom!
-                                                        .airportName,
-                                                style: TextStyle(
+                                              child: Text('',
+
+                                                style: const TextStyle(
                                                     fontSize: 17,
                                                     fontWeight:
                                                         FontWeight.bold),
@@ -366,14 +347,12 @@ class _SearchScreenState extends State<SearchScreen> {
                                           ),
                                         ),
                                       ],
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
                                     ),
                                   ),
                                 ),
                                 Transform.rotate(
                                   angle: 90 * math.pi / 180, //아이콘 90도 회전
-                                  child: Icon(
+                                  child: const Icon(
                                     Icons.flight,
                                     color: Colors.grey,
                                   ),
@@ -381,8 +360,10 @@ class _SearchScreenState extends State<SearchScreen> {
                                 Expanded(
                                   child: Container(
                                     child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
                                       children: [
-                                        Text(
+                                        const Text(
                                           'TO',
                                           style: TextStyle(
                                               fontSize: 15, color: Colors.grey),
@@ -390,11 +371,11 @@ class _SearchScreenState extends State<SearchScreen> {
                                         Expanded(
                                           child: InkWell(
                                             onTap: () {
-                                              log('To select city');
+                                              logger.info('To select city');
                                             },
                                             child: Container(
                                               alignment: Alignment.centerRight,
-                                              child: Text('Select City',
+                                              child: const Text('Select City',
                                                   style: TextStyle(
                                                       fontSize: 17,
                                                       fontWeight:
@@ -403,101 +384,131 @@ class _SearchScreenState extends State<SearchScreen> {
                                           ),
                                         ),
                                       ],
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
                                     ),
                                   ),
                                 ),
                               ],
                             ),
                           ),
-                          Divider(
+                          const Divider(
                             color: Colors.white12,
                             height: 0.2,
                           ),
                           Container(
                             height: 80,
-                            padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
+                            padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
                             child: InkWell(
                               onTap: () {
-                                log('Travel Date round trip');
+                                logger.info('message');
                               },
                               child: Row(
                                 children: [
                                   Expanded(
-                                    child: Container(
-                                      child: Column(
-                                        children: [
-                                          Text(
-                                            'TRAVEL DATE',
-                                            style: TextStyle(
-                                                fontSize: 15,
-                                                color: Colors.grey),
-                                          ),
-                                          Expanded(
-                                            child: Container(
-                                              alignment: Alignment.centerLeft,
-                                              child: Text(
-                                                'SUN 4, oct',
-                                                style: TextStyle(
-                                                    fontSize: 17,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                      ),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text('TRAVEL DATE'),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Container(
+                                                height: 50,
+                                                child: DatePickButtonWidget(
+                                                  defaultTextStyle: TextStyle(
+                                                      color: Colors.white),
+                                                  selectedTextStyle: TextStyle(
+                                                      color: Colors.white),
+                                                  textAlign:
+                                                      Alignment.centerLeft,
+                                                  initialDate:
+                                                      _dateTimeNotifier.value,
+                                                  firstDate:
+                                                      _dateTimeNotifier.value,
+                                                  lastDate: DateTime(
+                                                      _dateTimeNotifier
+                                                              .value.year +
+                                                          1),
+                                                  title: 'Select Date',
+                                                  onDatedSelected:
+                                                      (selectedDate) {
+                                                    setState(() {
+                                                      _dateTimeNotifier.value =
+                                                          selectedDate;
+                                                    });
+                                                  },
+                                                )),
+                                          ],
+                                        ),
+                                      ],
                                     ),
                                   ),
+                                  const Divider(
+                                    color: Colors.white12,
+                                    height: 0.2,
+                                  ),
                                   Expanded(
-                                    child: Container(
-                                      child: Column(
-                                        children: [
-                                          Text(
-                                            'RETURN',
-                                            style: TextStyle(
-                                                fontSize: 15,
-                                                color: Colors.grey),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: [
+                                        Text('TRAVEL DATE'),
+                                        Expanded(
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            children: [
+                                              Container(
+                                                height: 50,
+                                                child: DatePickButtonWidget(
+                                                  defaultTextStyle: TextStyle(
+                                                      color: Colors.white),
+                                                  selectedTextStyle: TextStyle(
+                                                      color: Colors.white),
+                                                  textAlign:
+                                                      Alignment.centerRight,
+                                                  initialDate:
+                                                      _dateTimeNotifier.value,
+                                                  firstDate:
+                                                      _dateTimeNotifier.value,
+                                                  lastDate: DateTime(2025),
+                                                  title: 'Select Date',
+                                                  onDatedSelected:
+                                                      (selectedDate) {
+                                                    logger
+                                                        .info('$selectedDate');
+                                                  },
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                          Expanded(
-                                            child: Container(
-                                              alignment: Alignment.centerRight,
-                                              child: Text('Select Date',
-                                                  style: TextStyle(
-                                                      fontSize: 17,
-                                                      fontWeight:
-                                                          FontWeight.bold)),
-                                            ),
-                                          ),
-                                        ],
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                      ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ],
                               ),
                             ),
                           ),
-                          Divider(
+                          const Divider(
                             color: Colors.white12,
                             height: 0.2,
                           ),
                           Container(
                             height: 90,
-                            padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                            padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                             child: Row(
                               children: [
                                 Expanded(
                                   child: InkWell(
                                     onTap: () {
-                                      log('Adult');
+                                      logger.info('Adult');
                                     },
                                     child: Container(
                                       child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           const Gap(10),
                                           const Text(
@@ -507,20 +518,54 @@ class _SearchScreenState extends State<SearchScreen> {
                                                 color: Colors.grey),
                                           ),
                                           Expanded(
-                                            child: Container(
-                                              alignment: Alignment.centerLeft,
-                                              child: Text(
-                                                '1 Adult',
-                                                style: TextStyle(
-                                                    fontSize: 17,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceEvenly,
+                                              children: [
+                                                InkWell(
+                                                  child: Container(
+                                                    //인원 감소 버튼
+                                                    child: const Icon(Icons
+                                                        .remove_circle_outline),
+                                                  ),
+                                                  onTap: () {
+                                                    setState(() {
+                                                      if (currentPersonValue >
+                                                          1)
+                                                        currentPersonValue--;
+                                                    });
+                                                  },
+                                                ),
+                                                const Gap(10),
+                                                Container(
+                                                  alignment:
+                                                      Alignment.centerLeft,
+                                                  child: Text(
+                                                    currentPersonValue
+                                                        .toString(),
+                                                    style: TextStyle(
+                                                        fontSize: 17,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ),
+                                                const Gap(10),
+                                                InkWell(
+                                                  child: Container(
+                                                    //인원 증가 버튼
+                                                    child: const Icon(Icons
+                                                        .add_circle_outline),
+                                                  ),
+                                                  onTap: () {
+                                                    setState(() {
+                                                      currentPersonValue++;
+                                                    });
+                                                  },
+                                                ),
+                                              ],
                                             ),
                                           ),
                                         ],
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
                                       ),
                                     ),
                                   ),
@@ -534,13 +579,15 @@ class _SearchScreenState extends State<SearchScreen> {
                                 Expanded(
                                   child: InkWell(
                                     onTap: () {
-                                      log('CLASS');
+                                      logger.info('CLASS');
                                     },
                                     child: Container(
                                       child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
                                         children: [
                                           const Gap(10),
-                                          Text(
+                                          const Text(
                                             'CLASS',
                                             style: TextStyle(
                                                 fontSize: 15,
@@ -548,17 +595,57 @@ class _SearchScreenState extends State<SearchScreen> {
                                           ),
                                           Expanded(
                                             child: Container(
+                                              width: 150,
+                                              height: 50,
                                               alignment: Alignment.centerRight,
-                                              child: Text('Economy',
-                                                  style: TextStyle(
-                                                      fontSize: 17,
-                                                      fontWeight:
-                                                          FontWeight.bold)),
+                                              child: DropdownButtonHideUnderline(
+
+                                                child: DropdownButton(
+                                                  alignment: Alignment.centerRight,
+                                                  icon: SizedBox.shrink(),
+                                                  //드롭다운 밑줄/화살표 가려줌
+
+                                                  value:
+                                                      searchViewModel.selectClass,
+                                                  items: searchViewModel
+                                                      .selectedClassList
+                                                      .map((e) {
+                                                    return DropdownMenuItem<
+                                                            String>(
+                                                      alignment: Alignment.centerRight,
+                                                        value: e,
+                                                        child: Center(
+                                                          child: Text(e),
+                                                        ));
+                                                  }).toList(),
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      searchViewModel
+                                                          .selectedClass = value!;
+                                                    });
+                                                  },
+                                                  isExpanded: true,
+
+                                                ),
+                                              ),
+
+                                              // const DropdownMenu(
+                                              //
+                                              //   dropdownMenuEntries: [
+                                              //     DropdownMenuEntry(
+                                              //         value: Colors.black,
+                                              //         label: 'Economy'),
+                                              //     DropdownMenuEntry(
+                                              //         value: Colors.black,
+                                              //         label: 'Business'),
+                                              //     DropdownMenuEntry(
+                                              //         value: Colors.black,
+                                              //         label: 'First'),
+                                              //   ],
+                                              // ),
                                             ),
                                           ),
                                         ],
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
                                       ),
                                     ),
                                   ),
@@ -566,7 +653,7 @@ class _SearchScreenState extends State<SearchScreen> {
                               ],
                             ),
                           ),
-                          Divider(
+                          const Divider(
                             color: Colors.white12,
                             height: 0.2,
                           ),
@@ -584,18 +671,18 @@ class _SearchScreenState extends State<SearchScreen> {
 
                               setState(() {});
 
-                              log('isSelectd : $isSelected');
+                              logger.info('isSelectd : $isSelected');
                             },
                             child: Container(
                               height: 60,
-                              padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                              padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                               child: Row(
                                 children: [
                                   isSelected == true
                                       ? ShaderMask(
-                                          child: Icon(Icons.circle),
+                                          child: const Icon(Icons.circle),
                                           shaderCallback: (Rect bounds) {
-                                            return LinearGradient(
+                                            return const LinearGradient(
                                                     colors: [
                                                   Color(0xFFF88264),
                                                   Color(0xFFFFE3C5)
@@ -605,14 +692,14 @@ class _SearchScreenState extends State<SearchScreen> {
                                                 .createShader(bounds);
                                           },
                                         )
-                                      : Icon(Icons.circle_outlined),
+                                      : const Icon(Icons.circle_outlined),
                                   // if (isSelected == false)
                                   //   Icon(Icons.circle_outlined),
                                   // if (isSelected == true)
                                   //   Icon(Icons.circle),
                                   // 라디오 버튼 ui가 값이 변하는 구문
                                   const Gap(10),
-                                  Text(
+                                  const Text(
                                     'Show direct flight only',
                                     style: TextStyle(
                                       fontSize: 17,
@@ -629,12 +716,12 @@ class _SearchScreenState extends State<SearchScreen> {
                     InkWell(
                       onTap: () {
                         context.go('/search/flightResults');
-                        log('search flight');
+                        logger.info('search flight');
                       },
                       child: Container(
                         height: 80,
                         alignment: Alignment.center,
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           gradient: LinearGradient(
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
@@ -648,7 +735,7 @@ class _SearchScreenState extends State<SearchScreen> {
                             Radius.circular(20),
                           ),
                         ),
-                        child: Text(
+                        child: const Text(
                           'Search Flights',
                           style: TextStyle(
                               fontWeight: FontWeight.w800,
@@ -667,11 +754,14 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-// Widget _searchCity() {
-//     return
-// }
-
-// Future<void> searchCity(String query) async {
-//   isLoading = true;
-//   notifyListeners();
+  Widget travelPerson(VoidCallback callback) {
+    return TextButton(
+      onPressed: () {
+        setState(() {
+          callback();
+        });
+      },
+      child: Text(''),
+    );
+  }
 }

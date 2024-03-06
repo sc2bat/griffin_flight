@@ -34,6 +34,7 @@ import '../presentation/book/passport/passport_view_model.dart';
 import '../presentation/counter/counter_view_model.dart';
 import '../presentation/mybooks/my_books_view_model.dart';
 import '../presentation/search/providers/airport_provider.dart';
+import '../presentation/search/search_screen_view_model.dart';
 
 final getIt = GetIt.instance;
 
@@ -55,12 +56,17 @@ void setupDependencies() {
     ..registerSingleton<PaymentRepository>(
       PaymentRepositoryImpl(),
     )
+    ..registerSingleton<AirportRepository>(
+      AirportRepositoryImpl(),
+    )
     ..registerSingleton<FlightRepository>(
       FlightRepositoryImpl(),
     )
     ..registerSingleton<PassportRepository>(
       PassportRepositoryImpl(),
     );
+
+
 
   // use case
   getIt
@@ -105,6 +111,10 @@ void setupDependencies() {
     ..registerFactory<CounterViewModel>(
       () => CounterViewModel(),
     )
+    ..registerFactory<SearchScreenViewModel>(
+          () => SearchScreenViewModel(airportRepository: getIt<AirportRepository>(),
+      ),
+    )
     ..registerFactory<SampleViewModel>(
       () => SampleViewModel(
         sampleUseCase: getIt<SampleUseCase>(),
@@ -137,13 +147,10 @@ void setupDependencies() {
 
   // ----------------- Airport Start -----------------
   // Airport Repositories
-  getIt.registerLazySingleton<AirportRepository>(() => AirportRepositoryImpl());
+  //getIt.registerLazySingleton<AirportRepository>(() => AirportRepositoryImpl());
   // Airport Usecase
-  getIt.registerLazySingleton(
-      () => GetAirportUsecase(repository: getIt<AirportRepository>()));
+  //getIt.registerLazySingleton(() => GetAirportUsecase(repository: getIt<AirportRepository>()));
   // Airport Provider
-  getIt.registerFactory(
-    () => AirportProvider(getAirportUsecase: getIt<GetAirportUsecase>()),
-  );
+  //getIt.registerFactory(() => AirportProvider(getAirportUsecase: getIt<GetAirportUsecase>()),);
   // ----------------- Airport End -----------------
 }
