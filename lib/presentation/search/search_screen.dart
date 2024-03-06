@@ -1,25 +1,15 @@
-import 'dart:developer';
 import 'dart:math' as math;
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
-import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:go_router/go_router.dart';
-import 'package:griffin/presentation/book/passport/widgets/date_pick_button_widget.dart';
 import 'package:griffin/presentation/common/colors.dart';
-import 'package:griffin/presentation/search/providers/airport_provider.dart';
+import 'package:griffin/presentation/common/date_pick_button_widget.dart';
 import 'package:griffin/presentation/search/search_screen_view_model.dart';
 import 'package:griffin/utils/simple_logger.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
-
-// import 'package:griffin/presentation/search/search_view_model.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
-
-import '../../di/get_it.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({Key? key}) : super(key: key);
@@ -33,7 +23,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
   //여행객 증가, 감소 초기값
 
-  ValueNotifier<DateTime> _dateTimeNotifier =
+  final ValueNotifier<DateTime> _dateTimeNotifier =
       ValueNotifier<DateTime>(DateTime.now());
 
   //travel date 초기값 설정
@@ -49,19 +39,14 @@ class _SearchScreenState extends State<SearchScreen> {
   bool isLoading = false;
   bool isSelected = false;
 
-  double _panelHeightClosed = 0.0;
-
-
-
-
-
+  final double _panelHeightClosed = 0.0;
 
   @override
   Widget build(BuildContext context) {
     final searchViewModel = context.watch<SearchScreenViewModel>();
     // final state = viewModel.state;
 
-    double _panelHeightOpen = MediaQuery.of(context).size.height * 0.8;
+    double panelHeightOpen = MediaQuery.of(context).size.height * 0.8;
 
     return Scaffold(
       body: SafeArea(
@@ -144,9 +129,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         child: TextField(
                           controller: textEditingController,
                           textAlignVertical: TextAlignVertical.center,
-                          onChanged: (value) {
-
-                          },
+                          onChanged: (value) {},
                           //onSubmitted: (value) {
                           //  print(value);
                           //},
@@ -209,15 +192,11 @@ class _SearchScreenState extends State<SearchScreen> {
                     alignment: Alignment.center,
                     // color: Colors.amber,
                     child: Container(
-
-                          child: Center(
-                              child: Lottie.asset(
-                                  'assets/lottie/search_loading.json',
-                                  repeat: true,
-                                  width: 100,
-                                  fit: BoxFit.fitWidth),
-                            )
-                          /*: ListView.builder(
+                        child: Center(
+                      child: Lottie.asset('assets/lottie/search_loading.json',
+                          repeat: true, width: 100, fit: BoxFit.fitWidth),
+                    )
+                        /*: ListView.builder(
                               itemCount: 2,
 
                               itemBuilder: (context, index) {
@@ -236,8 +215,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                 );
                               },
                             ),*/
-                    )
-    ),
+                        )),
               ),
               // Column(
               //   children: [
@@ -255,7 +233,7 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
           isDraggable: true,
           backdropEnabled: true,
-          maxHeight: _panelHeightOpen,
+          maxHeight: panelHeightOpen,
           minHeight: _panelHeightClosed,
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(20),
@@ -336,9 +314,9 @@ class _SearchScreenState extends State<SearchScreen> {
                                             },
                                             child: Container(
                                               alignment: Alignment.centerLeft,
-                                              child: Text('',
-
-                                                style: const TextStyle(
+                                              child: const Text(
+                                                '',
+                                                style: TextStyle(
                                                     fontSize: 17,
                                                     fontWeight:
                                                         FontWeight.bold),
@@ -408,18 +386,20 @@ class _SearchScreenState extends State<SearchScreen> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Text('TRAVEL DATE'),
+                                        const Text('TRAVEL DATE'),
                                         Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.start,
                                           children: [
-                                            Container(
+                                            SizedBox(
                                                 height: 50,
                                                 child: DatePickButtonWidget(
-                                                  defaultTextStyle: TextStyle(
-                                                      color: Colors.white),
-                                                  selectedTextStyle: TextStyle(
-                                                      color: Colors.white),
+                                                  defaultTextStyle:
+                                                      const TextStyle(
+                                                          color: Colors.white),
+                                                  selectedTextStyle:
+                                                      const TextStyle(
+                                                          color: Colors.white),
                                                   textAlign:
                                                       Alignment.centerLeft,
                                                   initialDate:
@@ -453,19 +433,21 @@ class _SearchScreenState extends State<SearchScreen> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.end,
                                       children: [
-                                        Text('TRAVEL DATE'),
+                                        const Text('TRAVEL DATE'),
                                         Expanded(
                                           child: Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.end,
                                             children: [
-                                              Container(
+                                              SizedBox(
                                                 height: 50,
                                                 child: DatePickButtonWidget(
-                                                  defaultTextStyle: TextStyle(
-                                                      color: Colors.white),
-                                                  selectedTextStyle: TextStyle(
-                                                      color: Colors.white),
+                                                  defaultTextStyle:
+                                                      const TextStyle(
+                                                          color: Colors.white),
+                                                  selectedTextStyle:
+                                                      const TextStyle(
+                                                          color: Colors.white),
                                                   textAlign:
                                                       Alignment.centerRight,
                                                   initialDate:
@@ -531,8 +513,9 @@ class _SearchScreenState extends State<SearchScreen> {
                                                   onTap: () {
                                                     setState(() {
                                                       if (currentPersonValue >
-                                                          1)
+                                                          1) {
                                                         currentPersonValue--;
+                                                      }
                                                     });
                                                   },
                                                 ),
@@ -543,7 +526,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                                   child: Text(
                                                     currentPersonValue
                                                         .toString(),
-                                                    style: TextStyle(
+                                                    style: const TextStyle(
                                                         fontSize: 17,
                                                         fontWeight:
                                                             FontWeight.bold),
@@ -598,21 +581,23 @@ class _SearchScreenState extends State<SearchScreen> {
                                               width: 150,
                                               height: 50,
                                               alignment: Alignment.centerRight,
-                                              child: DropdownButtonHideUnderline(
-
+                                              child:
+                                                  DropdownButtonHideUnderline(
                                                 child: DropdownButton(
-                                                  alignment: Alignment.centerRight,
-                                                  icon: SizedBox.shrink(),
+                                                  alignment:
+                                                      Alignment.centerRight,
+                                                  icon: const SizedBox.shrink(),
                                                   //드롭다운 밑줄/화살표 가려줌
 
-                                                  value:
-                                                      searchViewModel.selectClass,
+                                                  value: searchViewModel
+                                                      .selectClass,
                                                   items: searchViewModel
                                                       .selectedClassList
                                                       .map((e) {
                                                     return DropdownMenuItem<
                                                             String>(
-                                                      alignment: Alignment.centerRight,
+                                                        alignment: Alignment
+                                                            .centerRight,
                                                         value: e,
                                                         child: Center(
                                                           child: Text(e),
@@ -621,11 +606,11 @@ class _SearchScreenState extends State<SearchScreen> {
                                                   onChanged: (value) {
                                                     setState(() {
                                                       searchViewModel
-                                                          .selectedClass = value!;
+                                                              .selectedClass =
+                                                          value!;
                                                     });
                                                   },
                                                   isExpanded: true,
-
                                                 ),
                                               ),
 
@@ -761,7 +746,7 @@ class _SearchScreenState extends State<SearchScreen> {
           callback();
         });
       },
-      child: Text(''),
+      child: const Text(''),
     );
   }
 }

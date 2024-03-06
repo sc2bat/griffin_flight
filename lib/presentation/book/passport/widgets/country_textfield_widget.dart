@@ -43,7 +43,7 @@ class _CountryTextFieldWidgetState extends State<CountryTextFieldWidget> {
             color: AppColors.greyCard,
           ),
           countrySearchPlaceholder: "Search",
-          countryDropdownLabel: countryValue!,
+          countryDropdownLabel: countryValue,
           dropdownItemStyle: const TextStyle(
             fontSize: 16,
           ),
