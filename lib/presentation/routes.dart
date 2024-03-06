@@ -9,6 +9,8 @@ import 'package:griffin/presentation/counter/counter_screen.dart';
 import 'package:griffin/presentation/counter/sample_screen.dart';
 import 'package:griffin/presentation/index_screen.dart';
 import 'package:griffin/presentation/mybooks/my_books_view_model.dart';
+import 'package:griffin/presentation/mypage/mypage_screen.dart';
+import 'package:griffin/presentation/mypage/mypage_view_model.dart';
 import 'package:griffin/presentation/pay/pay_screen.dart';
 import 'package:griffin/presentation/search/flight_results.dart';
 import 'package:griffin/presentation/search/search_screen.dart';
@@ -44,6 +46,15 @@ final router = GoRouter(
       builder: (context, state) => ChangeNotifierProvider(
         create: (_) => getIt<SignViewModel>(),
         child: const SignScreen(),
+      ),
+      routes: const [],
+    ),
+    GoRoute(
+      name: 'mypage',
+      path: '/mypage',
+      builder: (_, __) => ChangeNotifierProvider(
+        create: (_) => getIt<MypageViewModel>(),
+        child: const MypageScreen(),
       ),
       routes: const [],
     ),
@@ -116,4 +127,5 @@ List<String> routeList = [
   'sample',
   'splash',
   'sign',
+  'mypage',
 ];
