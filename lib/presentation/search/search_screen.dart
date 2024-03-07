@@ -69,11 +69,11 @@ class _SearchScreenState extends State<SearchScreen> {
                     children: [
                       IconButton(
                           onPressed: () {
-                            setState(() {
-                              _panelController.close();
+                            _panelController.close();
+                            _textEditingController.clear();
+                            forSelectAirportList = [];
 
-                              //상위 위젯의 상태를 변경하기 위한 컨트롤러 호출
-                            });
+                            //상위 위젯의 상태를 변경하기 위한 컨트롤러 호출
                           },
                           icon: const Icon(Icons.close)),
                     ],
@@ -144,26 +144,32 @@ class _SearchScreenState extends State<SearchScreen> {
                           textAlignVertical: TextAlignVertical.center,
                           onChanged: (value) {
                             setState(() {
-                              forSelectAirportList =
-                                  state.airportList
+                              forSelectAirportList = state.airportList
                                   .where((e) =>
-                              e.airportName.toLowerCase().contains(value.toLowerCase()) ||
-                                  e.airportCode.toLowerCase().contains(value.toLowerCase()))
-                                  .where((e) => e.airportId != state.fromAirportId)
+                                      e.airportName
+                                          .toLowerCase()
+                                          .contains(value.toLowerCase()) ||
+                                      e.airportCode
+                                          .toLowerCase()
+                                          .contains(value.toLowerCase()))
+                                  .where(
+                                      (e) => e.airportId != state.fromAirportId)
+                                  .toSet()
                                   .toList();
 
+                              if (state.toAirportId != 0) {
+                                forSelectAirportList
+                                    .where(
+                                        (e) => e.airportId != state.toAirportId)
+                                    .toList();
+                              }
 
-                              // forSelectAirportList = state.airportList
-                              //     .where((e) =>
-                              //         e.airportName
-                              //             .toLowerCase()
-                              //             .contains(value.toLowerCase()) ||
-                              //         e.airportCode
-                              //             .toLowerCase()
-                              //             .contains(value.toLowerCase()))
-                              //     .toList();
-                              // state.fromAirportId != 0 ?
-                              // logger.info(forSelectAirportList);
+                              if (state.fromAirportId != 0) {
+                                forSelectAirportList
+                                    .where((e) =>
+                                        e.airportId != state.fromAirportId)
+                                    .toList();
+                              }
                             });
                           },
                           onSubmitted: (value) {
@@ -225,8 +231,9 @@ class _SearchScreenState extends State<SearchScreen> {
                                       : searchViewModel
                                           .saveToAirport(item.airportId);
 
-
                                   _panelController.close();
+                                  _textEditingController.clear();
+                                  forSelectAirportList = [];
                                   //클릭하면 패널 닫기
                                 },
                                 child: Padding(
@@ -353,7 +360,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                                             e.airportCode)
                                                         .first
                                                     : 'Select City'),
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                     fontSize: 17,
                                                     fontWeight:
                                                         FontWeight.bold),
@@ -391,6 +398,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                               logger.info('To select city');
                                               setState(() {
                                                 isFromCitySelected = false;
+                                                //from 선택 값을 뺀 나머지만 있어야 함
                                               });
                                             },
                                             child: Container(
@@ -667,50 +675,48 @@ class _SearchScreenState extends State<SearchScreen> {
                               ],
                             ),
                           ),
-                          const Divider(
-                            color: Colors.white12,
-                            height: 0.2,
-                          ),
-                          InkWell(
-                            onTap: () => searchViewModel.onTapDirect(),
-                            child: Container(
-                              height: 60,
-                              padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                              child: Row(
-                                children: [
-                                  state.isSelected == true
-                                      ? ShaderMask(
-                                          child: const Icon(Icons.circle),
-                                          shaderCallback: (Rect bounds) {
-                                            return const LinearGradient(
-                                                    colors: [
-                                                  Color(0xFFF88264),
-                                                  Color(0xFFFFE3C5)
-                                                ],
-                                                    begin: Alignment.topCenter,
-                                                    end: Alignment.bottomCenter)
-                                                .createShader(bounds);
-                                          },
-                                        )
-                                      : const Icon(Icons.circle_outlined),
-                                  const Gap(10),
-                                  const Text(
-                                    'Show direct flight only',
-                                    style: TextStyle(
-                                      fontSize: 17,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
+
+                          // InkWell(
+                          //   onTap: () => searchViewModel.onTapDirect(),
+                          //   child: Container(
+                          //     height: 60,
+                          //     padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                          //     child: Row(
+                          //       children: [
+                          //         state.isSelected == true
+                          //             ? ShaderMask(
+                          //                 child: const Icon(Icons.circle),
+                          //                 shaderCallback: (Rect bounds) {
+                          //                   return const LinearGradient(
+                          //                           colors: [
+                          //                         Color(0xFFF88264),
+                          //                         Color(0xFFFFE3C5)
+                          //                       ],
+                          //                           begin: Alignment.topCenter,
+                          //                           end: Alignment.bottomCenter)
+                          //                       .createShader(bounds);
+                          //                 },
+                          //               )
+                          //             : const Icon(Icons.circle_outlined),
+                          //         const Gap(10),
+                          //         const Text(
+                          //           'Show direct flight only',
+                          //           style: TextStyle(
+                          //             fontSize: 17,
+                          //           ),
+                          //         ),
+                          //       ],
+                          //     ),
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),
-                    const Gap(20),
+                    const Gap(30),
                     InkWell(
                       onTap: () {
-                        //logger.info(DateTime.parse(state.travelDate));
+                        //여기서 값을 가지고 이동해야하나
+
                         context.go('/search/flightResults');
                       },
                       child: Container(
