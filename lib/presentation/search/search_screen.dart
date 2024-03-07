@@ -144,14 +144,26 @@ class _SearchScreenState extends State<SearchScreen> {
                           textAlignVertical: TextAlignVertical.center,
                           onChanged: (value) {
                             setState(() {
-                              forSelectAirportList = state.airportList
-                                  .where((e) => e.airportName
-                                      .toLowerCase()
-                                      .contains(value.toLowerCase()) || e.airportCode
-                                  .toLowerCase()
-                                  .contains(value.toLowerCase()))
+                              forSelectAirportList =
+                                  state.airportList
+                                  .where((e) =>
+                              e.airportName.toLowerCase().contains(value.toLowerCase()) ||
+                                  e.airportCode.toLowerCase().contains(value.toLowerCase()))
+                                  .where((e) => e.airportId != state.fromAirportId)
                                   .toList();
-                              logger.info(forSelectAirportList);
+
+
+                              // forSelectAirportList = state.airportList
+                              //     .where((e) =>
+                              //         e.airportName
+                              //             .toLowerCase()
+                              //             .contains(value.toLowerCase()) ||
+                              //         e.airportCode
+                              //             .toLowerCase()
+                              //             .contains(value.toLowerCase()))
+                              //     .toList();
+                              // state.fromAirportId != 0 ?
+                              // logger.info(forSelectAirportList);
                             });
                           },
                           onSubmitted: (value) {
@@ -207,8 +219,15 @@ class _SearchScreenState extends State<SearchScreen> {
                               final item = forSelectAirportList[index];
                               return InkWell(
                                 onTap: () {
-                                  searchViewModel
-                                      .saveFromAirport(item.airportId);
+                                  isFromCitySelected
+                                      ? searchViewModel
+                                          .saveFromAirport(item.airportId)
+                                      : searchViewModel
+                                          .saveToAirport(item.airportId);
+
+
+                                  _panelController.close();
+                                  //클릭하면 패널 닫기
                                 },
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
@@ -324,8 +343,16 @@ class _SearchScreenState extends State<SearchScreen> {
                                             },
                                             child: Container(
                                               alignment: Alignment.centerLeft,
-                                              child: const Text(
-                                                'Select City',
+                                              child: Text(
+                                                (state.fromAirportId != 0
+                                                    ? state.airportList
+                                                        .where((e) =>
+                                                            e.airportId ==
+                                                            state.fromAirportId)
+                                                        .map((e) =>
+                                                            e.airportCode)
+                                                        .first
+                                                    : 'Select City'),
                                                 style: TextStyle(
                                                     fontSize: 17,
                                                     fontWeight:
@@ -368,8 +395,17 @@ class _SearchScreenState extends State<SearchScreen> {
                                             },
                                             child: Container(
                                               alignment: Alignment.centerRight,
-                                              child: const Text('Select City',
-                                                  style: TextStyle(
+                                              child: Text(
+                                                  (state.toAirportId != 0
+                                                      ? state.airportList
+                                                          .where((e) =>
+                                                              e.airportId ==
+                                                              state.toAirportId)
+                                                          .map((e) =>
+                                                              e.airportCode)
+                                                          .first
+                                                      : 'Select City'),
+                                                  style: const TextStyle(
                                                       fontSize: 17,
                                                       fontWeight:
                                                           FontWeight.bold)),
