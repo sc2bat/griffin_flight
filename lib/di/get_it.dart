@@ -94,8 +94,8 @@ void setupDependencies() {
         signRepository: getIt<SignRepository>(),
       ),
     )
-    ..registerSingleton<SplashGetUserInfoUseCase>(
-      SplashGetUserInfoUseCase(
+    ..registerSingleton<getUserInfoUseCase>(
+      getUserInfoUseCase(
         userRepository: getIt<UserRepository>(),
       ),
     )
@@ -139,7 +139,7 @@ void setupDependencies() {
     ..registerFactory<SplashViewModel>(
       () => SplashViewModel(
         getSessionUseCase: getIt<GetSessionUseCase>(),
-        splashGetUserInfoUseCase: getIt<SplashGetUserInfoUseCase>(),
+        getUserInfoUseCase: getIt<getUserInfoUseCase>(),
       ),
     )
     ..registerFactory<SignViewModel>(
