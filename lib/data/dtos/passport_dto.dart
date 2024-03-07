@@ -10,7 +10,7 @@ class PassportDTO {
   final DateTime? createdAt;
   final bool? isDeleted;
 
-  const PassportDTO({
+   PassportDTO({
     this.passportId,
     this.gender,
     this.firstName,
@@ -38,18 +38,18 @@ class PassportDTO {
     };
   }
 
-  factory PassportDTO.fromJson(Map<String, dynamic> map) {
+  factory PassportDTO.fromJson(Map<String, dynamic> json) {
     return PassportDTO(
-      passportId: map['passportId'] as int,
-      gender: map['gender'] as int,
-      firstName: map['firstName'] as String,
-      lastName: map['lastName'] as String,
-      email: map['email'] as String,
-      phone: map['phone'] as String,
-      birthday: map['birthday'] as String,
-      bookId: map['bookId'] as int,
-      createdAt: map['createdAt'] as DateTime,
-      isDeleted: map['isDeleted'] as bool,
+      passportId: json['passportId'],
+      gender: json['gender'],
+      firstName: json['firstName'],
+      lastName: json['lastName'],
+      email: json['email'],
+      phone: json['phone'],
+      birthday: json['birthday'],
+      bookId: json['bookId'],
+      createdAt: json['createdAt'],
+      isDeleted: json['isDeleted'],
     );
   }
 }
