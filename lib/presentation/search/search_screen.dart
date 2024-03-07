@@ -41,7 +41,6 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   void dispose() {
-    _panelController.close();
     _textEditingController.dispose();
     super.dispose();
   }
@@ -639,8 +638,8 @@ class _SearchScreenState extends State<SearchScreen> {
                     const Gap(20),
                     InkWell(
                       onTap: () {
-                        context.go('/search/flightResults');
                         logger.info('search flight');
+                        context.go('/search/flightResults');
                       },
                       child: Container(
                         height: 80,

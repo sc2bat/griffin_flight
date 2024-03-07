@@ -13,7 +13,8 @@ import 'package:griffin/presentation/mybooks/my_books_view_model.dart';
 import 'package:griffin/presentation/mypage/mypage_screen.dart';
 import 'package:griffin/presentation/mypage/mypage_view_model.dart';
 import 'package:griffin/presentation/pay/pay_screen.dart';
-import 'package:griffin/presentation/search/flight_results.dart';
+import 'package:griffin/presentation/search/flight_result/flight_result_view_model.dart';
+import 'package:griffin/presentation/search/flight_result/flight_results.dart';
 import 'package:griffin/presentation/search/search_screen.dart';
 import 'package:griffin/presentation/search/search_view_model.dart';
 import 'package:griffin/presentation/sign/sign_screen.dart';
@@ -30,7 +31,7 @@ final router = GoRouter(
     GoRoute(
       name: 'index',
       path: '/',
-      builder: (context, state) => const IndexScreen(),
+      builder: (_, __) => const IndexScreen(),
       routes: const [],
     ),
     GoRoute(
@@ -45,7 +46,7 @@ final router = GoRouter(
     GoRoute(
       name: 'sign',
       path: '/sign',
-      builder: (context, state) => ChangeNotifierProvider(
+      builder: (_, __) => ChangeNotifierProvider(
         create: (_) => getIt<SignViewModel>(),
         child: const SignScreen(),
       ),
@@ -63,32 +64,38 @@ final router = GoRouter(
     GoRoute(
       name: 'search',
       path: '/search',
-      builder: (context, state) => ChangeNotifierProvider(
-          create: (_) => getIt<SearchViewModel>(), child: const SearchScreen()),
+      builder: (_, __) => ChangeNotifierProvider(
+        create: (_) => getIt<SearchViewModel>(),
+        child: const SearchScreen(),
+      ),
       routes: [
         GoRoute(
           name: 'flightResults',
           path: 'flightResults',
-          builder: (context, state) => const FlightResults(),
+          builder: (_, __) => ChangeNotifierProvider(
+            create: (_) => getIt<FlightResultViewModel>(),
+            child: const FlightResults(),
+          ),
         ),
       ],
     ),
     GoRoute(
       name: 'book',
       path: '/book',
-      builder: (context, state) => const BookScreen(),
+      builder: (_, __) => const BookScreen(),
       routes: [
         GoRoute(
             name: 'passport',
             path: 'passport',
-            builder: (context, state) => ChangeNotifierProvider(
-                create: (_) => getIt<PassportViewModel>(),
-                child: const PassportScreen()),
+            builder: (_, __) => ChangeNotifierProvider(
+                  create: (_) => getIt<PassportViewModel>(),
+                  child: const PassportScreen(),
+                ),
             routes: [
               GoRoute(
                 name: 'seat',
                 path: 'seat',
-                builder: (context, state) => const SeatScreen(),
+                builder: (_, __) => const SeatScreen(),
               ),
             ]),
       ],
@@ -96,29 +103,30 @@ final router = GoRouter(
     GoRoute(
       name: 'myBooks',
       path: '/myBooks',
-      builder: (context, state) => ChangeNotifierProvider(
-          create: (_) =>
-              MyBooksViewModel(paymentRepository: getIt<PaymentRepository>()),
+      builder: (_, __) => ChangeNotifierProvider(
+          create: (_) => MyBooksViewModel(
+                paymentRepository: getIt<PaymentRepository>(),
+              ),
           child: const MyBooksScreen()),
       routes: const [],
     ),
     GoRoute(
       name: 'pay',
       path: '/pay',
-      builder: (context, state) =>
+      builder: (_, state) =>
           PayScreen(forPaymentList: state.extra as List<PaymentModel>),
       routes: const [],
     ),
     GoRoute(
       name: 'counter',
       path: '/counter',
-      builder: (context, state) => CounterScreen(),
+      builder: (_, __) => CounterScreen(),
       routes: const [],
     ),
     GoRoute(
       name: 'sample',
       path: '/sample',
-      builder: (context, state) => const SampleScreen(),
+      builder: (_, __) => const SampleScreen(),
       routes: const [],
     ),
   ],
