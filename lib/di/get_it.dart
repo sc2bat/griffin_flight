@@ -10,6 +10,7 @@ import 'package:griffin/domain/repositories/sign_repository.dart';
 import 'package:griffin/domain/repositories/user_repository.dart';
 import 'package:griffin/domain/use_cases/airport/airport_list_use_case.dart';
 import 'package:griffin/domain/use_cases/sample_use_case.dart';
+import 'package:griffin/domain/use_cases/search/search_flight_use_case.dart';
 import 'package:griffin/domain/use_cases/sign/save_session_use_case.dart';
 import 'package:griffin/domain/use_cases/sign/sign_in_use_case.dart';
 import 'package:griffin/domain/use_cases/sign/sign_up_use_case.dart';
@@ -17,6 +18,7 @@ import 'package:griffin/domain/use_cases/splash/get_session_use_case.dart';
 import 'package:griffin/domain/use_cases/splash/splash_get_user_info_use_case.dart';
 import 'package:griffin/presentation/counter/sample_view_model.dart';
 import 'package:griffin/presentation/mypage/mypage_view_model.dart';
+import 'package:griffin/presentation/search/flight_result/flight_result_view_model.dart';
 import 'package:griffin/presentation/sign/sign_view_model.dart';
 import 'package:griffin/presentation/splash/splash_view_model.dart';
 
@@ -102,6 +104,11 @@ void setupDependencies() {
         airportRepository: getIt<AirportRepository>(),
       ),
     )
+    ..registerSingleton<SearchFlightUseCase>(
+      SearchFlightUseCase(
+        flightRepository: getIt<FlightRepository>(),
+      ),
+    )
     ..registerSingleton<PassportUsecase>(
       PassportUsecase(
         passportRepository: getIt<PassportRepository>(),
@@ -117,6 +124,11 @@ void setupDependencies() {
       () => SearchViewModel(
         getSessionUseCase: getIt<GetSessionUseCase>(),
         airportListUseCase: getIt<AirportListUseCase>(),
+      ),
+    )
+    ..registerFactory<FlightResultViewModel>(
+      () => FlightResultViewModel(
+        searchFlightUseCase: getIt<SearchFlightUseCase>(),
       ),
     )
     ..registerFactory<SampleViewModel>(
