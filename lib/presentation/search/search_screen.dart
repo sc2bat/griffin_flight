@@ -144,10 +144,12 @@ class _SearchScreenState extends State<SearchScreen> {
                           textAlignVertical: TextAlignVertical.center,
                           onChanged: (value) {
                             setState(() {
-                              final forSelectAirportList = state.airportList
+                              forSelectAirportList = state.airportList
                                   .where((e) => e.airportName
                                       .toLowerCase()
-                                      .contains(value.toLowerCase()))
+                                      .contains(value.toLowerCase()) || e.airportCode
+                                  .toLowerCase()
+                                  .contains(value.toLowerCase()))
                                   .toList();
                               logger.info(forSelectAirportList);
                             });
