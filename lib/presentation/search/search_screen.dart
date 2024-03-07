@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:griffin/domain/model/airport_model.dart';
 import 'package:griffin/presentation/common/colors.dart';
 import 'package:griffin/presentation/common/date_pick_button_widget.dart';
 import 'package:griffin/presentation/search/search_state.dart';
@@ -23,10 +24,13 @@ class _SearchScreenState extends State<SearchScreen> {
   late PanelController _panelController;
   late TextEditingController _textEditingController;
 
+  List<AirportModel> forSelectAirportList = [];
+
   final ValueNotifier<DateTime> _dateTimeNotifier =
       ValueNotifier<DateTime>(DateTime.now());
 
   final double _panelHeightClosed = 0.0;
+  bool isFromCitySelected = true;
 
   @override
   void initState() {
@@ -55,7 +59,7 @@ class _SearchScreenState extends State<SearchScreen> {
     return Scaffold(
       body: SafeArea(
         child: SlidingUpPanel(
-          color: Colors.black,
+          color: AppColors.greyCard,
           controller: _panelController,
           panel: Column(
             children: [
@@ -67,6 +71,7 @@ class _SearchScreenState extends State<SearchScreen> {
                           onPressed: () {
                             setState(() {
                               _panelController.close();
+
                               //상위 위젯의 상태를 변경하기 위한 컨트롤러 호출
                             });
                           },
@@ -75,13 +80,15 @@ class _SearchScreenState extends State<SearchScreen> {
                   ),
                   Expanded(
                     child: Container(
-                      child: const Column(
+                      child: Column(
                         children: [
                           Text(
                             'FLYING FROM',
                             style: TextStyle(
                               fontSize: 15,
-                              color: Colors.deepOrange,
+                              color: isFromCitySelected
+                                  ? Colors.deepOrange
+                                  : Colors.grey,
                               decoration: TextDecoration.none,
                             ),
                           ),
@@ -98,13 +105,15 @@ class _SearchScreenState extends State<SearchScreen> {
                   ),
                   Expanded(
                     child: Container(
-                      child: const Column(
+                      child: Column(
                         children: [
                           Text(
                             'FLYING TO',
                             style: TextStyle(
                               fontSize: 15,
-                              color: Colors.white,
+                              color: !isFromCitySelected
+                                  ? Colors.deepOrange
+                                  : Colors.grey,
                               decoration: TextDecoration.none,
                             ),
                           ),
@@ -133,7 +142,16 @@ class _SearchScreenState extends State<SearchScreen> {
                         child: TextField(
                           controller: _textEditingController,
                           textAlignVertical: TextAlignVertical.center,
-                          onChanged: (value) {},
+                          onChanged: (value) {
+                            setState(() {
+                              final forSelectAirportList = state.airportList
+                                  .where((e) => e.airportName
+                                      .toLowerCase()
+                                      .contains(value.toLowerCase()))
+                                  .toList();
+                              logger.info(forSelectAirportList);
+                            });
+                          },
                           onSubmitted: (value) {
                             logger.info(value);
                           },
@@ -182,9 +200,9 @@ class _SearchScreenState extends State<SearchScreen> {
                                 fit: BoxFit.fitWidth),
                           )
                         : ListView.builder(
-                            itemCount: state.airportList.length,
+                            itemCount: forSelectAirportList.length,
                             itemBuilder: (context, index) {
-                              final item = state.airportList[index];
+                              final item = forSelectAirportList[index];
                               return InkWell(
                                 onTap: () {
                                   searchViewModel
@@ -297,12 +315,15 @@ class _SearchScreenState extends State<SearchScreen> {
                                             onTap: () {
                                               _panelController
                                                   .animatePanelToPosition(1.0);
+                                              setState(() {
+                                                isFromCitySelected = true;
+                                              });
                                               logger.info('From select city');
                                             },
                                             child: Container(
                                               alignment: Alignment.centerLeft,
                                               child: const Text(
-                                                '',
+                                                'Select City',
                                                 style: TextStyle(
                                                     fontSize: 17,
                                                     fontWeight:
@@ -336,7 +357,12 @@ class _SearchScreenState extends State<SearchScreen> {
                                         Expanded(
                                           child: InkWell(
                                             onTap: () {
+                                              _panelController
+                                                  .animatePanelToPosition(1.0);
                                               logger.info('To select city');
+                                              setState(() {
+                                                isFromCitySelected = false;
+                                              });
                                             },
                                             child: Container(
                                               alignment: Alignment.centerRight,
@@ -381,27 +407,35 @@ class _SearchScreenState extends State<SearchScreen> {
                                             SizedBox(
                                                 height: 50,
                                                 child: DatePickButtonWidget(
-                                                  defaultTextStyle:
-                                                      const TextStyle(
-                                                          color: Colors.white),
-                                                  selectedTextStyle:
-                                                      const TextStyle(
-                                                          color: Colors.white),
-                                                  textAlign:
-                                                      Alignment.centerLeft,
-                                                  initialDate:
-                                                      _dateTimeNotifier.value,
-                                                  firstDate:
-                                                      _dateTimeNotifier.value,
-                                                  lastDate: DateTime(
-                                                      _dateTimeNotifier
-                                                              .value.year +
-                                                          1),
-                                                  title: 'Select Date',
-                                                  onDatedSelected:
+                                                    defaultTextStyle:
+                                                        const TextStyle(
+                                                            color:
+                                                                Colors.white),
+                                                    selectedTextStyle:
+                                                        const TextStyle(
+                                                            color:
+                                                                Colors.white),
+                                                    textAlign:
+                                                        Alignment.centerLeft,
+                                                    initialDate:
+                                                        _dateTimeNotifier.value,
+                                                    firstDate:
+                                                        _dateTimeNotifier.value,
+                                                    lastDate: DateTime(
+                                                        _dateTimeNotifier
+                                                                .value.year +
+                                                            1),
+                                                    title: 'Select Date',
+                                                    onDatedSelected: (value) {
                                                       searchViewModel
-                                                          .saveTravelDate,
-                                                )),
+                                                          .saveTravelDate(
+                                                              value);
+                                                      _dateTimeNotifier.value =
+                                                          value;
+                                                    }
+                                                    // searchViewModel
+                                                    //     .saveTravelDate,
+                                                    )),
                                           ],
                                         ),
                                       ],
@@ -483,20 +517,20 @@ class _SearchScreenState extends State<SearchScreen> {
                                           Expanded(
                                             child: Row(
                                               mainAxisAlignment:
-                                                  MainAxisAlignment.spaceEvenly,
+                                                  MainAxisAlignment.start,
                                               children: [
                                                 InkWell(
                                                   child: Container(
                                                     //인원 감소 버튼
-                                                    child: const Icon(Icons
-                                                        .remove_circle_outline),
+                                                    child: const Icon(
+                                                        Icons.remove),
                                                   ),
                                                   onTap: () {
                                                     searchViewModel
                                                         .decreasePerson();
                                                   },
                                                 ),
-                                                const Gap(10),
+                                                const Gap(40),
                                                 Container(
                                                   alignment:
                                                       Alignment.centerLeft,
@@ -508,12 +542,12 @@ class _SearchScreenState extends State<SearchScreen> {
                                                             FontWeight.bold),
                                                   ),
                                                 ),
-                                                const Gap(10),
+                                                const Gap(40),
                                                 InkWell(
                                                   child: Container(
                                                     //인원 증가 버튼
-                                                    child: const Icon(Icons
-                                                        .add_circle_outline),
+                                                    child:
+                                                        const Icon(Icons.add),
                                                   ),
                                                   onTap: () {
                                                     searchViewModel
@@ -582,7 +616,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                                           .onChangeClass(value);
                                                     }
                                                   },
-                                                  isExpanded: true,
+                                                  isExpanded: false,
                                                 ),
                                               ),
                                             ),
@@ -638,7 +672,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     const Gap(20),
                     InkWell(
                       onTap: () {
-                        logger.info('search flight');
+                        //logger.info(DateTime.parse(state.travelDate));
                         context.go('/search/flightResults');
                       },
                       child: Container(
