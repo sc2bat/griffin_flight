@@ -1,31 +1,38 @@
-import 'package:griffin/data/core/result.dart';
-import 'package:griffin/data/mappers/payment_data_mapper.dart';
-import 'package:griffin/domain/model/payment_model.dart';
+import 'dart:convert';
+
 import 'package:griffin/domain/repositories/payment_repository.dart';
+import 'package:http/http.dart' as http;
 
-import '../data_sources/apis/payment_api.dart';
+import '../../env/env.dart';
+import '../../utils/simple_logger.dart';
 
-class PaymentRepositoryImpl implements PaymentRepository{
+class PaymentRepositoryImpl implements PaymentRepository {
   @override
-  Future<Result<List<PaymentModel>>> getPaymentDataApi() async {
-    final result = await PaymentApi().getPaymentDataFromGit();
+  Future<void> postPaymentData(Map<String, dynamic> data) async {
+    final url = Uri.http(Env.griffinPostUrl, '/books');
 
-    return result.when(
-      success: (data) {
-        try {
-          List<PaymentModel> paymentModelList =
-          data.map((e) => PaymentDataMapper.fromDTO(e)).toList();
+    String jsonData = jsonEncode(data);
 
-          return Result.success(paymentModelList);
-        } catch (e) {
-          return Result.error('paymentRepositoryImpl $e');
-        }
-      },
-      error: (message) {
-        return Result.error(message);
-      },
-    );
+    logger.info(jsonData);
 
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonData,
+      );
+      if (response.statusCode == 201) {
+        logger.info('statusCode == 201');
+        logger.info(response.body);
+      } else {
+        logger.info('response.statusCode => ${response.statusCode}');
+        logger.info(response.body);
+      }
+    } catch (e) {
+      logger.info('error => $e');
+      throw Exception(e);
+    }
   }
-
 }

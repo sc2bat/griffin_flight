@@ -2,9 +2,10 @@ import 'package:animated_button_bar/animated_button_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:griffin/presentation/common/colors.dart';
-import 'package:griffin/presentation/mybooks/my_books_view_model.dart';
 import 'package:provider/provider.dart';
 import 'package:roundcheckbox/roundcheckbox.dart';
+
+import 'my_books_view_model.dart';
 
 class MyBooksScreen extends StatefulWidget {
   const MyBooksScreen({super.key});
