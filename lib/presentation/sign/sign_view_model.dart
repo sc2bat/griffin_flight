@@ -6,6 +6,7 @@ import 'package:griffin/domain/use_cases/sign/sign_in_use_case.dart';
 import 'package:griffin/domain/use_cases/sign/sign_up_use_case.dart';
 import 'package:griffin/presentation/sign/sign_state.dart';
 import 'package:griffin/presentation/sign/sign_ui_event.dart';
+import 'package:griffin/presentation/splash/sign_status.dart';
 
 class SignViewModel with ChangeNotifier {
   SignViewModel({
@@ -27,6 +28,10 @@ class SignViewModel with ChangeNotifier {
   Stream<SignUiEvent> get getSignUiEventStreamController =>
       _searchUiEventStreamController.stream;
 
+  // sign Status
+  final StreamController<SignStatus> _signStatus = StreamController();
+  Stream<SignStatus> get signStatus => _signStatus.stream;
+
   void init() {
     _signState = signState.copyWith(isLoading: true);
     notifyListeners();
@@ -45,6 +50,7 @@ class SignViewModel with ChangeNotifier {
             .add(const SignUiEvent.showSnackBar('Sign Up Success!'));
         _signState = signState.copyWith(isSignUp: true);
         notifyListeners();
+        _signStatus.add(SignStatus.signUp);
       },
       error: (message) {
         _searchUiEventStreamController.add(SignUiEvent.showSnackBar(message));
@@ -53,18 +59,19 @@ class SignViewModel with ChangeNotifier {
   }
 
   Future<void> signIn(String userName, String password) async {
+    _signState = signState.copyWith(isLoading: true);
+    notifyListeners();
     final result = await _signInUseCase.execute(userName, password);
 
     result.when(
       success: (data) async {
         await _saveSessionUseCase.execute(data);
-        // _searchUiEventStreamController
-        //     .add(const SignUiEvent.showSnackBar('Sign In Success!'));
-
-        // share preference save
+        _signStatus.add(SignStatus.signIn);
       },
       error: (message) =>
           _searchUiEventStreamController.add(SignUiEvent.showSnackBar(message)),
     );
+    _signState = signState.copyWith(isLoading: false);
+    notifyListeners();
   }
 }

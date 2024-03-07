@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 class SignInCard extends StatefulWidget {
   const SignInCard({
     super.key,
     required this.signInFunction,
+    required this.isLoading,
   });
   final Function(String userName, String password) signInFunction;
+  final bool isLoading;
 
   @override
   State<SignInCard> createState() => _SignInCardState();
@@ -86,35 +87,42 @@ class _SignInCardState extends State<SignInCard> {
                 },
               ),
               const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _isButtonClicked
-                    ? null
-                    : () {
-                        if (_isUsernameValid && _isPasswordValid) {
-                          widget.signInFunction(
-                            _usernameController.text,
-                            _passwordController.text,
-                          );
-                          setState(() {
-                            _isButtonClicked = true;
-                            _usernameController.text = '';
-                            _passwordController.text = '';
-                          });
-                          context.go('/splash');
-                        }
-                      },
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                    (Set<MaterialState> states) {
-                      if (states.contains(MaterialState.disabled)) {
-                        return Colors.black54;
-                      }
-                      return Colors.blue;
-                    },
-                  ),
-                ),
-                child: const Text('Sign In'),
-              ),
+              widget.isLoading
+                  ? const Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : ElevatedButton(
+                      onPressed: _isButtonClicked
+                          ? null
+                          : () async {
+                              if (_isUsernameValid && _isPasswordValid) {
+                                await widget.signInFunction(
+                                  _usernameController.text,
+                                  _passwordController.text,
+                                );
+                                setState(() {
+                                  _isButtonClicked = true;
+                                  _usernameController.text = '';
+                                  _passwordController.text = '';
+                                });
+                                // context.go('/splash');
+                              }
+                            },
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.resolveWith<Color>(
+                          (Set<MaterialState> states) {
+                            if (states.contains(MaterialState.disabled)) {
+                              return Colors.black54;
+                            }
+                            return !_isButtonClicked
+                                ? Colors.blue
+                                : Colors.black54;
+                          },
+                        ),
+                      ),
+                      child: const Text('Sign In'),
+                    ),
             ],
           ),
         ),

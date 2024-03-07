@@ -1,17 +1,14 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:griffin/presentation/sign/sign_state.dart';
 import 'package:griffin/utils/simple_logger.dart';
 
 class SignUpCard extends StatefulWidget {
   const SignUpCard({
     super.key,
-    required this.state,
     required this.signUpFunction,
     required this.tabAnimateTo,
   });
 
-  final SignState state;
   final Function(
           String email, String userName, String password1, String password2)
       signUpFunction;

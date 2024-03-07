@@ -9,6 +9,7 @@ import 'package:griffin/domain/repositories/session_repository.dart';
 import 'package:griffin/domain/repositories/sign_repository.dart';
 import 'package:griffin/domain/repositories/user_repository.dart';
 import 'package:griffin/domain/use_cases/airport/airport_list_use_case.dart';
+import 'package:griffin/domain/use_cases/my_books/my_books_use_case.dart';
 import 'package:griffin/domain/use_cases/sample_use_case.dart';
 import 'package:griffin/domain/use_cases/search/search_flight_use_case.dart';
 import 'package:griffin/domain/use_cases/sign/save_session_use_case.dart';
@@ -25,16 +26,16 @@ import 'package:griffin/presentation/splash/splash_view_model.dart';
 import '../data/repositories/airport_repository_impl.dart';
 import '../data/repositories/flight_repository_impl.dart';
 import '../data/repositories/passport_repository_imple.dart';
-import '../data/repositories/payment_repository_impl.dart';
+import '../data/repositories/my_books_repository_impl.dart';
 import '../domain/repositories/airport_repository.dart';
 import '../domain/repositories/passport_repository.dart';
-import '../domain/repositories/payment_repository.dart';
+import '../domain/repositories/my_books_repository.dart';
 import '../domain/use_cases/detail_use_case.dart';
 import '../domain/use_cases/passport_use_case.dart';
 import '../presentation/book/book/book_viewmodel.dart';
 import '../presentation/book/passport/passport_view_model.dart';
 import '../presentation/counter/counter_view_model.dart';
-import '../presentation/mybooks/my_books_view_model.dart';
+import '../presentation/my_books/my_books_view_model.dart';
 import '../presentation/search/search_view_model.dart';
 
 final getIt = GetIt.instance;
@@ -54,8 +55,8 @@ void setupDependencies() {
     ..registerSingleton<SignRepository>(
       SignRepositoryImpl(),
     )
-    ..registerSingleton<PaymentRepository>(
-      PaymentRepositoryImpl(),
+    ..registerSingleton<MyBooksRepository>(
+      MyBooksRepositoryImpl(),
     )
     ..registerSingleton<AirportRepository>(
       AirportRepositoryImpl(),
@@ -94,8 +95,8 @@ void setupDependencies() {
         signRepository: getIt<SignRepository>(),
       ),
     )
-    ..registerSingleton<SplashGetUserInfoUseCase>(
-      SplashGetUserInfoUseCase(
+    ..registerSingleton<getUserInfoUseCase>(
+      getUserInfoUseCase(
         userRepository: getIt<UserRepository>(),
       ),
     )
@@ -112,6 +113,11 @@ void setupDependencies() {
     ..registerSingleton<PassportUsecase>(
       PassportUsecase(
         passportRepository: getIt<PassportRepository>(),
+      ),
+    )
+    ..registerSingleton<MyBooksUseCase>(
+      MyBooksUseCase(
+        myBooksRepository: getIt<MyBooksRepository>(),
       ),
     );
 
@@ -139,7 +145,7 @@ void setupDependencies() {
     ..registerFactory<SplashViewModel>(
       () => SplashViewModel(
         getSessionUseCase: getIt<GetSessionUseCase>(),
-        splashGetUserInfoUseCase: getIt<SplashGetUserInfoUseCase>(),
+        getUserInfoUseCase: getIt<getUserInfoUseCase>(),
       ),
     )
     ..registerFactory<SignViewModel>(
@@ -154,7 +160,7 @@ void setupDependencies() {
     )
     ..registerFactory<MyBooksViewModel>(
       () => MyBooksViewModel(
-        paymentRepository: getIt<PaymentRepository>(),
+        myBooksUseCase: getIt<MyBooksUseCase>(),
       ),
     )
     ..registerFactory<BookViewModel>(
