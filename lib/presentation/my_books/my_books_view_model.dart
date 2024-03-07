@@ -1,17 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:griffin/domain/model/payment_model.dart';
-import 'package:griffin/domain/repositories/payment_repository.dart';
-import 'package:griffin/presentation/mybooks/my_books_state.dart';
 
 import '../../data/core/result.dart';
+import '../../domain/use_cases/my_books/my_books_use_case.dart';
+import 'my_books_state.dart';
 
 class MyBooksViewModel extends ChangeNotifier {
-  final PaymentRepository paymentRepository;
+  final MyBooksUseCase _myBooksUseCase;
   final List<PaymentModel> forPaymentList = [];
 
   MyBooksViewModel({
-    required this.paymentRepository,
-  }) {
+    required MyBooksUseCase myBooksUseCase,
+  }) : _myBooksUseCase = myBooksUseCase {
     fetchData();
   }
 
@@ -24,7 +24,7 @@ class MyBooksViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final result = await paymentRepository.getPaymentDataApi();
+      final result = await _myBooksUseCase.execute();
       switch (result) {
         case Success<List<PaymentModel>>():
           _state = state.copyWith(
