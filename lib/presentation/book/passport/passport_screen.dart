@@ -141,34 +141,33 @@ class _PassportScreenState extends State<PassportScreen>
                   const SizedBox(height: 30),
                   PhoneTextFieldWidget(
                       controller: phoneNumberController,
-                      onPhoneNumberChanged: (number) {},
-                      validator: (String? number) {
-                        return viewModel.phoneNumberValidate(number);
-                      }),
+                      onPhoneNumberChanged: (number) {
+                      },
+                      ),
                   const SizedBox(height: 30),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Expanded(
                         child: CountryTextFieldWidget(
-                          onCountrySelected: (country) {},
+                          onCountrySelected: (country) {
+                          },
                         ),
                       ),
                       const SizedBox(width: 15),
                       Expanded(
-                        child: SizedBox(
-                          height: 41,
-                          child: DatePickButtonWidget(
-                            title: 'DOB',
-                            textAlign: Alignment.centerLeft,
-                            lastDate: DateTime.now(),
-                            selectedTextStyle: const TextStyle(
-                                fontSize: 16, color: Colors.white),
-                            defaultTextStyle: const TextStyle(
-                                fontSize: 16, color: AppColors.greyText),
-                            firstDate: DateTime(1800),
-                            onDatedSelected: (selectedDate) {},
-                          ),
+                        child: DatePickButtonWidget(
+                          title: 'DOB',
+                          textAlign: Alignment.centerLeft,
+                          lastDate: DateTime.now(),
+                          selectedTextStyle: const TextStyle(
+                              fontSize: 16, color: Colors.white),
+                          defaultTextStyle: const TextStyle(
+                              fontSize: 16, color: AppColors.greyText),
+                          firstDate: DateTime(1800),
+                          showRequiredText: true,
+                          onDatedSelected: (selectedDate) {
+                          },
                         ),
                       )
                     ],

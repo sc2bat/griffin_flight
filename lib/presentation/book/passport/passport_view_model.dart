@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:griffin/domain/use_cases/passport_use_case.dart';
+import '../../../utils/simple_logger.dart';
 
 class PassportViewModel extends ChangeNotifier {
   final PassportUsecase _passportUsecase;
@@ -36,11 +37,9 @@ class PassportViewModel extends ChangeNotifier {
     return null;
   }
 
-  // phoneNumber 유효성 검사
-  String? phoneNumberValidate(String? number) {
-    if (number == null || number.isEmpty) {
-      return 'Phone number is required.';
-    }
-    return null;
-  }
+  //Continue 버튼 동작
+void pressContinue () {
+
+}
+
 }

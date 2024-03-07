@@ -11,7 +11,8 @@ class DatePickButtonWidget extends StatefulWidget {
       required this.firstDate,
       required this.selectedTextStyle,
       required this.defaultTextStyle,
-      required this.onDatedSelected});
+      required this.onDatedSelected,
+      this.showRequiredText = false});
 
   final String title;
   final TextStyle selectedTextStyle;
@@ -21,6 +22,7 @@ class DatePickButtonWidget extends StatefulWidget {
   final DateTime lastDate;
   final DateTime firstDate;
   final void Function(DateTime) onDatedSelected;
+  final bool showRequiredText;
 
   @override
   State<DatePickButtonWidget> createState() => _DatePickButtonWidgetState();
@@ -34,43 +36,60 @@ class _DatePickButtonWidgetState extends State<DatePickButtonWidget> {
     TextStyle effectiveTextStyle =
         date != null ? widget.selectedTextStyle : widget.defaultTextStyle;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.greyCard,
-        borderRadius: BorderRadius.circular(3),
-      ),
-      child: TextButton(
-        style: TextButton.styleFrom(padding: EdgeInsets.zero),
-        onPressed: () async {
-          final selectedDate = await showDatePicker(
-            context: context,
-            initialDate: widget.initialDate,
-            lastDate: widget.lastDate,
-            firstDate: widget.firstDate,
-            initialEntryMode: DatePickerEntryMode.calendarOnly,
-          );
-          if (selectedDate != null) {
-            setState(() {
-              date = selectedDate;
-            });
-            widget.onDatedSelected(selectedDate);
-          }
-        },
-        child: Align(
-          alignment: widget.textAlign,
-          child: Row(
-            children: [
-              const SizedBox(width: 8.0),
-              Text(
+    return Column(
+      children: [
+        Container(
+          height: 41,
+          decoration: BoxDecoration(
+            color: AppColors.greyCard,
+            borderRadius: BorderRadius.circular(3),
+            border: Border(
+              bottom: BorderSide(
+                color: date == null && widget.showRequiredText
+                    ? const Color(0xFFE5ACA6)
+                    : Colors.transparent,
+              ),
+            ),
+          ),
+          child: TextButton(
+            style: TextButton.styleFrom(padding: EdgeInsets.zero),
+            onPressed: () async {
+              final selectedDate = await showDatePicker(
+                context: context,
+                initialDate: widget.initialDate,
+                lastDate: widget.lastDate,
+                firstDate: widget.firstDate,
+                initialEntryMode: DatePickerEntryMode.calendarOnly,
+              );
+              if (selectedDate != null) {
+                setState(() {
+                  date = selectedDate;
+                });
+                widget.onDatedSelected(selectedDate);
+              }
+            },
+            child: Align(
+              alignment: widget.textAlign,
+              child: Text(
                 date != null
                     ? '${date!.year.toString()}-${date!.month.toString().padLeft(2, '0')}-${date!.day.toString().padLeft(2, '0')}'
                     : widget.title,
                 style: effectiveTextStyle,
               ),
-            ],
+            ),
           ),
         ),
-      ),
+        const SizedBox(height: 6),
+        date == null && widget.showRequiredText
+            ? const Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'DOB is required.',
+                  style: TextStyle(fontSize: 12, color: Color(0xFFE5ACA6)),
+                ),
+              )
+            : const Text('')
+      ],
     );
   }
 }

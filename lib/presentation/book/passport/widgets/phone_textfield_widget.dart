@@ -3,15 +3,14 @@ import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import '../../../common/colors.dart';
 
 class PhoneTextFieldWidget extends StatefulWidget {
-  const PhoneTextFieldWidget(
-      {super.key,
-      required this.controller,
-      required this.onPhoneNumberChanged,
-      required this.validator});
-
   final TextEditingController controller;
   final void Function(PhoneNumber) onPhoneNumberChanged;
-  final String? Function(String?) validator;
+
+  const PhoneTextFieldWidget({
+    super.key,
+    required this.controller,
+    required this.onPhoneNumberChanged,
+  });
 
   @override
   State<PhoneTextFieldWidget> createState() => _PhoneTextFieldWidgetState();
@@ -22,6 +21,7 @@ class _PhoneTextFieldWidgetState extends State<PhoneTextFieldWidget> {
 
   String initialCountry = 'KOR';
   PhoneNumber number = PhoneNumber(isoCode: 'KOR');
+  bool isPhoneEmpty = true;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +35,7 @@ class _PhoneTextFieldWidgetState extends State<PhoneTextFieldWidget> {
               borderRadius: BorderRadius.circular(3.0),
               border: Border(
                 bottom: BorderSide(
-                  color: widget.validator != null
+                  color: isPhoneEmpty
                       ? const Color(0xFFE5ACA6)
                       : Colors.transparent,
                 ),
@@ -46,10 +46,6 @@ class _PhoneTextFieldWidgetState extends State<PhoneTextFieldWidget> {
               selectorConfig: const SelectorConfig(
                 selectorType: PhoneInputSelectorType.DROPDOWN,
               ),
-              onInputChanged: (PhoneNumber number) {
-                widget.onPhoneNumberChanged(number);
-              },
-              validator: widget.validator,
               textFieldController: widget.controller,
               ignoreBlank: false,
               autoValidateMode: AutovalidateMode.disabled,
@@ -62,10 +58,15 @@ class _PhoneTextFieldWidgetState extends State<PhoneTextFieldWidget> {
               inputBorder:
                   const OutlineInputBorder(borderSide: BorderSide.none),
               onSaved: (PhoneNumber number) {},
+              onInputChanged: (PhoneNumber number) {
+                setState(() {
+                  isPhoneEmpty = false;
+                });
+              },
             ),
           ),
           const SizedBox(height: 6),
-          widget.validator != null
+          isPhoneEmpty
               ? const Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
