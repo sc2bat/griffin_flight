@@ -52,7 +52,6 @@ dependencies:
   dotted_dashed_line: ^0.0.3
   we_slide: ^2.4.0
   sliding_up_panel: ^2.0.0+1
-  book_my_seat: ^1.0.1
   roundcheckbox: ^2.0.5
   gap: ^3.0.1
   qr_flutter: ^4.1.0

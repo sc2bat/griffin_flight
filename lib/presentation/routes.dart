@@ -5,7 +5,6 @@ import 'package:griffin/domain/repositories/payment_repository.dart';
 import 'package:griffin/presentation/book/book/book_screen.dart';
 import 'package:griffin/presentation/book/passport/passport_screen.dart';
 import 'package:griffin/presentation/book/passport/passport_view_model.dart';
-import 'package:griffin/presentation/book/seat/seat_screen.dart';
 import 'package:griffin/presentation/counter/counter_screen.dart';
 import 'package:griffin/presentation/counter/sample_screen.dart';
 import 'package:griffin/presentation/index_screen.dart';
@@ -23,6 +22,7 @@ import 'package:griffin/presentation/splash/splash_screen.dart';
 import 'package:griffin/presentation/splash/splash_view_model.dart';
 import 'package:provider/provider.dart';
 
+import 'book/seat/seat_screen.dart';
 import 'mybooks/my_books_screen.dart';
 
 final router = GoRouter(

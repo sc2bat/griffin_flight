@@ -39,6 +39,10 @@ class _PassportScreenState extends State<PassportScreen>
     );
     _formKeys =
         List.generate(_numberOfPeople, (index) => GlobalKey<FormState>());
+    firstNameController.text = 'test';
+    lastNameController.text = 'test';
+    emailController.text = 'test@naver.com';
+    phoneNumberController.text = '0100000000';
   }
 
   @override
