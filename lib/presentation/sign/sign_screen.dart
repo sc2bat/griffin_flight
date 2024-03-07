@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:griffin/presentation/sign/sign_view_model.dart';
+import 'package:griffin/presentation/splash/sign_status.dart';
 import 'package:provider/provider.dart';
 
 import 'widget/sign_in_card.dart';
@@ -19,6 +21,7 @@ class _SignScreenState extends State<SignScreen>
   late TabController tabController;
 
   StreamSubscription? _streamSubscription;
+  StreamSubscription? _signStatusSubscription;
 
   @override
   void initState() {
@@ -33,6 +36,17 @@ class _SignScreenState extends State<SignScreen>
           );
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
         });
+      });
+      _signStatusSubscription = signViewModel.signStatus.listen((event) {
+        switch (event) {
+          case SignStatus.signIn:
+            context.go('/splash');
+            break;
+          case SignStatus.signOut:
+            break;
+          case SignStatus.signUp:
+            break;
+        }
       });
 
       signViewModel.init();
@@ -80,13 +94,13 @@ class _SignScreenState extends State<SignScreen>
           controller: tabController,
           children: [
             SignInCard(
-                signInFunction: (userName, password) =>
-                    signViewModel.signIn(userName, password)),
+                isLoading: signState.isLoading,
+                signInFunction: (userName, password) async =>
+                    await signViewModel.signIn(userName, password)),
             SignUpCard(
-                state: signState,
                 tabAnimateTo: () => tabController.animateTo(0),
-                signUpFunction: (email, userName, password1, password2) =>
-                    signViewModel.signUp(
+                signUpFunction: (email, userName, password1, password2) async =>
+                    await signViewModel.signUp(
                         email, userName, password1, password2)),
           ],
         ),
