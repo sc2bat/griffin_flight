@@ -39,7 +39,7 @@ class _DatePickButtonWidgetState extends State<DatePickButtonWidget> {
     return Column(
       children: [
         Container(
-          height: 41,
+          height: 30,
           decoration: BoxDecoration(
             color: AppColors.greyCard,
             borderRadius: BorderRadius.circular(3),
@@ -79,7 +79,6 @@ class _DatePickButtonWidgetState extends State<DatePickButtonWidget> {
             ),
           ),
         ),
-        const SizedBox(height: 6),
         date == null && widget.showRequiredText
             ? const Align(
                 alignment: Alignment.centerLeft,

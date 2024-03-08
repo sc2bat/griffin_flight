@@ -439,96 +439,54 @@ class _SearchScreenState extends State<SearchScreen> {
                                 logger.info('message');
                               },
                               child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        const Text('TRAVEL DATE'),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            SizedBox(
-                                                height: 50,
-                                                child: DatePickButtonWidget(
-                                                    defaultTextStyle:
-                                                        const TextStyle(
-                                                            color:
-                                                                Colors.white),
-                                                    selectedTextStyle:
-                                                        const TextStyle(
-                                                            color:
-                                                                Colors.white),
-                                                    textAlign:
-                                                        Alignment.centerLeft,
-                                                    initialDate:
-                                                        _dateTimeNotifier.value,
-                                                    firstDate:
-                                                        _dateTimeNotifier.value,
-                                                    lastDate: DateTime(
-                                                        _dateTimeNotifier
-                                                                .value.year +
-                                                            1),
-                                                    title: 'Select Date',
-                                                    onDatedSelected: (value) {
-                                                      searchViewModel
-                                                          .saveTravelDate(
-                                                              value);
-                                                      _dateTimeNotifier.value =
-                                                          value;
-                                                    }
-                                                    // searchViewModel
-                                                    //     .saveTravelDate,
-                                                    )),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Text('TRAVEL DATE'),
+                                      DatePickButtonWidget(
+                                          defaultTextStyle: const TextStyle(
+                                              color: Colors.white),
+                                          selectedTextStyle: const TextStyle(
+                                              color: Colors.white),
+                                          textAlign: Alignment.centerLeft,
+                                          initialDate: _dateTimeNotifier.value,
+                                          firstDate: _dateTimeNotifier.value,
+                                          lastDate: DateTime(
+                                              _dateTimeNotifier.value.year + 1),
+                                          title: 'Select Date',
+                                          onDatedSelected: (value) {
+                                            searchViewModel
+                                                .saveTravelDate(value);
+                                            _dateTimeNotifier.value = value;
+                                          }),
+                                    ],
                                   ),
                                   const Divider(
                                     color: Colors.white12,
                                     height: 0.2,
                                   ),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
-                                      children: [
-                                        const Text('TRAVEL DATE'),
-                                        Expanded(
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.end,
-                                            children: [
-                                              SizedBox(
-                                                height: 50,
-                                                child: DatePickButtonWidget(
-                                                  defaultTextStyle:
-                                                      const TextStyle(
-                                                          color: Colors.white),
-                                                  selectedTextStyle:
-                                                      const TextStyle(
-                                                          color: Colors.white),
-                                                  textAlign:
-                                                      Alignment.centerRight,
-                                                  initialDate:
-                                                      _dateTimeNotifier.value,
-                                                  firstDate:
-                                                      _dateTimeNotifier.value,
-                                                  lastDate: DateTime(2025),
-                                                  title: 'Select Date',
-                                                  onDatedSelected:
-                                                      searchViewModel
-                                                          .saveReturnDate,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      const Text('TRAVEL DATE'),
+                                      DatePickButtonWidget(
+                                        defaultTextStyle: const TextStyle(
+                                            color: Colors.white),
+                                        selectedTextStyle: const TextStyle(
+                                            color: Colors.white),
+                                        textAlign: Alignment.centerRight,
+                                        initialDate: _dateTimeNotifier.value,
+                                        firstDate: _dateTimeNotifier.value,
+                                        lastDate: DateTime(2025),
+                                        title: 'Select Date',
+                                        onDatedSelected:
+                                            searchViewModel.saveReturnDate,
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
@@ -675,40 +633,6 @@ class _SearchScreenState extends State<SearchScreen> {
                               ],
                             ),
                           ),
-
-                          // InkWell(
-                          //   onTap: () => searchViewModel.onTapDirect(),
-                          //   child: Container(
-                          //     height: 60,
-                          //     padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                          //     child: Row(
-                          //       children: [
-                          //         state.isSelected == true
-                          //             ? ShaderMask(
-                          //                 child: const Icon(Icons.circle),
-                          //                 shaderCallback: (Rect bounds) {
-                          //                   return const LinearGradient(
-                          //                           colors: [
-                          //                         Color(0xFFF88264),
-                          //                         Color(0xFFFFE3C5)
-                          //                       ],
-                          //                           begin: Alignment.topCenter,
-                          //                           end: Alignment.bottomCenter)
-                          //                       .createShader(bounds);
-                          //                 },
-                          //               )
-                          //             : const Icon(Icons.circle_outlined),
-                          //         const Gap(10),
-                          //         const Text(
-                          //           'Show direct flight only',
-                          //           style: TextStyle(
-                          //             fontSize: 17,
-                          //           ),
-                          //         ),
-                          //       ],
-                          //     ),
-                          //   ),
-                          // ),
                         ],
                       ),
                     ),
