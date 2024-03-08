@@ -1,7 +1,9 @@
 import 'package:go_router/go_router.dart';
 import 'package:griffin/di/get_it.dart';
-import 'package:griffin/domain/model/payment_model.dart';
-import 'package:griffin/presentation/book/book/book_screen.dart';
+import 'package:griffin/domain/model/fligth_result/flight_result_model.dart';
+import 'package:griffin/domain/model/payment/payment_model.dart';
+import 'package:griffin/presentation/book/books/books_screen.dart';
+import 'package:griffin/presentation/book/books/books_viewmodel.dart';
 import 'package:griffin/presentation/book/passport/passport_screen.dart';
 import 'package:griffin/presentation/book/passport/passport_view_model.dart';
 import 'package:griffin/presentation/book/seat/seat_screen.dart';
@@ -80,7 +82,10 @@ final router = GoRouter(
     GoRoute(
       name: 'book',
       path: '/book',
-      builder: (_, __) => const BookScreen(),
+      builder: (_, __) => ChangeNotifierProvider(
+        create: (_) => getIt<BooksViewModel>(),
+        child: BooksScreen(),
+      ),
       routes: [
         GoRoute(
             name: 'passport',

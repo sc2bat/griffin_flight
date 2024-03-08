@@ -1,7 +1,7 @@
 // 데이터를 가지고오는것.
 // 직접 data의 api에 접근을 하면 안됩니다.
 
-import 'package:griffin/domain/model/airport_model.dart';
+import 'package:griffin/domain/model/airport/airport_model.dart';
 import 'package:griffin/domain/repositories/airport_repository.dart';
 
 class GetAirportUsecase {

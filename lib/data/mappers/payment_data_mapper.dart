@@ -1,4 +1,4 @@
-import '../../domain/model/payment_model.dart';
+import '../../domain/model/payment/payment_model.dart';
 import '../dtos/payment_data_dto.dart';
 
 extension PaymentDataMapper on PaymentData{

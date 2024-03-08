@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:griffin/domain/model/payment_model.dart';
+import 'package:griffin/domain/model/payment/payment_model.dart';
 import 'package:griffin/presentation/pay/ticket_data.dart';
 import 'package:ticket_widget/ticket_widget.dart';
 

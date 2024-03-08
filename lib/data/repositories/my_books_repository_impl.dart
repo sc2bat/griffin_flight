@@ -1,6 +1,6 @@
 import 'package:griffin/data/core/result.dart';
 import 'package:griffin/data/mappers/payment_data_mapper.dart';
-import 'package:griffin/domain/model/payment_model.dart';
+import 'package:griffin/domain/model/payment/payment_model.dart';
 import 'package:griffin/domain/repositories/my_books_repository.dart';
 
 import '../data_sources/apis/payment_api.dart';

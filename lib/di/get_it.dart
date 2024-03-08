@@ -26,13 +26,13 @@ import 'package:griffin/presentation/splash/splash_view_model.dart';
 import '../data/repositories/airport_repository_impl.dart';
 import '../data/repositories/flight_repository_impl.dart';
 import '../data/repositories/my_books_repository_impl.dart';
-import '../data/repositories/passport_repository_imple.dart';
+import '../data/repositories/passport_repository_impl.dart';
 import '../domain/repositories/airport_repository.dart';
 import '../domain/repositories/my_books_repository.dart';
 import '../domain/repositories/passport_repository.dart';
-import '../domain/use_cases/detail_use_case.dart';
-import '../domain/use_cases/passport_use_case.dart';
-import '../presentation/book/book/book_viewmodel.dart';
+import '../domain/use_cases/books/books_use_case.dart';
+import '../domain/use_cases/passport/passport_use_case.dart';
+import '../presentation/book/books/books_viewmodel.dart';
 import '../presentation/book/passport/passport_view_model.dart';
 import '../presentation/counter/counter_view_model.dart';
 import '../presentation/my_books/my_books_view_model.dart';
@@ -163,9 +163,10 @@ void setupDependencies() {
         myBooksUseCase: getIt<MyBooksUseCase>(),
       ),
     )
-    ..registerFactory<BookViewModel>(
-      () => BookViewModel(
-        detailUseCase: getIt<DetailUseCase>(),
+    ..registerFactory<BooksViewModel>(
+      () => BooksViewModel(
+        booksUseCase: getIt<BooksUseCase>(),
+        getSessionUseCase: getIt<GetSessionUseCase>(),
       ),
     )
     ..registerFactory<PassportViewModel>(

@@ -1,5 +1,5 @@
 import '../../../data/core/result.dart';
-import '../../model/payment_model.dart';
+import '../../model/payment/payment_model.dart';
 import '../../repositories/my_books_repository.dart';
 
 class MyBooksUseCase {

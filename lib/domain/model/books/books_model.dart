@@ -3,7 +3,9 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'books_model.freezed.dart';
+
 part 'books_model.g.dart';
+
 
 @freezed
 abstract class BooksModel with _$BooksModel {

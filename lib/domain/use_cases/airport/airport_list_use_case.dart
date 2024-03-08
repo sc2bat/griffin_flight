@@ -1,7 +1,7 @@
 import 'package:griffin/data/core/result.dart';
 import 'package:griffin/data/dtos/airport_dto.dart';
 import 'package:griffin/data/mappers/airport_mapper.dart';
-import 'package:griffin/domain/model/airport_model.dart';
+import 'package:griffin/domain/model/airport/airport_model.dart';
 import 'package:griffin/domain/repositories/airport_repository.dart';
 
 class AirportListUseCase {

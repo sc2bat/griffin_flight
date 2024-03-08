@@ -8,7 +8,7 @@ import 'package:bootpay/model/user.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 
-import '../../domain/model/payment_model.dart';
+import '../../domain/model/payment/payment_model.dart';
 import '../../domain/use_cases/payment/payment_use_case.dart';
 import '../../env/env.dart';
 import '../../utils/simple_logger.dart';

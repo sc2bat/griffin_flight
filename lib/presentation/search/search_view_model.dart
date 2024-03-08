@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:griffin/data/core/result.dart';
-import 'package:griffin/domain/model/airport_model.dart';
+import 'package:griffin/domain/model/airport/airport_model.dart';
 import 'package:griffin/domain/model/user/user_account_model.dart';
 import 'package:griffin/domain/use_cases/airport/airport_list_use_case.dart';
 import 'package:griffin/domain/use_cases/splash/get_session_use_case.dart';

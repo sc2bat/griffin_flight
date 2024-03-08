@@ -7,7 +7,7 @@ part 'flight_result_model.g.dart';
 
 @freezed
 abstract class FlightResultModel with _$FlightResultModel {
-  const factory FlightResultModel({
+   factory FlightResultModel({
     required int flightId,
     required String flightDate,
     required int departureLoc,

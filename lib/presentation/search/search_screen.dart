@@ -3,7 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
-import 'package:griffin/domain/model/airport_model.dart';
+import 'package:griffin/domain/model/airport/airport_model.dart';
 import 'package:griffin/presentation/common/colors.dart';
 import 'package:griffin/presentation/common/date_pick_button_widget.dart';
 import 'package:griffin/presentation/search/search_state.dart';
