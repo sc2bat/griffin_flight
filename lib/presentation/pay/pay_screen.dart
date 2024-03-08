@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:griffin/domain/model/payment_model.dart';
+import 'package:griffin/domain/model/payment/payment_model.dart';
 import 'package:griffin/presentation/pay/pay_view_model.dart';
 import 'package:griffin/presentation/pay/ticket_widgets.dart';
 import 'package:intl/intl.dart';

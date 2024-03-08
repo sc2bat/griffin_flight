@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:griffin/domain/model/airport_model.dart';
+import 'package:griffin/domain/model/airport/airport_model.dart';
 import 'package:griffin/presentation/counter/sample_provider.dart';
 import 'package:griffin/utils/simple_logger.dart';
 

@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:griffin/domain/model/payment_model.dart';
+import 'package:griffin/domain/model/payment/payment_model.dart';
 
 import '../../data/core/result.dart';
 import '../../domain/use_cases/my_books/my_books_for_pay_use_case.dart';

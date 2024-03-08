@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:griffin/domain/use_cases/passport_use_case.dart';
+import 'package:griffin/domain/use_cases/passport/passport_use_case.dart';
 
 class PassportViewModel extends ChangeNotifier {
   final PassportUsecase _passportUsecase;

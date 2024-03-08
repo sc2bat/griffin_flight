@@ -1,5 +1,5 @@
 import 'package:griffin/data/dtos/airport_dto.dart';
-import 'package:griffin/domain/model/airport_model.dart';
+import 'package:griffin/domain/model/airport/airport_model.dart';
 
 class AirportMapper {
   static AirportDTO toDTO(AirportModel model) {

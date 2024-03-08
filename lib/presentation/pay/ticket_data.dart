@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
-import '../../domain/model/payment_model.dart';
+import '../../domain/model/payment/payment_model.dart';
 
 class TicketData extends StatelessWidget {
   const TicketData({

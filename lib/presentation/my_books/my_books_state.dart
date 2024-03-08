@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../domain/model/payment_model.dart';
+import '../../domain/model/payment/payment_model.dart';
 
 part 'my_books_state.freezed.dart';
 part 'my_books_state.g.dart';

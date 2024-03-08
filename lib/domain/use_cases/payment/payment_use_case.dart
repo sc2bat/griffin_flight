@@ -1,6 +1,6 @@
 import 'package:griffin/data/dtos/books_dto.dart';
 import 'package:griffin/data/mappers/books_mapper.dart';
-import 'package:griffin/domain/model/books_model.dart';
+import 'package:griffin/domain/model/books/books_model.dart';
 import 'package:griffin/domain/repositories/payment_repository.dart';
 
 class PaymentUseCase {

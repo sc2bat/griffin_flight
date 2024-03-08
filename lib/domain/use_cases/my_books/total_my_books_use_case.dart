@@ -1,7 +1,7 @@
+import 'package:griffin/domain/model/books/books_model.dart';
 import 'package:griffin/domain/repositories/books_repository.dart';
 
 import '../../../data/core/result.dart';
-import '../../model/books_model.dart';
 
 class TotalMyBooksUseCase {
   TotalMyBooksUseCase({

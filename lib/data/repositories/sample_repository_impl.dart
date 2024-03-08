@@ -1,7 +1,7 @@
 import 'package:griffin/data/core/result.dart';
 import 'package:griffin/data/data_sources/apis/sample_api.dart';
 import 'package:griffin/data/mappers/airport_mapper.dart';
-import 'package:griffin/domain/model/airport_model.dart';
+import 'package:griffin/domain/model/airport/airport_model.dart';
 import 'package:griffin/domain/repositories/sample_repository.dart';
 
 class SampleRepositoryImpl implements SampleRepository {

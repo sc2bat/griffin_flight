@@ -1,7 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:griffin/domain/model/user/user_account_model.dart';
 
-import '../../domain/model/airport_model.dart';
+import '../../domain/model/airport/airport_model.dart';
 
 part 'search_state.freezed.dart';
 part 'search_state.g.dart';

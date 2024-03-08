@@ -1,5 +1,6 @@
+import 'package:griffin/domain/model/payment/payment_model.dart';
+
 import '../../../data/core/result.dart';
-import '../../model/payment_model.dart';
 import '../../repositories/my_books_for_pay_repository.dart';
 
 class MyBooksForPayUseCase {
@@ -17,7 +18,4 @@ class MyBooksForPayUseCase {
       error: (message) => Result.error(message),
     );
   }
-
-
-
 }

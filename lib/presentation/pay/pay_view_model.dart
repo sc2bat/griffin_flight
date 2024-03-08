@@ -8,12 +8,12 @@ import 'package:bootpay/model/user.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
-import 'package:griffin/domain/model/books_model.dart';
+import 'package:griffin/domain/model/books/books_model.dart';
 import 'package:griffin/domain/use_cases/my_books/total_my_books_use_case.dart';
 import 'package:griffin/presentation/pay/pay_state.dart';
 
 import '../../data/core/result.dart';
-import '../../domain/model/payment_model.dart';
+import '../../domain/model/payment/payment_model.dart';
 import '../../domain/use_cases/payment/payment_use_case.dart';
 import '../../env/env.dart';
 import '../../utils/simple_logger.dart';

@@ -1,4 +1,4 @@
-import 'package:griffin/domain/model/books_model.dart';
+import 'package:griffin/domain/model/books/books_model.dart';
 
 import '../../data/core/result.dart';
 
