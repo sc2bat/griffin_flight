@@ -14,40 +14,63 @@ import 'package:griffin/presentation/pay/pay_state.dart';
 
 import '../../data/core/result.dart';
 import '../../domain/model/payment/payment_model.dart';
+import '../../domain/model/user/user_account_model.dart';
 import '../../domain/use_cases/payment/payment_use_case.dart';
+import '../../domain/use_cases/splash/get_session_use_case.dart';
 import '../../env/env.dart';
 import '../../utils/simple_logger.dart';
 
 class PayViewModel extends ChangeNotifier {
+  final GetSessionUseCase _getSessionUseCase;
   final TotalMyBooksUseCase _totalMyBooksUseCase;
   final PaymentUseCase _paymentUseCase;
 
   PayViewModel({
+    required GetSessionUseCase getSessionUseCase,
     required TotalMyBooksUseCase totalMyBooksUseCase,
     required PaymentUseCase paymentUseCase,
-  })  : _totalMyBooksUseCase = totalMyBooksUseCase,
+  })  : _getSessionUseCase = getSessionUseCase,
+        _totalMyBooksUseCase = totalMyBooksUseCase,
         _paymentUseCase = paymentUseCase {
-    fetchData(1);
+    fetchData();
   }
 
   PayState _state = const PayState();
 
   PayState get state => _state;
 
-  Future<void> fetchData(int userId) async {
+  Future<void> getSession() async {
+    final result = await _getSessionUseCase.execute();
+    switch (result) {
+      case Success<UserAccountModel>():
+        _state = state.copyWith(userAccountModel: result.data);
+        notifyListeners();
+        break;
+      case Error<UserAccountModel>():
+        logger.info(result.message);
+        notifyListeners();
+        break;
+    }
+  }
+
+  Future<void> fetchData() async {
     try {
-      final result = await _totalMyBooksUseCase.execute(userId);
-      switch (result) {
-        case Success<List<BooksModel>>():
-          _state = state.copyWith(
-            totalBookItemList: result.data,
-          );
-        case Error<List<BooksModel>>():
-          _state = state.copyWith(
-            totalBookItemList: [],
-          );
+      await getSession();
+      if (_state.userAccountModel != null) {
+        final result =
+            await _totalMyBooksUseCase.execute(_state.userAccountModel!.userId);
+        switch (result) {
+          case Success<List<BooksModel>>():
+            _state = state.copyWith(
+              totalBookItemList: result.data,
+            );
+          case Error<List<BooksModel>>():
+            _state = state.copyWith(
+              totalBookItemList: [],
+            );
+        }
+        notifyListeners();
       }
-      notifyListeners();
     } catch (error) {
       // 에러 처리
       debugPrint('Error fetching data: $error');
@@ -135,9 +158,9 @@ class PayViewModel extends ChangeNotifier {
   Payload getPayload(double totalAmount) {
     Payload payload = Payload();
     Item item1 = Item();
-    item1.name = "항공 티켓"; // 주문정보에 담길 상품명
+    item1.name = "GRIFFIN 예약 - 항공티켓"; // 주문정보에 담길 상품명
     item1.qty = 1; // 해당 상품의 주문 수량
-    item1.id = "ITEM_CODE_MOUSE"; // 해당 상품의 고유 키
+    item1.id = "ITEM_CODE_TICKET"; // 해당 상품의 고유 키
     item1.price = totalAmount; // 상품의 가격
 
     payload.androidApplicationId =
@@ -155,18 +178,18 @@ class PayViewModel extends ChangeNotifier {
         .toString(); //주문번호, 개발사에서 고유값으로 지정해야함
 
     payload.metadata = {
-      "callbackParam1": "value12",
-      "callbackParam2": "value34",
-      "callbackParam3": "value56",
-      "callbackParam4": "value78",
+      "구매자 연락처": _state.userAccountModel!.userId,
+      "구매자 이름": _state.userAccountModel!.userName,
+      "구매자 E-mail": _state.userAccountModel!.email,
+      "티켓구매수량": "${_state.paidBookItemList.length} 매",
     }; // 전달할 파라미터, 결제 후 되돌려 주는 값
 
     User user = User(); // 구매자 정보
-    user.username = "사용자 이름";
-    user.email = "user1234@griffin.com";
+    user.username = _state.userAccountModel!.userName;
+    user.email = _state.userAccountModel!.email;
 
     Extra extra = Extra(); // 결제 옵션
-    extra.cardQuota = '12';
+    extra.cardQuota = '3';
     // extra.openType = 'popup';
 
     // extra.carrier = "SKT,KT,LGT"; //본인인증 시 고정할 통신사명

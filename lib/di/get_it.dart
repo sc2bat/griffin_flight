@@ -184,6 +184,7 @@ void setupDependencies() {
     ..registerFactory<MyBooksViewModel>(
       () => MyBooksViewModel(
         myBooksUseCase: getIt<MyBooksForPayUseCase>(),
+        getSessionUseCase: getIt<GetSessionUseCase>(),
       ),
     )
     ..registerFactory<BooksViewModel>(
@@ -201,6 +202,7 @@ void setupDependencies() {
       () => PayViewModel(
         totalMyBooksUseCase: getIt<TotalMyBooksUseCase>(),
         paymentUseCase: getIt<PaymentUseCase>(),
+        getSessionUseCase: getIt<GetSessionUseCase>(),
       ),
     );
 
