@@ -7,7 +7,7 @@ import 'package:griffin/env/env.dart';
 import '../../dtos/payment_data_dto.dart';
 
 class PaymentApi {
-  Future<Result<List<PaymentData>>> getMyBooksDataFromGit() async {
+  Future<Result<List<PaymentData>>> getMyBooksForPayDataFromGit() async {
     final Result paymentDataFromGitResult = await fetchHttp('${Env.griffinGetUrl}/payment/');
     return paymentDataFromGitResult.when(
       success: (response) {

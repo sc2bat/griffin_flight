@@ -2,15 +2,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:griffin/domain/model/payment_model.dart';
 
 import '../../data/core/result.dart';
-import '../../domain/use_cases/my_books/my_books_use_case.dart';
+import '../../domain/use_cases/my_books/my_books_for_pay_use_case.dart';
 import 'my_books_state.dart';
 
 class MyBooksViewModel extends ChangeNotifier {
-  final MyBooksUseCase _myBooksUseCase;
+  final MyBooksForPayUseCase _myBooksUseCase;
   final List<PaymentModel> forPaymentList = [];
 
   MyBooksViewModel({
-    required MyBooksUseCase myBooksUseCase,
+    required MyBooksForPayUseCase myBooksUseCase,
   }) : _myBooksUseCase = myBooksUseCase {
     fetchData();
   }
