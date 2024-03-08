@@ -35,6 +35,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   void dispose() {
+    _subscription?.cancel();
     super.dispose();
   }
 

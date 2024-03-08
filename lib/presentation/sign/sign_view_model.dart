@@ -46,11 +46,11 @@ class SignViewModel with ChangeNotifier {
 
     result.when(
       success: (_) {
-        _searchUiEventStreamController
-            .add(const SignUiEvent.showSnackBar('Sign Up Success!'));
         _signState = signState.copyWith(isSignUp: true);
         notifyListeners();
         _signStatus.add(SignStatus.signUp);
+        _searchUiEventStreamController
+            .add(SignUiEvent.showSnackBar('$userName signUp Success'));
       },
       error: (message) {
         _searchUiEventStreamController.add(SignUiEvent.showSnackBar(message));

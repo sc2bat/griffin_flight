@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:griffin/utils/simple_logger.dart';
 
 class SignInCard extends StatefulWidget {
   const SignInCard({
@@ -55,7 +56,7 @@ class _SignInCardState extends State<SignInCard> {
                 onChanged: (value) {
                   setState(() {
                     _isUsernameValid = _validateUsername(value);
-                    _isButtonClicked = false;
+                    _isButtonClicked = _isUsernameValid && _isPasswordValid;
                   });
                 },
               ),
@@ -81,8 +82,9 @@ class _SignInCardState extends State<SignInCard> {
                 ),
                 onChanged: (value) {
                   setState(() {
-                    _isButtonClicked = false;
                     _isPasswordValid = _validatePassword(value);
+                    _isButtonClicked = _isUsernameValid && _isPasswordValid;
+                    logger.info(_isButtonClicked);
                   });
                 },
               ),
@@ -92,22 +94,19 @@ class _SignInCardState extends State<SignInCard> {
                       child: CircularProgressIndicator(),
                     )
                   : ElevatedButton(
-                      onPressed: _isButtonClicked
-                          ? null
-                          : () async {
-                              if (_isUsernameValid && _isPasswordValid) {
-                                await widget.signInFunction(
-                                  _usernameController.text,
-                                  _passwordController.text,
-                                );
-                                setState(() {
-                                  _isButtonClicked = true;
-                                  _usernameController.text = '';
-                                  _passwordController.text = '';
-                                });
-                                // context.go('/splash');
-                              }
-                            },
+                      onPressed: () async {
+                        if (_isButtonClicked) {
+                          await widget.signInFunction(
+                            _usernameController.text,
+                            _passwordController.text,
+                          );
+                          setState(() {
+                            _isButtonClicked = false;
+                            _passwordController.text = '';
+                          });
+                          // context.go('/splash');
+                        }
+                      },
                       style: ButtonStyle(
                         backgroundColor:
                             MaterialStateProperty.resolveWith<Color>(
@@ -115,7 +114,7 @@ class _SignInCardState extends State<SignInCard> {
                             if (states.contains(MaterialState.disabled)) {
                               return Colors.black54;
                             }
-                            return !_isButtonClicked
+                            return _isButtonClicked
                                 ? Colors.blue
                                 : Colors.black54;
                           },
@@ -135,9 +134,6 @@ class _SignInCardState extends State<SignInCard> {
   }
 
   bool _validatePassword(String password) {
-    return password.isNotEmpty &&
-        password.length >= 8 &&
-        password.contains(RegExp(r'[a-z]')) &&
-        password.contains(RegExp(r'[0-9]'));
+    return password.isNotEmpty;
   }
 }

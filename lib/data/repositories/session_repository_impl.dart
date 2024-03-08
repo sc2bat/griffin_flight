@@ -68,19 +68,13 @@ class SessionRepositoryImpl implements SessionRepository {
   Future<Result<void>> deleteSession() async {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
-      UserDTO userDTO = UserDTO(
-          userId: 0,
-          userName: 'guest',
-          email: 'guest@guest.com',
-          createdAt: DateTime.now(),
-          isDeleted: 0);
-      final String session = jsonEncode(userDTO.toJson());
 
-      await prefs.setString('session', session);
+      await prefs.clear();
+
       return const Result.success(null);
     } catch (e) {
-      logger.info('SessionRepositoryImpl storeSession');
-      return Result.error('getSession error => $e');
+      logger.info('SessionRepositoryImpl deleteSession');
+      return Result.error('deleteSession error => $e');
     }
   }
 }
