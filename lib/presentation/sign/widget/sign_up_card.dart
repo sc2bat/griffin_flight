@@ -1,18 +1,17 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:griffin/utils/simple_logger.dart';
 
 class SignUpCard extends StatefulWidget {
   const SignUpCard({
     super.key,
     required this.signUpFunction,
-    required this.tabAnimateTo,
+    // required this.tabAnimateTo,
   });
 
   final Function(
           String email, String userName, String password1, String password2)
       signUpFunction;
-  final Function() tabAnimateTo;
+  // final Function() tabAnimateTo;
 
   @override
   State<SignUpCard> createState() => _SignUpCardState();
@@ -69,7 +68,10 @@ class _SignUpCardState extends State<SignUpCard> {
                 onChanged: (value) {
                   setState(() {
                     _isEmailValid = _validateEmail(value);
-                    _isButtonClicked = false;
+                    _isButtonClicked = _isEmailValid &&
+                        _isUsernameValid &&
+                        _isPasswordValid &&
+                        _isConfirmPasswordValid;
                   });
                 },
               ),
@@ -83,7 +85,10 @@ class _SignUpCardState extends State<SignUpCard> {
                 onChanged: (value) {
                   setState(() {
                     _isUsernameValid = _validateUsername(value);
-                    _isButtonClicked = false;
+                    _isButtonClicked = _isEmailValid &&
+                        _isUsernameValid &&
+                        _isPasswordValid &&
+                        _isConfirmPasswordValid;
                   });
                 },
               ),
@@ -110,7 +115,10 @@ class _SignUpCardState extends State<SignUpCard> {
                 onChanged: (value) {
                   setState(() {
                     _isPasswordValid = _validatePassword(value);
-                    _isButtonClicked = false;
+                    _isButtonClicked = _isEmailValid &&
+                        _isUsernameValid &&
+                        _isPasswordValid &&
+                        _isConfirmPasswordValid;
                   });
                 },
               ),
@@ -139,43 +147,40 @@ class _SignUpCardState extends State<SignUpCard> {
                   setState(() {
                     _isConfirmPasswordValid =
                         _passwordMatch(value, _passwordController.text);
-                    _isButtonClicked = false;
+                    _isButtonClicked = _isEmailValid &&
+                        _isUsernameValid &&
+                        _isPasswordValid &&
+                        _isConfirmPasswordValid;
                   });
                 },
               ),
               const SizedBox(height: 20),
               ElevatedButton(
-                onPressed: _isButtonClicked
-                    ? null
-                    : () {
-                        logger.info('qwerasdf');
-                        if (_isEmailValid &&
-                            _isUsernameValid &&
-                            _isPasswordValid &&
-                            _isConfirmPasswordValid) {
-                          widget.signUpFunction(
-                            _emailController.text,
-                            _usernameController.text,
-                            _passwordController.text,
-                            _confirmPasswordController.text,
-                          );
-                          setState(() {
-                            _isButtonClicked = true;
-                            _emailController.text = '';
-                            _usernameController.text = '';
-                            _passwordController.text = '';
-                            _confirmPasswordController.text = '';
-                          });
-                          widget.tabAnimateTo();
-                        }
-                      },
+                onPressed: () {
+                  if (_isButtonClicked) {
+                    widget.signUpFunction(
+                      _emailController.text,
+                      _usernameController.text,
+                      _passwordController.text,
+                      _confirmPasswordController.text,
+                    );
+                    setState(() {
+                      _isButtonClicked = false;
+                      _emailController.text = '';
+                      _usernameController.text = '';
+                      _passwordController.text = '';
+                      _confirmPasswordController.text = '';
+                    });
+                    // widget.tabAnimateTo();
+                  }
+                },
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.resolveWith<Color>(
                     (Set<MaterialState> states) {
                       if (states.contains(MaterialState.disabled)) {
                         return Colors.black54;
                       }
-                      return Colors.blue;
+                      return _isButtonClicked ? Colors.blue : Colors.black54;
                     },
                   ),
                 ),

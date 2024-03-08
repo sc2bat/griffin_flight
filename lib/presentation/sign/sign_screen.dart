@@ -25,6 +25,12 @@ class _SignScreenState extends State<SignScreen>
 
   @override
   void initState() {
+    tabController = TabController(
+      initialIndex: 0,
+      length: 2,
+      vsync: this,
+    );
+
     Future.microtask(() {
       final signViewModel = context.read<SignViewModel>();
 
@@ -43,26 +49,23 @@ class _SignScreenState extends State<SignScreen>
             context.go('/splash');
             break;
           case SignStatus.signOut:
+            context.go('/sign');
             break;
           case SignStatus.signUp:
+            tabController.animateTo(0);
             break;
         }
       });
 
       signViewModel.init();
     });
-
-    tabController = TabController(
-      initialIndex: 0,
-      length: 2,
-      vsync: this,
-    );
     super.initState();
   }
 
   @override
   void dispose() {
     _streamSubscription?.cancel();
+    _signStatusSubscription?.cancel();
     tabController.dispose();
     super.dispose();
   }
@@ -98,7 +101,7 @@ class _SignScreenState extends State<SignScreen>
                 signInFunction: (userName, password) async =>
                     await signViewModel.signIn(userName, password)),
             SignUpCard(
-                tabAnimateTo: () => tabController.animateTo(0),
+                // tabAnimateTo: () => tabController.animateTo(0),
                 signUpFunction: (email, userName, password1, password2) async =>
                     await signViewModel.signUp(
                         email, userName, password1, password2)),

@@ -16,8 +16,28 @@ class SignRepositoryImpl implements SignRepository {
         Uri.parse(url),
         body: signUpDTO.toJson(),
       );
-
-      return Result.success(jsonDecode(response.body));
+      if (response.statusCode == 200) {
+        final jsonData = jsonDecode(response.body) as Map<String, dynamic>;
+        if (jsonData.containsKey('status')) {
+          if (jsonData['status'] == 1) {
+            return Result.success(jsonData);
+          } else if (jsonData.containsKey('case')) {
+            Map<String, dynamic> caseMap = jsonData['case'];
+            for (String key in caseMap.keys) {
+              if (caseMap.containsKey(key)) {
+                return Result.error('${jsonData['case'][key][0]}');
+              }
+            }
+            return const Result.error('signUp Unknown case error');
+          } else {
+            return Result.error('signUp error => ${jsonData['status']}');
+          }
+        } else {
+          return const Result.error('signUp error');
+        }
+      } else {
+        return Result.error('http error => ${response.statusCode}');
+      }
     } catch (e) {
       return Result.error('$e');
     }
@@ -34,7 +54,17 @@ class SignRepositoryImpl implements SignRepository {
           'password': password,
         },
       );
-      return Result.success(UserDTO.fromJson(jsonDecode(response.body)[0]));
+      if (response.statusCode == 200) {
+        final jsonData = jsonDecode(response.body);
+        if (jsonData is Map<String, dynamic> &&
+            jsonData.containsKey('status')) {
+          return const Result.error('Please verify your signIn information');
+        } else {
+          return Result.success(UserDTO.fromJson(jsonData[0]));
+        }
+      } else {
+        return Result.error('http error => ${response.statusCode}');
+      }
     } catch (e) {
       return Result.error('$e');
     }
@@ -45,7 +75,11 @@ class SignRepositoryImpl implements SignRepository {
     String url = '${Env.griffinAccountUrl}/logout/';
     try {
       final response = await http.post(Uri.parse(url));
-      return Result.success(jsonDecode(response.body));
+      if (response.statusCode == 200) {
+        return Result.success(jsonDecode(response.body));
+      } else {
+        return Result.error('http error => ${response.statusCode}');
+      }
     } catch (e) {
       return Result.error('$e');
     }
