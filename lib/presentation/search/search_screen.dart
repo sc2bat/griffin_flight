@@ -68,14 +68,13 @@ class _SearchScreenState extends State<SearchScreen> {
                   Column(
                     children: [
                       IconButton(
-                          onPressed: () {
-                            _panelController.close();
-                            _textEditingController.clear();
-                            forSelectAirportList = [];
-
-                            //상위 위젯의 상태를 변경하기 위한 컨트롤러 호출
-                          },
-                          icon: const Icon(Icons.close)),
+                        onPressed: () {
+                          _panelController.close();
+                          _textEditingController.clear();
+                          forSelectAirportList = [];
+                        },
+                        icon: const Icon(Icons.close),
+                      ),
                     ],
                   ),
                   Expanded(
@@ -234,7 +233,6 @@ class _SearchScreenState extends State<SearchScreen> {
                                   _panelController.close();
                                   _textEditingController.clear();
                                   forSelectAirportList = [];
-                                  //클릭하면 패널 닫기
                                 },
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
@@ -250,18 +248,6 @@ class _SearchScreenState extends State<SearchScreen> {
                   ),
                 ),
               ),
-              // Column(
-              //   children: [
-              //     Column(
-              //       children: searchAirport.map((airport) {
-              //         return Container(
-              //           child: Text(airport.airportName),
-              //         );
-              //       }).toList(),
-              //     ),
-              //   ],
-              // ),
-              //도시 검색 결과 리스트 코드
             ],
           ),
           isDraggable: true,
@@ -639,9 +625,9 @@ class _SearchScreenState extends State<SearchScreen> {
                     const Gap(30),
                     InkWell(
                       onTap: () {
-                        //여기서 값을 가지고 이동해야하나
+                        searchViewModel.searchFilght();
 
-                        context.go('/search/flightResults');
+                        // context.go('/search/flightResults');
                       },
                       child: Container(
                         height: 80,

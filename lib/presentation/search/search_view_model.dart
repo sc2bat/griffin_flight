@@ -3,6 +3,7 @@ import 'package:griffin/data/core/result.dart';
 import 'package:griffin/domain/model/airport/airport_model.dart';
 import 'package:griffin/domain/model/user/user_account_model.dart';
 import 'package:griffin/domain/use_cases/airport/airport_list_use_case.dart';
+import 'package:griffin/domain/use_cases/search/search_flight_use_case.dart';
 import 'package:griffin/domain/use_cases/splash/get_session_use_case.dart';
 import 'package:griffin/presentation/search/search_state.dart';
 import 'package:griffin/utils/simple_logger.dart';
@@ -11,10 +12,13 @@ class SearchViewModel with ChangeNotifier {
   SearchViewModel({
     required GetSessionUseCase getSessionUseCase,
     required AirportListUseCase airportListUseCase,
+    required SearchFlightUseCase searchFlightUseCase,
   })  : _getSessionUseCase = getSessionUseCase,
-        _airportListUseCase = airportListUseCase;
+        _airportListUseCase = airportListUseCase,
+        _searchFlightUseCase = searchFlightUseCase;
   final GetSessionUseCase _getSessionUseCase;
   final AirportListUseCase _airportListUseCase;
+  final SearchFlightUseCase _searchFlightUseCase;
 
   SearchState _state = SearchState();
   SearchState get state => _state;
@@ -121,5 +125,19 @@ class SearchViewModel with ChangeNotifier {
   void saveToAirport(int airportId) {
     _state = state.copyWith(toAirportId: airportId);
     notifyListeners();
+  }
+
+  Future<void> searchFilght() async {
+    if (stateValid()) {
+      final result = await _searchFlightUseCase.execute(state.fromAirportId,
+          state.toAirportId, state.travelDate, state.returnDate);
+    }
+  }
+
+  bool stateValid() {
+    return state.fromAirportId != 0 &&
+        state.toAirportId != 0 &&
+        state.travelDate.isNotEmpty &&
+        state.returnDate.isNotEmpty;
   }
 }
