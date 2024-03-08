@@ -25,11 +25,11 @@ import 'package:griffin/presentation/splash/splash_view_model.dart';
 
 import '../data/repositories/airport_repository_impl.dart';
 import '../data/repositories/flight_repository_impl.dart';
-import '../data/repositories/passport_repository_imple.dart';
 import '../data/repositories/my_books_repository_impl.dart';
+import '../data/repositories/passport_repository_imple.dart';
 import '../domain/repositories/airport_repository.dart';
-import '../domain/repositories/passport_repository.dart';
 import '../domain/repositories/my_books_repository.dart';
+import '../domain/repositories/passport_repository.dart';
 import '../domain/use_cases/detail_use_case.dart';
 import '../domain/use_cases/passport_use_case.dart';
 import '../presentation/book/book/book_viewmodel.dart';
@@ -95,8 +95,8 @@ void setupDependencies() {
         signRepository: getIt<SignRepository>(),
       ),
     )
-    ..registerSingleton<getUserInfoUseCase>(
-      getUserInfoUseCase(
+    ..registerSingleton<GetUserInfoUseCase>(
+      GetUserInfoUseCase(
         userRepository: getIt<UserRepository>(),
       ),
     )
@@ -145,7 +145,7 @@ void setupDependencies() {
     ..registerFactory<SplashViewModel>(
       () => SplashViewModel(
         getSessionUseCase: getIt<GetSessionUseCase>(),
-        getUserInfoUseCase: getIt<getUserInfoUseCase>(),
+        getUserInfoUseCase: getIt<GetUserInfoUseCase>(),
       ),
     )
     ..registerFactory<SignViewModel>(

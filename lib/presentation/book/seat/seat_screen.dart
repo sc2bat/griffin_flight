@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:griffin/presentation/book/seat/seat_view_model.dart';
-import 'package:griffin/presentation/book/seat/widgets/seat_label_widget.dart';
 import 'package:griffin/presentation/book/seat/widgets/column_number_widget.dart';
-import 'package:griffin/presentation/book/seat/widgets/business_class_widget.dart';
-import 'package:griffin/presentation/book/seat/widgets/economy_class_widget.dart';
 import 'package:griffin/presentation/book/seat/widgets/first_class_widget.dart';
-import 'package:provider/provider.dart';
+import 'package:griffin/presentation/book/seat/widgets/seat_label_widget.dart';
+
 import '../../common/colors.dart';
 import '../../common/common_button.dart';
 
@@ -73,8 +70,7 @@ class _SeatScreenState extends State<SeatScreen> {
                       if (adjustedIndex < 7) {
                         return FirstClass(
                           color: AppColors.orangeColor,
-                          isSelected:
-                              selectedSeatList.length < _numberOfPeople,
+                          isSelected: selectedSeatList.length < _numberOfPeople,
                           index: index,
                           list: selectedSeatList,
                         );
@@ -82,8 +78,7 @@ class _SeatScreenState extends State<SeatScreen> {
                         // return BusinessClass();
                         return FirstClass(
                           color: AppColors.greenColor,
-                          isSelected:
-                              selectedSeatList.length < _numberOfPeople,
+                          isSelected: selectedSeatList.length < _numberOfPeople,
                           list: selectedSeatList,
                           index: index,
                         );
@@ -91,8 +86,7 @@ class _SeatScreenState extends State<SeatScreen> {
                         // return EconomyClass();
                         return FirstClass(
                           color: Colors.blue,
-                          isSelected:
-                              selectedSeatList.length < _numberOfPeople,
+                          isSelected: selectedSeatList.length < _numberOfPeople,
                           list: selectedSeatList,
                           index: index,
                         );

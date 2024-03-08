@@ -7,7 +7,7 @@ class CitySelectPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('FLYING FROM'),
+        title: const Text('FLYING FROM'),
       ),
     );
   }

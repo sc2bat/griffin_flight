@@ -10,12 +10,12 @@ import 'package:griffin/utils/simple_logger.dart';
 class SplashViewModel with ChangeNotifier {
   SplashViewModel({
     required GetSessionUseCase getSessionUseCase,
-    required getUserInfoUseCase getUserInfoUseCase,
+    required GetUserInfoUseCase getUserInfoUseCase,
   })  : _getSessionUseCase = getSessionUseCase,
         _getUserInfoUseCase = getUserInfoUseCase;
 
   final GetSessionUseCase _getSessionUseCase;
-  final getUserInfoUseCase _getUserInfoUseCase;
+  final GetUserInfoUseCase _getUserInfoUseCase;
 
   SplashState _splashState = const SplashState();
   SplashState get splashState => _splashState;

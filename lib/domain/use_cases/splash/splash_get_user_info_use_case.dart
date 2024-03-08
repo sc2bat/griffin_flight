@@ -3,8 +3,8 @@ import 'package:griffin/data/mappers/user_mapper.dart';
 import 'package:griffin/domain/model/user/user_account_model.dart';
 import 'package:griffin/domain/repositories/user_repository.dart';
 
-class getUserInfoUseCase {
-  getUserInfoUseCase({
+class GetUserInfoUseCase {
+  GetUserInfoUseCase({
     required UserRepository userRepository,
   }) : _userRepository = userRepository;
   final UserRepository _userRepository;

@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:griffin/presentation/book/seat/seat_view_model.dart';
-import 'package:griffin/presentation/common/colors.dart';
-import 'package:provider/provider.dart';
 
 import '../../../../utils/simple_logger.dart';
 
@@ -11,11 +8,12 @@ class FirstClass extends StatefulWidget {
   final int index;
   final List<String> list;
 
-  const FirstClass({super.key,
-    required this.color,
-    required this.isSelected,
-    required this.index,
-    required this.list});
+  const FirstClass(
+      {super.key,
+      required this.color,
+      required this.isSelected,
+      required this.index,
+      required this.list});
 
   @override
   State<FirstClass> createState() => _FirstClassState();
@@ -45,8 +43,9 @@ class _FirstClassState extends State<FirstClass> {
           setState(() {
             isFirstSelected = !isFirstSelected;
             isFirstSelected
-                ? widget.isSelected ? widget.list.add(selectedSeat)
-                : null
+                ? widget.isSelected
+                    ? widget.list.add(selectedSeat)
+                    : null
                 : widget.list.removeWhere((element) => element == selectedSeat);
           });
           logger.info(widget.list);

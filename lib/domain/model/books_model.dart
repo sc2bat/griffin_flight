@@ -1,9 +1,8 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:json_annotation/json_annotation.dart';
+// ignore_for_file: invalid_annotation_target
 
+import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'books_model.freezed.dart';
-
 part 'books_model.g.dart';
 
 @freezed
@@ -18,8 +17,8 @@ abstract class BooksModel with _$BooksModel {
     @JsonKey(name: 'is_deleted') int? isDeleted,
     @JsonKey(name: 'user_id') int? userId,
     @JsonKey(name: 'flight_id') int? flightId,
-
   }) = _BooksModel;
 
-  factory BooksModel.fromJson(Map<String, dynamic> json) => _$BooksModelFromJson(json);
+  factory BooksModel.fromJson(Map<String, dynamic> json) =>
+      _$BooksModelFromJson(json);
 }

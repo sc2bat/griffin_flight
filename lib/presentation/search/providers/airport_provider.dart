@@ -37,13 +37,9 @@ class AirportProvider extends GetxController {
     f.value = 1;
   }
 
-
-
   // 선택지 FLYINGFROMAIRPORT
   AirportModel? selectFlyingFrom;
   AirportModel? selectFlyingTo;
-
-
 
   // Airport data 받아오기.(usecase에서 받아오기)
   Future<void> fetchAirports() async {
@@ -52,8 +48,6 @@ class AirportProvider extends GetxController {
     try {
       _airports.value = await getAirportUsecase.call();
       _searchResultAirports.value = _airports;
-    } catch(e) {
-
     } finally {
       _isLoading.value = false;
     }
@@ -63,12 +57,8 @@ class AirportProvider extends GetxController {
   Future<void> searchAirports(String airportName) async {
     _searchResultAirports.value = airports
         .where((airport) => airport.airportName
-        .toLowerCase()
-        .contains(airportName.toLowerCase()))
+            .toLowerCase()
+            .contains(airportName.toLowerCase()))
         .toList();
   }
-
-
-
-
 }

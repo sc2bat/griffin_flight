@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:griffin/domain/use_cases/passport_use_case.dart';
-import '../../../utils/simple_logger.dart';
 
 class PassportViewModel extends ChangeNotifier {
   final PassportUsecase _passportUsecase;
@@ -38,8 +37,5 @@ class PassportViewModel extends ChangeNotifier {
   }
 
   //Continue 버튼 동작
-void pressContinue () {
-
-}
-
+  void pressContinue() {}
 }
