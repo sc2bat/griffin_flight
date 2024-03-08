@@ -7,8 +7,8 @@ import '../data_sources/apis/payment_api.dart';
 
 class MyBooksForPayRepositoryImpl implements MyBooksForPayRepository {
   @override
-  Future<Result<List<PaymentModel>>> getMyBooksForPayDataApi() async {
-    final result = await PaymentApi().getMyBooksForPayDataFromGit();
+  Future<Result<List<PaymentModel>>> getMyBooksForPayDataApi(int userId) async {
+    final result = await PaymentApi().getMyBooksForPayDataFromGit(userId);
 
     return result.when(
       success: (data) {
