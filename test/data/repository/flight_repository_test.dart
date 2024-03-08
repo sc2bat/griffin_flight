@@ -2,7 +2,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:griffin/data/dtos/search_dto.dart';
 import 'package:griffin/data/mappers/flight_mapper.dart';
 import 'package:griffin/data/repositories/flight_repository_impl.dart';
-import 'package:griffin/domain/repositories/flight_repository.dart';
 import 'package:griffin/utils/simple_logger.dart';
 
 void main() {

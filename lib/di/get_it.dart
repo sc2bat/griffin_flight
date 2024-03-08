@@ -153,6 +153,7 @@ void setupDependencies() {
       () => SearchViewModel(
         getSessionUseCase: getIt<GetSessionUseCase>(),
         airportListUseCase: getIt<AirportListUseCase>(),
+        searchFlightUseCase: getIt<SearchFlightUseCase>(),
       ),
     )
     ..registerFactory<FlightResultViewModel>(

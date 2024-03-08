@@ -131,6 +131,14 @@ class SearchViewModel with ChangeNotifier {
     if (stateValid()) {
       final result = await _searchFlightUseCase.execute(state.fromAirportId,
           state.toAirportId, state.travelDate, state.returnDate);
+      switch (result) {
+        case Success<Map<String, dynamic>>():
+          logger.info(result.data);
+        case Error<Map<String, dynamic>>():
+          logger.info(result.message);
+      }
+    } else {
+      logger.info('check valid');
     }
   }
 

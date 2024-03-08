@@ -1,4 +1,3 @@
-import 'package:griffin/data/dtos/flight_dto.dart';
 import 'package:griffin/data/dtos/search_dto.dart';
 
 import '../../data/core/result.dart';
