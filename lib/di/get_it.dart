@@ -9,7 +9,7 @@ import 'package:griffin/domain/repositories/session_repository.dart';
 import 'package:griffin/domain/repositories/sign_repository.dart';
 import 'package:griffin/domain/repositories/user_repository.dart';
 import 'package:griffin/domain/use_cases/airport/airport_list_use_case.dart';
-import 'package:griffin/domain/use_cases/my_books/my_books_use_case.dart';
+import 'package:griffin/domain/use_cases/my_books/my_books_for_pay_use_case.dart';
 import 'package:griffin/domain/use_cases/sample_use_case.dart';
 import 'package:griffin/domain/use_cases/search/search_flight_use_case.dart';
 import 'package:griffin/domain/use_cases/sign/save_session_use_case.dart';
@@ -24,18 +24,25 @@ import 'package:griffin/presentation/sign/sign_view_model.dart';
 import 'package:griffin/presentation/splash/splash_view_model.dart';
 
 import '../data/repositories/airport_repository_impl.dart';
+import '../data/repositories/books_repository_impl.dart';
 import '../data/repositories/flight_repository_impl.dart';
-import '../data/repositories/my_books_repository_impl.dart';
+import '../data/repositories/my_books_for_pay_repository_impl.dart';
 import '../data/repositories/passport_repository_imple.dart';
+import '../data/repositories/payment_repository_impl.dart';
 import '../domain/repositories/airport_repository.dart';
-import '../domain/repositories/my_books_repository.dart';
+import '../domain/repositories/books_repository.dart';
+import '../domain/repositories/my_books_for_pay_repository.dart';
 import '../domain/repositories/passport_repository.dart';
+import '../domain/repositories/payment_repository.dart';
 import '../domain/use_cases/detail_use_case.dart';
+import '../domain/use_cases/my_books/total_my_books_use_case.dart';
 import '../domain/use_cases/passport_use_case.dart';
+import '../domain/use_cases/payment/payment_use_case.dart';
 import '../presentation/book/book/book_viewmodel.dart';
 import '../presentation/book/passport/passport_view_model.dart';
 import '../presentation/counter/counter_view_model.dart';
 import '../presentation/my_books/my_books_view_model.dart';
+import '../presentation/pay/pay_view_model.dart';
 import '../presentation/search/search_view_model.dart';
 
 final getIt = GetIt.instance;
@@ -55,8 +62,8 @@ void setupDependencies() {
     ..registerSingleton<SignRepository>(
       SignRepositoryImpl(),
     )
-    ..registerSingleton<MyBooksRepository>(
-      MyBooksRepositoryImpl(),
+    ..registerSingleton<MyBooksForPayRepository>(
+      MyBooksForPayRepositoryImpl(),
     )
     ..registerSingleton<AirportRepository>(
       AirportRepositoryImpl(),
@@ -66,6 +73,12 @@ void setupDependencies() {
     )
     ..registerSingleton<PassportRepository>(
       PassportRepositoryImpl(),
+    )
+    ..registerSingleton<BooksRepository>(
+      BooksRepositoryImpl(),
+    )
+    ..registerSingleton<PaymentRepository>(
+      PaymentRepositoryImpl(),
     );
 
   // use case
@@ -115,9 +128,19 @@ void setupDependencies() {
         passportRepository: getIt<PassportRepository>(),
       ),
     )
-    ..registerSingleton<MyBooksUseCase>(
-      MyBooksUseCase(
-        myBooksRepository: getIt<MyBooksRepository>(),
+    ..registerSingleton<MyBooksForPayUseCase>(
+      MyBooksForPayUseCase(
+        myBooksForPayRepository: getIt<MyBooksForPayRepository>(),
+      ),
+    )
+    ..registerSingleton<TotalMyBooksUseCase>(
+      TotalMyBooksUseCase(
+        booksRepository: getIt<BooksRepository>(),
+      ),
+    )
+    ..registerSingleton<PaymentUseCase>(
+      PaymentUseCase(
+        paymentRepository: getIt<PaymentRepository>(),
       ),
     );
 
@@ -160,7 +183,7 @@ void setupDependencies() {
     )
     ..registerFactory<MyBooksViewModel>(
       () => MyBooksViewModel(
-        myBooksUseCase: getIt<MyBooksUseCase>(),
+        myBooksUseCase: getIt<MyBooksForPayUseCase>(),
       ),
     )
     ..registerFactory<BookViewModel>(
@@ -171,6 +194,12 @@ void setupDependencies() {
     ..registerFactory<PassportViewModel>(
       () => PassportViewModel(
         passportUsecase: getIt<PassportUsecase>(),
+      ),
+    )
+    ..registerFactory<PayViewModel>(
+      () => PayViewModel(
+        totalMyBooksUseCase: getIt<TotalMyBooksUseCase>(),
+        paymentUseCase: getIt<PaymentUseCase>(),
       ),
     );
 
