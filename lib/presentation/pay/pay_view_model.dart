@@ -7,18 +7,73 @@ import 'package:bootpay/model/payload.dart';
 import 'package:bootpay/model/user.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:go_router/go_router.dart';
+import 'package:griffin/domain/model/books/books_model.dart';
+import 'package:griffin/domain/use_cases/my_books/total_my_books_use_case.dart';
+import 'package:griffin/presentation/pay/pay_state.dart';
 
+import '../../data/core/result.dart';
 import '../../domain/model/payment/payment_model.dart';
 import '../../domain/use_cases/payment/payment_use_case.dart';
 import '../../env/env.dart';
 import '../../utils/simple_logger.dart';
 
 class PayViewModel extends ChangeNotifier {
+  final TotalMyBooksUseCase _totalMyBooksUseCase;
   final PaymentUseCase _paymentUseCase;
 
   PayViewModel({
+    required TotalMyBooksUseCase totalMyBooksUseCase,
     required PaymentUseCase paymentUseCase,
-  }) : _paymentUseCase = paymentUseCase;
+  })  : _totalMyBooksUseCase = totalMyBooksUseCase,
+        _paymentUseCase = paymentUseCase {
+    fetchData(1);
+  }
+
+  PayState _state = const PayState();
+
+  PayState get state => _state;
+
+  Future<void> fetchData(int userId) async {
+    try {
+      final result = await _totalMyBooksUseCase.execute(userId);
+      switch (result) {
+        case Success<List<BooksModel>>():
+          _state = state.copyWith(
+            totalBookItemList: result.data,
+          );
+        case Error<List<BooksModel>>():
+          _state = state.copyWith(
+            totalBookItemList: [],
+          );
+      }
+      notifyListeners();
+    } catch (error) {
+      // 에러 처리
+      debugPrint('Error fetching data: $error');
+    }
+  }
+
+  void postPaidItems(List<PaymentModel> forPaymentList) {
+    List<BooksModel> paidList = [];
+    for (var bookItem in forPaymentList) {
+      BooksModel paidItem = _state.totalBookItemList
+          .firstWhere((e) => e.bookId == bookItem.bookId);
+      BooksModel postItem = BooksModel(
+          bookId: paidItem.bookId,
+          classSeat: paidItem.classSeat,
+          status: paidItem.status,
+          payStatus: 1,
+          payAmount: paidItem.payAmount,
+          createdAt: paidItem.createdAt,
+          isDeleted: paidItem.isDeleted,
+          userId: paidItem.userId,
+          flightId: paidItem.flightId);
+      paidList.add(postItem);
+    }
+    logger.info(paidList);
+    _paymentUseCase.execute(data: paidList);
+  }
 
   void bootpayPayment(BuildContext context, List<PaymentModel> forPaymentList,
       double totalAmount) {
@@ -37,11 +92,13 @@ class PayViewModel extends ChangeNotifier {
       },
       onError: (String data) {
         logger.info('------- onError: $data');
+        // postPaidItems(forPaymentList);
       },
       onClose: () {
         logger.info('------- onClose');
         Bootpay().dismiss(context); //명시적으로 부트페이 뷰 종료 호출
         //TODO - 원하시는 라우터로 페이지 이동
+        context.go('/myBooks');
       },
       onIssued: (String data) {
         logger.info('------- onIssued: $data');
@@ -67,8 +124,9 @@ class PayViewModel extends ChangeNotifier {
       onDone: (String data) {
         logger.info('------- onDone: $data');
         String paidResultData = jsonDecode(data)['event'];
+        logger.info(paidResultData);
         if (paidResultData == 'done') {
-          //TODO : 결제완료 되면 /books 에 POST 하기.
+          postPaidItems(forPaymentList);
         }
       },
     );

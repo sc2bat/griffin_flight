@@ -15,6 +15,7 @@ import 'package:griffin/presentation/my_books/my_books_view_model.dart';
 import 'package:griffin/presentation/mypage/mypage_screen.dart';
 import 'package:griffin/presentation/mypage/mypage_view_model.dart';
 import 'package:griffin/presentation/pay/pay_screen.dart';
+import 'package:griffin/presentation/pay/pay_view_model.dart';
 import 'package:griffin/presentation/search/flight_result/flight_result_view_model.dart';
 import 'package:griffin/presentation/search/flight_result/flight_results.dart';
 import 'package:griffin/presentation/search/search_screen.dart';
@@ -114,8 +115,10 @@ final router = GoRouter(
     GoRoute(
       name: 'pay',
       path: '/pay',
-      builder: (_, state) =>
-          PayScreen(forPaymentList: state.extra as List<PaymentModel>),
+      builder: (_, state) => ChangeNotifierProvider(
+        create: (_) => getIt<PayViewModel>(),
+        child: PayScreen(forPaymentList: state.extra as List<PaymentModel>),
+      ),
       routes: const [],
     ),
     GoRoute(
