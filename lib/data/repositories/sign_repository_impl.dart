@@ -12,10 +12,12 @@ class SignRepositoryImpl implements SignRepository {
   Future<Result<Map<String, dynamic>>> signUp(SignUpDTO signUpDTO) async {
     String url = '${Env.griffinAccountUrl}/signup/';
     try {
-      final response = await http.post(
-        Uri.parse(url),
-        body: signUpDTO.toJson(),
-      );
+      final response = await http
+          .post(
+            Uri.parse(url),
+            body: signUpDTO.toJson(),
+          )
+          .timeout(const Duration(seconds: 30));
       if (response.statusCode == 200) {
         final jsonData = jsonDecode(response.body) as Map<String, dynamic>;
         if (jsonData.containsKey('status')) {
@@ -53,7 +55,7 @@ class SignRepositoryImpl implements SignRepository {
           'username': userName,
           'password': password,
         },
-      );
+      ).timeout(const Duration(seconds: 30));
       if (response.statusCode == 200) {
         final jsonData = jsonDecode(response.body);
         if (jsonData is Map<String, dynamic> &&
@@ -74,7 +76,8 @@ class SignRepositoryImpl implements SignRepository {
   Future<Result<Map<String, dynamic>>> signOut() async {
     String url = '${Env.griffinAccountUrl}/logout/';
     try {
-      final response = await http.post(Uri.parse(url));
+      final response =
+          await http.post(Uri.parse(url)).timeout(const Duration(seconds: 30));
       if (response.statusCode == 200) {
         return Result.success(jsonDecode(response.body));
       } else {

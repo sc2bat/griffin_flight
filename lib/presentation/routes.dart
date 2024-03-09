@@ -1,6 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:griffin/di/get_it.dart';
-import 'package:griffin/domain/model/fligth_result/flight_result_model.dart';
 import 'package:griffin/domain/model/payment/payment_model.dart';
 import 'package:griffin/presentation/book/books/books_screen.dart';
 import 'package:griffin/presentation/book/books/books_viewmodel.dart';
@@ -16,8 +16,8 @@ import 'package:griffin/presentation/mypage/mypage_screen.dart';
 import 'package:griffin/presentation/mypage/mypage_view_model.dart';
 import 'package:griffin/presentation/pay/pay_screen.dart';
 import 'package:griffin/presentation/pay/pay_view_model.dart';
+import 'package:griffin/presentation/search/flight_result/flight_result_screen.dart';
 import 'package:griffin/presentation/search/flight_result/flight_result_view_model.dart';
-import 'package:griffin/presentation/search/flight_result/flight_results.dart';
 import 'package:griffin/presentation/search/search_screen.dart';
 import 'package:griffin/presentation/search/search_view_model.dart';
 import 'package:griffin/presentation/sign/sign_screen.dart';
@@ -71,12 +71,22 @@ final router = GoRouter(
       ),
       routes: [
         GoRoute(
-          name: 'flightResults',
-          path: 'flightResults',
-          builder: (_, __) => ChangeNotifierProvider(
-            create: (_) => getIt<FlightResultViewModel>(),
-            child: const FlightResults(),
-          ),
+          name: 'result',
+          path: 'result',
+          builder: (context, state) {
+            if (state.extra != null) {
+              final map = state.extra! as Map<String, dynamic>;
+              return ChangeNotifierProvider(
+                create: (_) => getIt<FlightResultViewModel>(),
+                child: FlightResultScreen(
+                  searchResult: map["search_result"] as Map<String, dynamic>,
+                ),
+              );
+            } else {
+              context.go('/search');
+              return Container();
+            }
+          },
         ),
       ],
     ),

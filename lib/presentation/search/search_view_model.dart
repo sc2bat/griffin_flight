@@ -1,11 +1,16 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:griffin/data/core/result.dart';
 import 'package:griffin/domain/model/airport/airport_model.dart';
 import 'package:griffin/domain/model/user/user_account_model.dart';
 import 'package:griffin/domain/use_cases/airport/airport_list_use_case.dart';
 import 'package:griffin/domain/use_cases/search/search_flight_use_case.dart';
 import 'package:griffin/domain/use_cases/splash/get_session_use_case.dart';
+import 'package:griffin/presentation/common/common.dart';
 import 'package:griffin/presentation/search/search_state.dart';
+import 'package:griffin/presentation/search/search_ui_event.dart';
 import 'package:griffin/utils/simple_logger.dart';
 
 class SearchViewModel with ChangeNotifier {
@@ -22,6 +27,11 @@ class SearchViewModel with ChangeNotifier {
 
   SearchState _state = SearchState();
   SearchState get state => _state;
+
+  final _searchUiEventStreamController = StreamController<SearchUiEvent>();
+  Stream<SearchUiEvent> get searchUiEventStreamController =>
+      _searchUiEventStreamController.stream;
+
 //좌석 등급 리스트
 
   void init() async {
@@ -38,6 +48,18 @@ class SearchViewModel with ChangeNotifier {
 
     _state = state.copyWith(isLoading: false);
     notifyListeners();
+  }
+
+  StreamSubscription? setStream(BuildContext context) {
+    return searchUiEventStreamController.listen((event) {
+      switch (event) {
+        case ShowSnackBar():
+          showSnackBar(context, event.message);
+        case SearchSuccess():
+          context.push('/search/result',
+              extra: {'search_result': state.searchResult});
+      }
+    });
   }
 
   Future<void> getSession() async {
@@ -128,18 +150,31 @@ class SearchViewModel with ChangeNotifier {
   }
 
   Future<void> searchFilght() async {
+    _state = state.copyWith(isLoading: true);
+    notifyListeners();
+
     if (stateValid()) {
       final result = await _searchFlightUseCase.execute(state.fromAirportId,
           state.toAirportId, state.travelDate, state.returnDate);
       switch (result) {
         case Success<Map<String, dynamic>>():
           logger.info(result.data);
+          _state = state.copyWith(searchResult: result.data);
+          _searchUiEventStreamController
+              .add(const SearchUiEvent.searchSuccess());
         case Error<Map<String, dynamic>>():
           logger.info(result.message);
+          _searchUiEventStreamController.add(SearchUiEvent.showSnackBar(
+              'result.message => ${result.message}'));
       }
     } else {
       logger.info('check valid');
+      _searchUiEventStreamController
+          .add(const SearchUiEvent.showSnackBar('조회에 필요한 정보가 부족합니다.'));
     }
+
+    _state = state.copyWith(isLoading: false);
+    notifyListeners();
   }
 
   bool stateValid() {

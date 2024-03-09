@@ -121,6 +121,7 @@ void setupDependencies() {
     ..registerSingleton<SearchFlightUseCase>(
       SearchFlightUseCase(
         flightRepository: getIt<FlightRepository>(),
+        airportRepository: getIt<AirportRepository>(),
       ),
     )
     ..registerSingleton<PassportUsecase>(

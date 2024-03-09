@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:griffin/domain/model/fligth_result/flight_result_model.dart';
+import 'package:griffin/domain/model/flight_result/flight_result_model.dart';
 import 'package:griffin/presentation/book/books/books_viewmodel.dart';
 import 'package:griffin/presentation/book/books/widgets/flight_icon_widget.dart';
 import 'package:provider/provider.dart';
@@ -8,7 +8,6 @@ import 'package:provider/provider.dart';
 import '../../common/colors.dart';
 import '../../common/common_button.dart';
 import '../../common/flight_card.dart';
-import '../../common/total_fare_bar_widget.dart';
 
 class BooksScreen extends StatefulWidget {
   FlightResultModel departureFlightResultModel;
@@ -17,6 +16,7 @@ class BooksScreen extends StatefulWidget {
   BooksScreen({super.key})
       : departureFlightResultModel = FlightResultModel(
             flightId: 1,
+            airplaneId: 1,
             flightDate: '2024-03-08',
             departureLoc: 1,
             departureAirportCode: 'ICN',
@@ -30,6 +30,7 @@ class BooksScreen extends StatefulWidget {
             payAmount: 200.0),
         arrivalFlightResultModel = FlightResultModel(
             flightId: 2,
+            airplaneId: 1,
             flightDate: '2024-03-10',
             departureLoc: 1,
             departureAirportCode: 'DEL',

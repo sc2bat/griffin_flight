@@ -1,15 +1,14 @@
+import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:go_router/go_router.dart';
 import 'package:griffin/domain/model/airport/airport_model.dart';
 import 'package:griffin/presentation/common/colors.dart';
 import 'package:griffin/presentation/common/date_pick_button_widget.dart';
 import 'package:griffin/presentation/search/search_state.dart';
 import 'package:griffin/presentation/search/search_view_model.dart';
 import 'package:griffin/utils/simple_logger.dart';
-import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
@@ -23,6 +22,7 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   late PanelController _panelController;
   late TextEditingController _textEditingController;
+  StreamSubscription? _streamSubscription;
 
   List<AirportModel> forSelectAirportList = [];
 
@@ -37,6 +37,7 @@ class _SearchScreenState extends State<SearchScreen> {
     Future.microtask(() {
       final searchViewModel = context.read<SearchViewModel>();
       searchViewModel.init();
+      _streamSubscription = searchViewModel.setStream(context);
     });
     _panelController = PanelController();
     _textEditingController = TextEditingController();
@@ -45,6 +46,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   void dispose() {
+    _streamSubscription?.cancel();
     _textEditingController.dispose();
     super.dispose();
   }
@@ -211,12 +213,9 @@ class _SearchScreenState extends State<SearchScreen> {
                   // color: Colors.amber,
                   child: Container(
                     child: state.isLoading
-                        ? Center(
-                            child: Lottie.asset(
-                                'assets/lottie/search_loading.json',
-                                repeat: true,
-                                width: 100,
-                                fit: BoxFit.fitWidth),
+                        ? const Center(
+                            child: CircularProgressIndicator(),
+                            // Lottie.asset(searchLoadingLottie, repeat: true, width: 100, fit: BoxFit.fitWidth),
                           )
                         : ListView.builder(
                             itemCount: forSelectAirportList.length,
@@ -420,62 +419,66 @@ class _SearchScreenState extends State<SearchScreen> {
                           Container(
                             height: 80,
                             padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-                            child: InkWell(
-                              onTap: () {
-                                logger.info('message');
-                              },
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const Text('TRAVEL DATE'),
-                                      DatePickButtonWidget(
-                                          defaultTextStyle: const TextStyle(
-                                              color: Colors.white),
-                                          selectedTextStyle: const TextStyle(
-                                              color: Colors.white),
-                                          textAlign: Alignment.centerLeft,
-                                          initialDate: _dateTimeNotifier.value,
-                                          firstDate: _dateTimeNotifier.value,
-                                          lastDate: DateTime(
-                                              _dateTimeNotifier.value.year + 1),
-                                          title: 'Select Date',
-                                          onDatedSelected: (value) {
-                                            searchViewModel
-                                                .saveTravelDate(value);
-                                            _dateTimeNotifier.value = value;
-                                          }),
-                                    ],
-                                  ),
-                                  const Divider(
-                                    color: Colors.white12,
-                                    height: 0.2,
-                                  ),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      const Text('TRAVEL DATE'),
-                                      DatePickButtonWidget(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      'TRAVEL DATE',
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                    DatePickButtonWidget(
                                         defaultTextStyle: const TextStyle(
                                             color: Colors.white),
                                         selectedTextStyle: const TextStyle(
                                             color: Colors.white),
-                                        textAlign: Alignment.centerRight,
+                                        textAlign: Alignment.centerLeft,
                                         initialDate: _dateTimeNotifier.value,
                                         firstDate: _dateTimeNotifier.value,
-                                        lastDate: DateTime(2025),
+                                        lastDate: DateTime(
+                                            _dateTimeNotifier.value.year + 1),
                                         title: 'Select Date',
-                                        onDatedSelected:
-                                            searchViewModel.saveReturnDate,
+                                        onDatedSelected: (value) {
+                                          searchViewModel.saveTravelDate(value);
+                                          _dateTimeNotifier.value = value;
+                                        }),
+                                  ],
+                                ),
+                                const Divider(
+                                  color: Colors.white12,
+                                  height: 0.2,
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    const Text(
+                                      'RETURN DATE',
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        color: Colors.grey,
                                       ),
-                                    ],
-                                  ),
-                                ],
-                              ),
+                                    ),
+                                    DatePickButtonWidget(
+                                      defaultTextStyle:
+                                          const TextStyle(color: Colors.white),
+                                      selectedTextStyle:
+                                          const TextStyle(color: Colors.white),
+                                      textAlign: Alignment.centerRight,
+                                      initialDate: _dateTimeNotifier.value,
+                                      firstDate: _dateTimeNotifier.value,
+                                      lastDate: DateTime(2025),
+                                      title: 'Select Date',
+                                      onDatedSelected:
+                                          searchViewModel.saveReturnDate,
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
                           ),
                           const Divider(
@@ -624,11 +627,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     ),
                     const Gap(30),
                     InkWell(
-                      onTap: () {
-                        searchViewModel.searchFilght();
-
-                        // context.go('/search/flightResults');
-                      },
+                      onTap: searchViewModel.searchFilght,
                       child: Container(
                         height: 80,
                         alignment: Alignment.center,
@@ -641,18 +640,19 @@ class _SearchScreenState extends State<SearchScreen> {
                               Color(0xFFFFE3C5),
                             ],
                           ),
-                          //color: Colors.grey[850],
                           borderRadius: BorderRadius.all(
                             Radius.circular(20),
                           ),
                         ),
-                        child: const Text(
-                          'Search Flights',
-                          style: TextStyle(
-                              fontWeight: FontWeight.w800,
-                              fontSize: 20,
-                              color: Colors.black),
-                        ),
+                        child: state.isLoading
+                            ? const CircularProgressIndicator()
+                            : const Text(
+                                'Search Flights',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w800,
+                                    fontSize: 20,
+                                    color: Colors.black),
+                              ),
                       ),
                     ),
                   ],
