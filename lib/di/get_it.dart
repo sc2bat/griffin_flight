@@ -9,6 +9,7 @@ import 'package:griffin/domain/repositories/session_repository.dart';
 import 'package:griffin/domain/repositories/sign_repository.dart';
 import 'package:griffin/domain/repositories/user_repository.dart';
 import 'package:griffin/domain/use_cases/airport/airport_list_use_case.dart';
+import 'package:griffin/domain/use_cases/books/direct_pay_use_case.dart';
 import 'package:griffin/domain/use_cases/my_books/my_books_for_pay_use_case.dart';
 import 'package:griffin/domain/use_cases/sample_use_case.dart';
 import 'package:griffin/domain/use_cases/search/search_flight_use_case.dart';
@@ -142,6 +143,9 @@ void setupDependencies() {
       PaymentUseCase(
         paymentRepository: getIt<PaymentRepository>(),
       ),
+    )
+    ..registerSingleton<DirectPayUseCase>(
+      DirectPayUseCase(),
     );
 
   // view models

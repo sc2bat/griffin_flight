@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:griffin/presentation/mypage/mypage_state.dart';
 import 'package:griffin/presentation/mypage/mypage_view_model.dart';
 import 'package:provider/provider.dart';
@@ -64,7 +65,23 @@ class _MypageScreenState extends State<MypageScreen>
     final MypageState mypageState = mypageViewModel.mypageState;
     // List<bool> selectedPage = [true, false];
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        actions: [
+          ElevatedButton(
+            onPressed: () {
+            },
+            style: ButtonStyle(
+              //테두리 모양 조절
+              shape: MaterialStateProperty.all(
+                  RoundedRectangleBorder(
+                      borderRadius:
+                      BorderRadius.circular(10))),
+            ),
+            child: const Text('LOG OUT',
+                style: TextStyle(color: Colors.white)),
+          )
+        ],
+      ),
       body: Column(
         children: [
           Container(

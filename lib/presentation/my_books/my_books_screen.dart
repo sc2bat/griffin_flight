@@ -83,173 +83,182 @@ class _MyBooksScreenState extends State<MyBooksScreen> {
                       children: [
                         Column(
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.all(16),
-                              child: (beforePayList.isEmpty)
-                                  ? const Center(child: Text('예약 내역이 없습니다.'))
-                                  : ListView.builder(
-                                      shrinkWrap: true,
-                                      physics: const BouncingScrollPhysics(),
-                                      itemCount: beforePayList.length,
-                                      itemBuilder: (context, index) {
-                                        final myBookItem = beforePayList[index];
-                                        return GestureDetector(
-                                          onTap: () {
-                                            viewModel.forPaymentCheckBoxTap(
-                                                myBookItem);
-                                          },
-                                          child: Container(
-                                            margin: const EdgeInsets.all(8),
-                                            decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius:
-                                                  BorderRadius.circular(12.0),
-                                            ),
-                                            padding: const EdgeInsets.all(10),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Expanded(
-                                                  flex: 9,
-                                                  child: Column(
-                                                    children: [
-                                                      Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceBetween,
-                                                          children: [
-                                                            Text(
-                                                              '예약번호: ${myBookItem.bookId}',
-                                                              style: const TextStyle(
-                                                                  fontSize: 15,
-                                                                  color: Colors
-                                                                      .black),
-                                                            ),
-                                                            Row(
-                                                              children: [
-                                                                Text(
-                                                                  myBookItem
-                                                                      .departureCode!,
-                                                                  style: const TextStyle(
+                            Expanded(
+                              child: SingleChildScrollView(
+                                physics: const BouncingScrollPhysics(),
+                                child: Column(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(16),
+                                      child: (beforePayList.isEmpty)
+                                          ? const Center(child: Text('NO RESERVATION HISTORY'))
+                                          : ListView.builder(
+                                              shrinkWrap: true,
+                                              physics: const BouncingScrollPhysics(),
+                                              itemCount: beforePayList.length,
+                                              itemBuilder: (context, index) {
+                                                final myBookItem = beforePayList[index];
+                                                return GestureDetector(
+                                                  onTap: () {
+                                                    viewModel.forPaymentCheckBoxTap(
+                                                        myBookItem);
+                                                  },
+                                                  child: Container(
+                                                    margin: const EdgeInsets.all(8),
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.white,
+                                                      borderRadius:
+                                                          BorderRadius.circular(12.0),
+                                                    ),
+                                                    padding: const EdgeInsets.all(10),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Expanded(
+                                                          flex: 9,
+                                                          child: Column(
+                                                            children: [
+                                                              Row(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .spaceBetween,
+                                                                  children: [
+                                                                    Text(
+                                                                      '예약번호: ${myBookItem.bookId}',
+                                                                      style: const TextStyle(
+                                                                          fontSize: 15,
+                                                                          color: Colors
+                                                                              .black),
+                                                                    ),
+                                                                    Row(
+                                                                      children: [
+                                                                        Text(
+                                                                          myBookItem
+                                                                              .departureCode!,
+                                                                          style: const TextStyle(
+                                                                              color: Colors
+                                                                                  .black,
+                                                                              fontWeight:
+                                                                                  FontWeight
+                                                                                      .bold),
+                                                                        ),
+                                                                        const Padding(
+                                                                          padding: EdgeInsets
+                                                                              .only(
+                                                                                  left:
+                                                                                      8.0),
+                                                                          child: Icon(
+                                                                            Icons
+                                                                                .flight_takeoff,
+                                                                            color: Colors
+                                                                                .pink,
+                                                                          ),
+                                                                        ),
+                                                                        Padding(
+                                                                          padding:
+                                                                              const EdgeInsets
+                                                                                  .only(
+                                                                                  left:
+                                                                                      8.0),
+                                                                          child: Text(
+                                                                            myBookItem
+                                                                                .arrivalCode!,
+                                                                            style: const TextStyle(
+                                                                                color: Colors
+                                                                                    .black,
+                                                                                fontWeight:
+                                                                                    FontWeight.bold),
+                                                                          ),
+                                                                        )
+                                                                      ],
+                                                                    ),
+                                                                  ]),
+                                                              const SizedBox(
+                                                                height: 10,
+                                                              ),
+                                                              Row(
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .center,
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .spaceBetween,
+                                                                  children: [
+                                                                    Text(
+                                                                      'DATE: ${myBookItem.flightDate}',
+                                                                      style: const TextStyle(
+                                                                          fontSize: 13,
+                                                                          color: Colors
+                                                                              .black),
+                                                                    ),
+                                                                    Text(
+                                                                      'PASSENGER: ${myBookItem.passengerName}',
+                                                                      style: const TextStyle(
+                                                                          fontSize: 13,
+                                                                          color: Colors
+                                                                              .black),
+                                                                    ),
+                                                                  ]),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        SizedBox(
+                                                            width:
+                                                                MediaQuery.of(context)
+                                                                        .size
+                                                                        .width *
+                                                                    0.15),
+                                                        Expanded(
+                                                          flex: 1,
+                                                          child: Column(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: [
+                                                              const Text('PAYMENT',
+                                                                  style: TextStyle(
                                                                       color: Colors
-                                                                          .black,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold),
-                                                                ),
-                                                                const Padding(
-                                                                  padding: EdgeInsets
-                                                                      .only(
-                                                                          left:
-                                                                              8.0),
-                                                                  child: Icon(
-                                                                    Icons
-                                                                        .flight_takeoff,
-                                                                    color: Colors
-                                                                        .pink,
-                                                                  ),
-                                                                ),
-                                                                Padding(
-                                                                  padding:
-                                                                      const EdgeInsets
-                                                                          .only(
-                                                                          left:
-                                                                              8.0),
-                                                                  child: Text(
-                                                                    myBookItem
-                                                                        .arrivalCode!,
-                                                                    style: const TextStyle(
-                                                                        color: Colors
-                                                                            .black,
-                                                                        fontWeight:
-                                                                            FontWeight.bold),
-                                                                  ),
-                                                                )
-                                                              ],
-                                                            ),
-                                                          ]),
-                                                      const SizedBox(
-                                                        height: 10,
-                                                      ),
-                                                      Row(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .center,
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceBetween,
-                                                          children: [
-                                                            Text(
-                                                              '탑승일: ${myBookItem.flightDate}',
-                                                              style: const TextStyle(
-                                                                  fontSize: 13,
-                                                                  color: Colors
-                                                                      .black),
-                                                            ),
-                                                            Text(
-                                                              '탑승자명: ${myBookItem.passengerName}',
-                                                              style: const TextStyle(
-                                                                  fontSize: 13,
-                                                                  color: Colors
-                                                                      .black),
-                                                            ),
-                                                          ]),
-                                                    ],
+                                                                          .black)),
+                                                              const SizedBox(
+                                                                height: 10,
+                                                              ),
+                                                              RoundCheckBox(
+                                                                isRound: false,
+                                                                checkedWidget:
+                                                                    const Icon(
+                                                                        Icons.check,
+                                                                        size: 14),
+                                                                uncheckedColor:
+                                                                    Colors.grey,
+                                                                checkedColor:
+                                                                    Colors.green,
+                                                                size: 14,
+                                                                isChecked: (viewModel
+                                                                        .forPaymentList
+                                                                        .contains(
+                                                                            myBookItem))
+                                                                    ? true
+                                                                    : false,
+                                                                onTap: (selected) {
+                                                                  viewModel
+                                                                      .forPaymentCheckBoxTap(
+                                                                          myBookItem);
+                                                                },
+                                                              )
+                                                            ],
+                                                          ),
+                                                        )
+                                                      ],
+                                                    ),
                                                   ),
-                                                ),
-                                                SizedBox(
-                                                    width:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .width *
-                                                            0.15),
-                                                Expanded(
-                                                  flex: 1,
-                                                  child: Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: [
-                                                      const Text('결제',
-                                                          style: TextStyle(
-                                                              color: Colors
-                                                                  .black)),
-                                                      const SizedBox(
-                                                        height: 10,
-                                                      ),
-                                                      RoundCheckBox(
-                                                        isRound: false,
-                                                        checkedWidget:
-                                                            const Icon(
-                                                                Icons.check,
-                                                                size: 14),
-                                                        uncheckedColor:
-                                                            Colors.grey,
-                                                        checkedColor:
-                                                            Colors.green,
-                                                        size: 14,
-                                                        isChecked: (viewModel
-                                                                .forPaymentList
-                                                                .contains(
-                                                                    myBookItem))
-                                                            ? true
-                                                            : false,
-                                                        onTap: (selected) {
-                                                          viewModel
-                                                              .forPaymentCheckBoxTap(
-                                                                  myBookItem);
-                                                        },
-                                                      )
-                                                    ],
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                        );
-                                      }),
+                                                );
+                                              }),
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
                             ElevatedButton(
                               onPressed: () {
@@ -263,9 +272,9 @@ class _MyBooksScreenState extends State<MyBooksScreen> {
                                 shape: MaterialStateProperty.all(
                                     RoundedRectangleBorder(
                                         borderRadius:
-                                            BorderRadius.circular(10))),
+                                        BorderRadius.circular(10))),
                               ),
-                              child: const Text('선택 완료',
+                              child: const Text('PAY',
                                   style: TextStyle(color: Colors.white)),
                             )
                           ],
@@ -275,7 +284,7 @@ class _MyBooksScreenState extends State<MyBooksScreen> {
                             Padding(
                               padding: const EdgeInsets.all(16),
                               child: (afterPayList.isEmpty)
-                                  ? const Center(child: Text('결제완료 내역이 없습니다.'))
+                                  ? const Center(child: Text('NO PAYMENT HISTORY'))
                                   : ListView.builder(
                                       shrinkWrap: true,
                                       physics: const BouncingScrollPhysics(),
@@ -304,7 +313,7 @@ class _MyBooksScreenState extends State<MyBooksScreen> {
                                                                 .spaceBetween,
                                                         children: [
                                                           Text(
-                                                            '예약번호: ${myBookItem.bookId}',
+                                                            'RESERVATION NO.: ${myBookItem.bookId}',
                                                             style:
                                                                 const TextStyle(
                                                                     fontSize:
@@ -368,7 +377,7 @@ class _MyBooksScreenState extends State<MyBooksScreen> {
                                                                 .spaceBetween,
                                                         children: [
                                                           Text(
-                                                            '탑승일: ${myBookItem.flightDate}',
+                                                            'DATE: ${myBookItem.flightDate}',
                                                             style:
                                                                 const TextStyle(
                                                                     fontSize:
@@ -377,7 +386,7 @@ class _MyBooksScreenState extends State<MyBooksScreen> {
                                                                         .black),
                                                           ),
                                                           Text(
-                                                            '탑승자명: ${myBookItem.passengerName}',
+                                                            'PASSENGER: ${myBookItem.passengerName}',
                                                             style:
                                                                 const TextStyle(
                                                                     fontSize:
@@ -401,14 +410,14 @@ class _MyBooksScreenState extends State<MyBooksScreen> {
                                                       MainAxisAlignment
                                                           .spaceBetween,
                                                   children: [
-                                                    Text('결제',
+                                                    Text('PAYMENT',
                                                         style: TextStyle(
                                                             color:
                                                                 Colors.grey)),
                                                     SizedBox(
                                                       height: 10,
                                                     ),
-                                                    Text('완료',
+                                                    Text('COMPLETE',
                                                         style: TextStyle(
                                                             color: Colors.grey))
                                                   ],
