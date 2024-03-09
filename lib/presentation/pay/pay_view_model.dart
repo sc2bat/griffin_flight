@@ -120,7 +120,6 @@ class PayViewModel extends ChangeNotifier {
       onClose: () {
         logger.info('------- onClose');
         Bootpay().dismiss(context); //명시적으로 부트페이 뷰 종료 호출
-        //TODO - 원하시는 라우터로 페이지 이동
         context.go('/myBooks');
       },
       onIssued: (String data) {
@@ -149,7 +148,7 @@ class PayViewModel extends ChangeNotifier {
         String paidResultData = jsonDecode(data)['event'];
         logger.info(paidResultData);
         if (paidResultData == 'done') {
-          postPaidItems(forPaymentList);
+          postPaidItems(forPaymentList); // 결제완료되면 서버로 pay status 변경
         }
       },
     );
@@ -173,23 +172,22 @@ class PayViewModel extends ChangeNotifier {
     payload.orderName = item1.name; //결제할 상품명
     payload.price = item1.price; //정기결제시 0 혹은 주석
 
-    payload.orderId = DateTime.now()
-        .millisecondsSinceEpoch
-        .toString(); //주문번호, 개발사에서 고유값으로 지정해야함
+    payload.orderId =
+        '${_state.userAccountModel!.userId}_${DateTime.now().millisecondsSinceEpoch.toString()}'; //주문번호, 개발사에서 고유값으로 지정해야함 ('userId + epoch time' 형태로 지정)
 
     payload.metadata = {
-      "구매자 연락처": _state.userAccountModel!.userId,
+      "구매자 ID": _state.userAccountModel!.userId,
       "구매자 이름": _state.userAccountModel!.userName,
       "구매자 E-mail": _state.userAccountModel!.email,
       "티켓구매수량": "${_state.paidBookItemList.length} 매",
-    }; // 전달할 파라미터, 결제 후 되돌려 주는 값
+    }; // 전달할 파라미터, 결제 후 되돌려 주는 값, 부트페이 관리자 화면에서 확인
 
     User user = User(); // 구매자 정보
     user.username = _state.userAccountModel!.userName;
     user.email = _state.userAccountModel!.email;
 
     Extra extra = Extra(); // 결제 옵션
-    extra.cardQuota = '3';
+    extra.cardQuota = '3'; // 5만원 이상 결제 시 할부 가능 범위 옵션
     // extra.openType = 'popup';
 
     // extra.carrier = "SKT,KT,LGT"; //본인인증 시 고정할 통신사명
