@@ -8,13 +8,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       routerConfig: router,
-      title: 'Flutter Demo',
+      title: 'Griffin Flight',
       theme: ThemeData(
         fontFamily: "Rubik",
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
-       ),
-      darkTheme: ThemeData(brightness: Brightness.dark,
+      ),
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
       ),
       themeMode: ThemeMode.dark,
     );

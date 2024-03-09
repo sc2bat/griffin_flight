@@ -44,85 +44,87 @@ class _SignInCardState extends State<SignInCard> {
         margin: const EdgeInsets.all(20.0),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              TextField(
-                controller: _usernameController,
-                decoration: InputDecoration(
-                  labelText: 'User Name',
-                  errorText: _isUsernameValid ? null : 'Invalid username',
-                ),
-                onChanged: (value) {
-                  setState(() {
-                    _isUsernameValid = _validateUsername(value);
-                    _isButtonClicked = _isUsernameValid && _isPasswordValid;
-                  });
-                },
-              ),
-              const SizedBox(height: 10),
-              TextField(
-                controller: _passwordController,
-                obscureText: !_isPasswordVisible,
-                decoration: InputDecoration(
-                  labelText: 'Password',
-                  errorText: _isPasswordValid ? null : 'Invalid password',
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      _isPasswordVisible
-                          ? Icons.visibility
-                          : Icons.visibility_off,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _isPasswordVisible = !_isPasswordVisible;
-                      });
-                    },
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                TextField(
+                  controller: _usernameController,
+                  decoration: InputDecoration(
+                    labelText: 'User Name',
+                    errorText: _isUsernameValid ? null : 'Invalid username',
                   ),
+                  onChanged: (value) {
+                    setState(() {
+                      _isUsernameValid = _validateUsername(value);
+                      _isButtonClicked = _isUsernameValid && _isPasswordValid;
+                    });
+                  },
                 ),
-                onChanged: (value) {
-                  setState(() {
-                    _isPasswordValid = _validatePassword(value);
-                    _isButtonClicked = _isUsernameValid && _isPasswordValid;
-                    logger.info(_isButtonClicked);
-                  });
-                },
-              ),
-              const SizedBox(height: 20),
-              widget.isLoading
-                  ? const Center(
-                      child: CircularProgressIndicator(),
-                    )
-                  : ElevatedButton(
-                      onPressed: () async {
-                        if (_isButtonClicked) {
-                          await widget.signInFunction(
-                            _usernameController.text,
-                            _passwordController.text,
-                          );
-                          setState(() {
-                            _isButtonClicked = false;
-                            _passwordController.text = '';
-                          });
-                          // context.go('/splash');
-                        }
-                      },
-                      style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.resolveWith<Color>(
-                          (Set<MaterialState> states) {
-                            if (states.contains(MaterialState.disabled)) {
-                              return Colors.black54;
-                            }
-                            return _isButtonClicked
-                                ? Colors.blue
-                                : Colors.black54;
-                          },
-                        ),
+                const SizedBox(height: 10),
+                TextField(
+                  controller: _passwordController,
+                  obscureText: !_isPasswordVisible,
+                  decoration: InputDecoration(
+                    labelText: 'Password',
+                    errorText: _isPasswordValid ? null : 'Invalid password',
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _isPasswordVisible
+                            ? Icons.visibility
+                            : Icons.visibility_off,
                       ),
-                      child: const Text('Sign In'),
+                      onPressed: () {
+                        setState(() {
+                          _isPasswordVisible = !_isPasswordVisible;
+                        });
+                      },
                     ),
-            ],
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      _isPasswordValid = _validatePassword(value);
+                      _isButtonClicked = _isUsernameValid && _isPasswordValid;
+                      logger.info(_isButtonClicked);
+                    });
+                  },
+                ),
+                const SizedBox(height: 20),
+                widget.isLoading
+                    ? const Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : ElevatedButton(
+                        onPressed: () async {
+                          if (_isButtonClicked) {
+                            await widget.signInFunction(
+                              _usernameController.text,
+                              _passwordController.text,
+                            );
+                            setState(() {
+                              _isButtonClicked = false;
+                              _passwordController.text = '';
+                            });
+                            // context.go('/splash');
+                          }
+                        },
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.resolveWith<Color>(
+                            (Set<MaterialState> states) {
+                              if (states.contains(MaterialState.disabled)) {
+                                return Colors.black54;
+                              }
+                              return _isButtonClicked
+                                  ? Colors.blue
+                                  : Colors.black54;
+                            },
+                          ),
+                        ),
+                        child: const Text('Sign In'),
+                      ),
+              ],
+            ),
           ),
         ),
       ),
