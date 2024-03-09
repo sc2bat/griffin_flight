@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:griffin/presentation/common/colors.dart';
+import 'package:griffin/presentation/common/common.dart';
 
 class FlightDetailsCard extends StatelessWidget {
   const FlightDetailsCard(
@@ -26,31 +27,9 @@ class FlightDetailsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String calculateDuration(String startTime, String endTime) {
-      int startHour = int.parse(startTime.substring(0, 2));
-      int startMinute = int.parse(startTime.substring(2));
-      int endHour = int.parse(endTime.substring(0, 2));
-      int endMinute = int.parse(endTime.substring(2));
-
-      int totalStartMinutes = startHour * 60 + startMinute;
-      int totalEndMinutes = endHour * 60 + endMinute;
-
-      if (totalEndMinutes < totalStartMinutes) {
-        totalEndMinutes += 24 * 60;
-      }
-
-      int diffMinutes = totalEndMinutes - totalStartMinutes;
-
-      int hours = diffMinutes ~/ 60;
-      int minutes = diffMinutes % 60;
-
-      String result = '${hours}시간 ${minutes}분';
-      return result;
-    }
-
     return Card(
         color: AppColors.greyCard,
-        child: Container(
+        child: SizedBox(
           height: height,
           width: width,
           child: Padding(

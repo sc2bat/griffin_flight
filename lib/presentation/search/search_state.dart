@@ -4,7 +4,6 @@ import 'package:griffin/domain/model/user/user_account_model.dart';
 import '../../domain/model/airport/airport_model.dart';
 
 part 'search_state.freezed.dart';
-part 'search_state.g.dart';
 
 @freezed
 class SearchState with _$SearchState {
@@ -19,9 +18,7 @@ class SearchState with _$SearchState {
     @Default(0) int toAirportId,
     @Default('') String travelDate,
     @Default('') String returnDate,
+    @Default({}) Map<String, dynamic> searchResult,
     UserAccountModel? userAccountModel,
   }) = _SearchState;
-
-  factory SearchState.fromJson(Map<String, dynamic> json) =>
-      _$SearchStateFromJson(json);
 }

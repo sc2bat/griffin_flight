@@ -39,7 +39,7 @@ class _DatePickButtonWidgetState extends State<DatePickButtonWidget> {
     return Column(
       children: [
         Container(
-          height: 41,
+          height: 40,
           decoration: BoxDecoration(
             color: AppColors.greyCard,
             borderRadius: BorderRadius.circular(3),
@@ -79,16 +79,6 @@ class _DatePickButtonWidgetState extends State<DatePickButtonWidget> {
             ),
           ),
         ),
-        const SizedBox(height: 6),
-        date == null && widget.showRequiredText
-            ? const Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'DOB is required.',
-                  style: TextStyle(fontSize: 12, color: Color(0xFFE5ACA6)),
-                ),
-              )
-            : const Text('')
       ],
     );
   }
