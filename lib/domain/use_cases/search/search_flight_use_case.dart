@@ -63,6 +63,10 @@ class SearchFlightUseCase {
                 .map((e) => FlightResultMapper.fromDTO(e))
                 .toList();
 
+            if (fromFlight.isEmpty && toFlight.isEmpty) {
+              return const Result.error('조회 결과가 없습니다.');
+            }
+
             final fromFlightResult = fromFlight
                 .map((e) => e.copyWith(
                       departureAirportCode: fromAirportModel!.airportCode,

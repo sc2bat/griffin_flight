@@ -175,20 +175,21 @@ class SearchViewModel with ChangeNotifier {
   }
 
   Future<void> searchFilght() async {
-    _state = state.copyWith(isLoading: true);
-    notifyListeners();
-
     if (stateValid()) {
-      _searchUiEventStreamController.add(const SearchUiEvent.viewAirportMap());
+      _state = state.copyWith(isLoading: true);
+      notifyListeners();
+
       final result = await _searchFlightUseCase.execute(state.fromAirportId,
           state.toAirportId, state.travelDate, state.returnDate);
       switch (result) {
         case Success<Map<String, dynamic>>():
-          logger.info(result.data);
-          _state = state.copyWith(searchResult: result.data);
+          _state = state.copyWith(searchResult: result.data, isLoading: false);
           notifyListeners();
+          _searchUiEventStreamController
+              .add(const SearchUiEvent.viewAirportMap());
         case Error<Map<String, dynamic>>():
-          logger.info(result.message);
+          _state = state.copyWith(isLoading: false);
+          notifyListeners();
           _searchUiEventStreamController.add(SearchUiEvent.showSnackBar(
               'result.message => ${result.message}'));
       }
@@ -205,15 +206,6 @@ class SearchViewModel with ChangeNotifier {
       }
       _searchUiEventStreamController.add(SearchUiEvent.showSnackBar(message));
     }
-
-    // _state = state.copyWith(isLoading: false);
-    // notifyListeners();
-
-    // dalay testing
-    Future.delayed(const Duration(seconds: 3), () {
-      _state = _state.copyWith(isLoading: false);
-      notifyListeners();
-    });
   }
 
   bool stateValid() {

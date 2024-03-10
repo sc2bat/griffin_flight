@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -28,6 +27,11 @@ class _AirportMapWidgetState extends State<AirportMapWidget> {
   final Set<Polyline> _polylines = {};
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final LatLng startLocation =
         LatLng(widget.fromAirport.latitude, widget.fromAirport.longitude);
@@ -36,32 +40,61 @@ class _AirportMapWidgetState extends State<AirportMapWidget> {
 
     return Scaffold(
       body: Center(
-        child: Column(
+        child: Stack(
           children: [
-            Expanded(
-              child: GoogleMap(
-                mapType: MapType.normal,
-                initialCameraPosition: CameraPosition(
-                  target: startLocation,
-                  zoom: 5,
+            GoogleMap(
+              mapType: MapType.normal,
+              initialCameraPosition: CameraPosition(
+                target: startLocation,
+                zoom: 5,
+              ),
+              onMapCreated: (GoogleMapController controller) {
+                _controller.complete(controller);
+                _startFlightAnimation(startLocation, endLocation);
+              },
+              polylines: _polylines,
+              markers: {
+                Marker(
+                  markerId: const MarkerId('start'),
+                  position: startLocation,
+                  infoWindow: const InfoWindow(title: 'Start'),
                 ),
-                onMapCreated: (GoogleMapController controller) {
-                  _controller.complete(controller);
-                  _startFlightAnimation(startLocation, endLocation);
-                },
-                polylines: _polylines,
-                markers: {
-                  Marker(
-                    markerId: const MarkerId('start'),
-                    position: startLocation,
-                    infoWindow: const InfoWindow(title: 'Start'),
+                Marker(
+                  markerId: const MarkerId('end'),
+                  position: endLocation,
+                  infoWindow: const InfoWindow(title: 'End'),
+                ),
+              },
+            ),
+            Positioned(
+              bottom: 16.0,
+              left: 0,
+              right: 0,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                      onPressed: () async {
+                        final GoogleMapController controller =
+                            await _controller.future;
+                        await controller.animateCamera(
+                          CameraUpdate.newLatLng(startLocation),
+                        );
+                      },
+                      child: const Icon(Icons.flight_takeoff_rounded)),
+                  const SizedBox(
+                    width: 24.0,
                   ),
-                  Marker(
-                    markerId: const MarkerId('end'),
-                    position: endLocation,
-                    infoWindow: const InfoWindow(title: 'End'),
-                  ),
-                },
+                  ElevatedButton(
+                      onPressed: () async {
+                        final GoogleMapController controller =
+                            await _controller.future;
+                        await controller.animateCamera(
+                          CameraUpdate.newLatLng(endLocation),
+                        );
+                      },
+                      child: const Icon(Icons.flight_land_rounded)),
+                ],
               ),
             ),
           ],
@@ -158,19 +191,13 @@ class _AirportMapWidgetState extends State<AirportMapWidget> {
 
     final GoogleMapController controller = await _controller.future;
     await controller.animateCamera(
-      CameraUpdate.newLatLngBounds(
-        LatLngBounds(
-          southwest: LatLng(
-            min(startLocation.latitude, endLocation.latitude),
-            min(startLocation.longitude, endLocation.longitude),
-          ),
-          northeast: LatLng(
-            max(startLocation.latitude, endLocation.latitude),
-            max(startLocation.longitude, endLocation.longitude),
-          ),
-        ),
-        100.0, // Padding
-      ),
+      CameraUpdate.newLatLng(startLocation),
     );
+    await controller.animateCamera(
+      CameraUpdate.zoomTo(12),
+    );
+    // await controller.animateCamera(
+    //   CameraUpdate.newLatLng(endLocation),
+    // );
   }
 }
