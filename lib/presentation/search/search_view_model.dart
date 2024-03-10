@@ -11,6 +11,7 @@ import 'package:griffin/domain/use_cases/splash/get_session_use_case.dart';
 import 'package:griffin/presentation/common/common.dart';
 import 'package:griffin/presentation/search/search_state.dart';
 import 'package:griffin/presentation/search/search_ui_event.dart';
+import 'package:griffin/presentation/search/widget/airport_map_widget.dart';
 import 'package:griffin/utils/simple_logger.dart';
 
 class SearchViewModel with ChangeNotifier {
@@ -55,9 +56,31 @@ class SearchViewModel with ChangeNotifier {
       switch (event) {
         case ShowSnackBar():
           showSnackBar(context, event.message);
-        case SearchSuccess():
-          context.push('/search/result',
-              extra: {'search_result': state.searchResult});
+        case ViewAirportMap():
+          if (state.fromAirport != null && state.toAirport != null) {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return Dialog.fullscreen(
+                  child: AirportMapWidget(
+                    goResultFunction: (context) {
+                      context.pop();
+                      context.push('/search/result',
+                          extra: {'search_result': state.searchResult});
+                    },
+                    isLoading: state.isLoading,
+                    fromAirport: state.fromAirport!,
+                    toAirport: state.toAirport!,
+                  ),
+                );
+              },
+            );
+          } else {
+            _searchUiEventStreamController.add(const SearchUiEvent.showSnackBar(
+                'fromAirport || toAirport is Null!'));
+          }
+        // context.push('/search/result',
+        //     extra: {'search_result': state.searchResult});
       }
     });
   }
@@ -139,13 +162,15 @@ class SearchViewModel with ChangeNotifier {
     return '$year$month$day';
   }
 
-  void saveFromAirport(int airportId) {
-    _state = state.copyWith(fromAirportId: airportId);
+  void saveFromAirport(AirportModel airportModel) {
+    _state = state.copyWith(
+        fromAirportId: airportModel.airportId, fromAirport: airportModel);
     notifyListeners();
   }
 
-  void saveToAirport(int airportId) {
-    _state = state.copyWith(toAirportId: airportId);
+  void saveToAirport(AirportModel airportModel) {
+    _state = state.copyWith(
+        toAirportId: airportModel.airportId, toAirport: airportModel);
     notifyListeners();
   }
 
@@ -154,14 +179,14 @@ class SearchViewModel with ChangeNotifier {
     notifyListeners();
 
     if (stateValid()) {
+      _searchUiEventStreamController.add(const SearchUiEvent.viewAirportMap());
       final result = await _searchFlightUseCase.execute(state.fromAirportId,
           state.toAirportId, state.travelDate, state.returnDate);
       switch (result) {
         case Success<Map<String, dynamic>>():
           logger.info(result.data);
           _state = state.copyWith(searchResult: result.data);
-          _searchUiEventStreamController
-              .add(const SearchUiEvent.searchSuccess());
+          notifyListeners();
         case Error<Map<String, dynamic>>():
           logger.info(result.message);
           _searchUiEventStreamController.add(SearchUiEvent.showSnackBar(
@@ -181,8 +206,14 @@ class SearchViewModel with ChangeNotifier {
       _searchUiEventStreamController.add(SearchUiEvent.showSnackBar(message));
     }
 
-    _state = state.copyWith(isLoading: false);
-    notifyListeners();
+    // _state = state.copyWith(isLoading: false);
+    // notifyListeners();
+
+    // dalay testing
+    Future.delayed(const Duration(seconds: 3), () {
+      _state = _state.copyWith(isLoading: false);
+      notifyListeners();
+    });
   }
 
   bool stateValid() {

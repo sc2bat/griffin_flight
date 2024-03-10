@@ -224,10 +224,8 @@ class _SearchScreenState extends State<SearchScreen> {
                               return InkWell(
                                 onTap: () {
                                   isFromCitySelected
-                                      ? searchViewModel
-                                          .saveFromAirport(item.airportId)
-                                      : searchViewModel
-                                          .saveToAirport(item.airportId);
+                                      ? searchViewModel.saveFromAirport(item)
+                                      : searchViewModel.saveToAirport(item);
 
                                   _panelController.close();
                                   _textEditingController.clear();
