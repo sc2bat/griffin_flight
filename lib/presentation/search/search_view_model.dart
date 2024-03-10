@@ -168,9 +168,17 @@ class SearchViewModel with ChangeNotifier {
               'result.message => ${result.message}'));
       }
     } else {
-      logger.info('check valid');
-      _searchUiEventStreamController
-          .add(const SearchUiEvent.showSnackBar('조회에 필요한 정보가 부족합니다.'));
+      String message = '관리자에게 문의바랍니다.';
+      if (state.fromAirportId == 0) {
+        message = '출발지를 선택해주세요.';
+      } else if (state.fromAirportId == 0) {
+        message = '도착지를 선택해주세요.';
+      } else if (state.travelDate.isEmpty) {
+        message = '가는날을 선택해주세요.';
+      } else if (state.returnDate.isEmpty) {
+        message = '오는날을 선택해주세요.';
+      }
+      _searchUiEventStreamController.add(SearchUiEvent.showSnackBar(message));
     }
 
     _state = state.copyWith(isLoading: false);
