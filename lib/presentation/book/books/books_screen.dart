@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:griffin/domain/model/flight_result/flight_result_model.dart';
@@ -10,38 +11,14 @@ import '../../common/common_button.dart';
 import '../../common/flight_card.dart';
 
 class BooksScreen extends StatefulWidget {
-  FlightResultModel departureFlightResultModel;
-  FlightResultModel arrivalFlightResultModel;
+  final FlightResultModel departureFlightResultModel;
+  final FlightResultModel arrivalFlightResultModel;
 
-  BooksScreen({super.key})
-      : departureFlightResultModel = FlightResultModel(
-            flightId: 1,
-            airplaneId: 1,
-            flightDate: '2024-03-08',
-            departureLoc: 1,
-            departureAirportCode: 'ICN',
-            departureAirportName: 'Incheon',
-            arrivalLoc: 2,
-            arrivalAirportCode: 'DEL',
-            arrivalAirportName: 'India',
-            departureTime: '1000',
-            arrivalTime: '1200',
-            classLevel: 'First',
-            payAmount: 200.0),
-        arrivalFlightResultModel = FlightResultModel(
-            flightId: 2,
-            airplaneId: 1,
-            flightDate: '2024-03-10',
-            departureLoc: 1,
-            departureAirportCode: 'DEL',
-            departureAirportName: 'India',
-            arrivalLoc: 2,
-            arrivalAirportCode: 'ICN',
-            arrivalAirportName: 'Incheon',
-            departureTime: '2200',
-            arrivalTime: '1200',
-            classLevel: 'First',
-            payAmount: 200.0);
+  const BooksScreen({
+    Key? key,
+    required this.departureFlightResultModel,
+    required this.arrivalFlightResultModel,
+  }) : super(key: key);
 
   @override
   State<BooksScreen> createState() => _BooksScreenState();

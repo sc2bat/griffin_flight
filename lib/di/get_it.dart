@@ -145,6 +145,9 @@ void setupDependencies() {
         paymentRepository: getIt<PaymentRepository>(),
       ),
     )
+    ..registerSingleton<BooksUseCase>(
+      BooksUseCase(),
+    )
     ..registerSingleton<DirectPayUseCase>(
       DirectPayUseCase(),
     );

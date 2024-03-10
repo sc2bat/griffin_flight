@@ -11,8 +11,10 @@ class FlightResultState with _$FlightResultState {
     @Default(false) bool isLoading,
     @Default([true, false]) List<bool> selectedPage,
     @Default([]) List<FlightResultModel> fligthSelectList,
-    @Default([]) List<FlightResultModel> fromFlight,
-    @Default([]) List<FlightResultModel> toFlightList,
+    @Default([]) List<FlightResultModel> fromFlightResultList,
+    @Default([]) List<FlightResultModel> toFlightResultList,
+    FlightResultModel? selectFromFlight,
+    FlightResultModel? selectToFlight,
     UserAccountModel? userAccountModel,
   }) = _FlightResultState;
 

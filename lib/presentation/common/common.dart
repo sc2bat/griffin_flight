@@ -70,7 +70,7 @@ double _calculateBasePrice(double distance) {
   } else if (distance >= 500 && distance < 1000) {
     return 150.0;
   } else {
-    return 25.0 * (distance / 100).ceil();
+    return 10.0 * (distance / 100).ceil();
   }
 }
 
