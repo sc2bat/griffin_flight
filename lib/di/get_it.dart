@@ -9,7 +9,6 @@ import 'package:griffin/domain/repositories/session_repository.dart';
 import 'package:griffin/domain/repositories/sign_repository.dart';
 import 'package:griffin/domain/repositories/user_repository.dart';
 import 'package:griffin/domain/use_cases/airport/airport_list_use_case.dart';
-import 'package:griffin/domain/use_cases/books/direct_pay_use_case.dart';
 import 'package:griffin/domain/use_cases/my_books/my_books_for_pay_use_case.dart';
 import 'package:griffin/domain/use_cases/sample_use_case.dart';
 import 'package:griffin/domain/use_cases/search/search_flight_use_case.dart';
@@ -38,7 +37,9 @@ import '../domain/repositories/payment_repository.dart';
 import '../domain/use_cases/books/books_use_case.dart';
 import '../domain/use_cases/my_books/total_my_books_use_case.dart';
 import '../domain/use_cases/passport/passport_use_case.dart';
-import '../domain/use_cases/payment/payment_use_case.dart';
+import '../domain/use_cases/payment/get_pay_data_use_case.dart';
+import '../domain/use_cases/payment/post_pay_data_use_case.dart';
+import '../domain/use_cases/sign/delete_session_use_case.dart';
 import '../presentation/book/books/books_viewmodel.dart';
 import '../presentation/book/passport/passport_view_model.dart';
 import '../presentation/counter/counter_view_model.dart';
@@ -99,6 +100,11 @@ void setupDependencies() {
         sessionRepository: getIt<SessionRepository>(),
       ),
     )
+    ..registerSingleton<DeleteSessionUseCase>(
+      DeleteSessionUseCase(
+        sessionRepository: getIt<SessionRepository>(),
+      ),
+    )
     ..registerSingleton<SignUpUseCase>(
       SignUpUseCase(
         signRepository: getIt<SignRepository>(),
@@ -140,16 +146,18 @@ void setupDependencies() {
         booksRepository: getIt<BooksRepository>(),
       ),
     )
-    ..registerSingleton<PaymentUseCase>(
-      PaymentUseCase(
+    ..registerSingleton<PostPayDataUseCase>(
+      PostPayDataUseCase(
         paymentRepository: getIt<PaymentRepository>(),
       ),
     )
     ..registerSingleton<BooksUseCase>(
       BooksUseCase(),
     )
-    ..registerSingleton<DirectPayUseCase>(
-      DirectPayUseCase(),
+    ..registerSingleton<GetPayDataUseCase>(
+      GetPayDataUseCase(
+        paymentRepository: getIt<PaymentRepository>(),
+      ),
     );
 
   // view models
@@ -188,7 +196,7 @@ void setupDependencies() {
       ),
     )
     ..registerFactory<MypageViewModel>(
-      () => MypageViewModel(),
+      () => MypageViewModel(deleteSessionUseCase: getIt<DeleteSessionUseCase>()),
     )
     ..registerFactory<MyBooksViewModel>(
       () => MyBooksViewModel(
@@ -210,8 +218,9 @@ void setupDependencies() {
     ..registerFactory<PayViewModel>(
       () => PayViewModel(
         totalMyBooksUseCase: getIt<TotalMyBooksUseCase>(),
-        paymentUseCase: getIt<PaymentUseCase>(),
+        postPayDataUseCase: getIt<PostPayDataUseCase>(),
         getSessionUseCase: getIt<GetSessionUseCase>(),
+        getPayDataUseCase: getIt<GetPayDataUseCase>(),
       ),
     );
 

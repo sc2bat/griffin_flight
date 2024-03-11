@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:griffin/domain/model/payment/payment_model.dart';
 import 'package:griffin/presentation/pay/pay_view_model.dart';
 import 'package:griffin/presentation/pay/ticket_widgets.dart';
 import 'package:intl/intl.dart';
@@ -8,14 +7,14 @@ import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class PayScreen extends StatefulWidget {
-  final List<PaymentModel> forPaymentList;
+  final List<int> forPayBookIdList;
 
   @override
   State<PayScreen> createState() => _PayScreenState();
 
   const PayScreen({
     super.key,
-    required this.forPaymentList,
+    required this.forPayBookIdList,
   });
 }
 
@@ -23,21 +22,36 @@ class _PayScreenState extends State<PayScreen> {
   final controller = PageController(viewportFraction: 0.8, keepPage: true);
 
   @override
+  void initState() {
+    Future.microtask(() {
+      final payViewModel = context.read<PayViewModel>();
+
+      payViewModel.init(widget.forPayBookIdList);
+    });
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final viewModel = context.watch<PayViewModel>();
+    final state = viewModel.state;
     final pages = List.generate(
-        (widget.forPaymentList.length / 2).ceil(),
+        (state.forPaymentList.length / 2).ceil(),
         (i) => TicketWidgets(
-            twoTicketList: widget.forPaymentList.sublist(
+            twoTicketList: state.forPaymentList.sublist(
                 i * 2,
-                (i + 1) * 2 > widget.forPaymentList.length
-                    ? widget.forPaymentList.length
+                (i + 1) * 2 > state.forPaymentList.length
+                    ? state.forPaymentList.length
                     : (i + 1) * 2)));
     final totalAmount =
-        widget.forPaymentList.fold(0.0, (e, v) => e + v.payAmount!);
+        state.forPaymentList.fold(0.0, (e, v) => e + v.payAmount!);
     return Scaffold(
       body: SafeArea(
-        child: SingleChildScrollView(
+        child: (state.isLoading)
+            ? const Center(
+          child: CircularProgressIndicator(),
+        )
+        : SingleChildScrollView(
           physics: const NeverScrollableScrollPhysics(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -69,10 +83,11 @@ class _PayScreenState extends State<PayScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                          '총 금액: ${NumberFormat('###,###,###,###').format(totalAmount)}원'),
+                          'Amount: ${NumberFormat('###,###,###,###').format(totalAmount)}USD'),
                       TextButton(
                           onPressed: () {
-                            viewModel.bootpayPayment(context, widget.forPaymentList, totalAmount);
+                            viewModel.bootpayPayment(
+                                context, state.forPaymentList, totalAmount);
                           },
                           child: const Text('결제하기',
                               style: TextStyle(fontSize: 16.0))),

@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:griffin/presentation/mypage/mypage_state.dart';
 import 'package:griffin/presentation/mypage/mypage_view_model.dart';
 import 'package:provider/provider.dart';
@@ -67,7 +68,10 @@ class _MypageScreenState extends State<MypageScreen>
       appBar: AppBar(
         actions: [
           ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              mypageViewModel.signOut();
+              context.go('/sign');
+            },
             style: ButtonStyle(
               //테두리 모양 조절
               shape: MaterialStateProperty.all(RoundedRectangleBorder(
@@ -135,6 +139,7 @@ class PageViewListWidget extends StatelessWidget {
     super.key,
     required this.ticketList,
   });
+
   final List<Map<String, dynamic>> ticketList;
 
   @override
