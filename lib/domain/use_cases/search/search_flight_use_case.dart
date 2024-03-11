@@ -46,7 +46,10 @@ class SearchFlightUseCase {
     }
     if (fromAirportModel != null && toAirportModel != null) {
       double distance = calculateDistance(
-          lat1: 63.985, lon1: -22.6056, lat2: 37.4691, lon2: 126.451);
+          lat1: fromAirportModel.latitude,
+          lon1: fromAirportModel.longitude,
+          lat2: toAirportModel.latitude,
+          lon2: toAirportModel.longitude);
       final result = await _flightRepository.searchFlightResult(searchDTO);
       switch (result) {
         case Success<Map<String, List<FlightDTO>>>():
@@ -59,6 +62,10 @@ class SearchFlightUseCase {
             final List<FlightResultModel> toFlight = result.data['to_flight']!
                 .map((e) => FlightResultMapper.fromDTO(e))
                 .toList();
+
+            if (fromFlight.isEmpty && toFlight.isEmpty) {
+              return const Result.error('조회 결과가 없습니다.');
+            }
 
             final fromFlightResult = fromFlight
                 .map((e) => e.copyWith(

@@ -16,6 +16,8 @@ class SearchState with _$SearchState {
     @Default(1) int currentPersonValue,
     @Default(0) int fromAirportId,
     @Default(0) int toAirportId,
+    AirportModel? fromAirport,
+    AirportModel? toAirport,
     @Default('') String travelDate,
     @Default('') String returnDate,
     @Default({}) Map<String, dynamic> searchResult,

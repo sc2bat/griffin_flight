@@ -11,6 +11,7 @@ import 'package:griffin/domain/use_cases/splash/get_session_use_case.dart';
 import 'package:griffin/presentation/common/common.dart';
 import 'package:griffin/presentation/search/search_state.dart';
 import 'package:griffin/presentation/search/search_ui_event.dart';
+import 'package:griffin/presentation/search/widget/airport_map_widget.dart';
 import 'package:griffin/utils/simple_logger.dart';
 
 class SearchViewModel with ChangeNotifier {
@@ -55,9 +56,31 @@ class SearchViewModel with ChangeNotifier {
       switch (event) {
         case ShowSnackBar():
           showSnackBar(context, event.message);
-        case SearchSuccess():
-          context.push('/search/result',
-              extra: {'search_result': state.searchResult});
+        case ViewAirportMap():
+          if (state.fromAirport != null && state.toAirport != null) {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return Dialog.fullscreen(
+                  child: AirportMapWidget(
+                    goResultFunction: (context) {
+                      context.pop();
+                      context.push('/search/result',
+                          extra: {'search_result': state.searchResult});
+                    },
+                    isLoading: state.isLoading,
+                    fromAirport: state.fromAirport!,
+                    toAirport: state.toAirport!,
+                  ),
+                );
+              },
+            );
+          } else {
+            _searchUiEventStreamController.add(const SearchUiEvent.showSnackBar(
+                'fromAirport || toAirport is Null!'));
+          }
+        // context.push('/search/result',
+        //     extra: {'search_result': state.searchResult});
       }
     });
   }
@@ -139,42 +162,50 @@ class SearchViewModel with ChangeNotifier {
     return '$year$month$day';
   }
 
-  void saveFromAirport(int airportId) {
-    _state = state.copyWith(fromAirportId: airportId);
+  void saveFromAirport(AirportModel airportModel) {
+    _state = state.copyWith(
+        fromAirportId: airportModel.airportId, fromAirport: airportModel);
     notifyListeners();
   }
 
-  void saveToAirport(int airportId) {
-    _state = state.copyWith(toAirportId: airportId);
+  void saveToAirport(AirportModel airportModel) {
+    _state = state.copyWith(
+        toAirportId: airportModel.airportId, toAirport: airportModel);
     notifyListeners();
   }
 
   Future<void> searchFilght() async {
-    _state = state.copyWith(isLoading: true);
-    notifyListeners();
-
     if (stateValid()) {
+      _state = state.copyWith(isLoading: true);
+      notifyListeners();
+
       final result = await _searchFlightUseCase.execute(state.fromAirportId,
           state.toAirportId, state.travelDate, state.returnDate);
       switch (result) {
         case Success<Map<String, dynamic>>():
-          logger.info(result.data);
-          _state = state.copyWith(searchResult: result.data);
+          _state = state.copyWith(searchResult: result.data, isLoading: false);
+          notifyListeners();
           _searchUiEventStreamController
-              .add(const SearchUiEvent.searchSuccess());
+              .add(const SearchUiEvent.viewAirportMap());
         case Error<Map<String, dynamic>>():
-          logger.info(result.message);
+          _state = state.copyWith(isLoading: false);
+          notifyListeners();
           _searchUiEventStreamController.add(SearchUiEvent.showSnackBar(
               'result.message => ${result.message}'));
       }
     } else {
-      logger.info('check valid');
-      _searchUiEventStreamController
-          .add(const SearchUiEvent.showSnackBar('조회에 필요한 정보가 부족합니다.'));
+      String message = '관리자에게 문의바랍니다.';
+      if (state.fromAirportId == 0) {
+        message = '출발지를 선택해주세요.';
+      } else if (state.fromAirportId == 0) {
+        message = '도착지를 선택해주세요.';
+      } else if (state.travelDate.isEmpty) {
+        message = '가는날을 선택해주세요.';
+      } else if (state.returnDate.isEmpty) {
+        message = '오는날을 선택해주세요.';
+      }
+      _searchUiEventStreamController.add(SearchUiEvent.showSnackBar(message));
     }
-
-    _state = state.copyWith(isLoading: false);
-    notifyListeners();
   }
 
   bool stateValid() {

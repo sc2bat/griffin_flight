@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:griffin/di/get_it.dart';
+import 'package:griffin/domain/model/flight_result/flight_result_model.dart';
 import 'package:griffin/domain/model/payment/payment_model.dart';
 import 'package:griffin/presentation/book/books/books_screen.dart';
 import 'package:griffin/presentation/book/books/books_viewmodel.dart';
@@ -83,8 +83,7 @@ final router = GoRouter(
                 ),
               );
             } else {
-              context.go('/search');
-              return Container();
+              return const IndexScreen();
             }
           },
         ),
@@ -93,10 +92,22 @@ final router = GoRouter(
     GoRoute(
       name: 'book',
       path: '/book',
-      builder: (_, __) => ChangeNotifierProvider(
-        create: (_) => getIt<BooksViewModel>(),
-        child: BooksScreen(),
-      ),
+      builder: (context, state) {
+        if (state.extra != null) {
+          final map = state.extra! as Map<String, dynamic>;
+          return ChangeNotifierProvider(
+            create: (_) => getIt<BooksViewModel>(),
+            child: BooksScreen(
+              departureFlightResultModel:
+                  map["departure_flight"] as FlightResultModel,
+              arrivalFlightResultModel:
+                  map["arrival_flight"] as FlightResultModel,
+            ),
+          );
+        } else {
+          return const IndexScreen();
+        }
+      },
       routes: [
         GoRoute(
             name: 'passport',

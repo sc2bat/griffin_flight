@@ -1,7 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:griffin/presentation/common/common_button.dart';
 import 'package:griffin/presentation/search/flight_result/flight_result_state.dart';
 import 'package:griffin/presentation/search/flight_result/flight_result_view_model.dart';
+import 'package:griffin/utils/simple_logger.dart';
 import 'package:provider/provider.dart';
 
 import 'widget/page_view_flight_list_widget.dart';
@@ -21,6 +25,7 @@ class _FlightResultScreenState extends State<FlightResultScreen>
     with TickerProviderStateMixin {
   late PageController _pageViewController;
   late TabController _tabController;
+  StreamSubscription? _streamSubscription;
 
   List<Widget> pages = <Widget>[
     const Text('From Flight'),
@@ -33,6 +38,7 @@ class _FlightResultScreenState extends State<FlightResultScreen>
       final FlightResultViewModel flightResultViewModel =
           context.read<FlightResultViewModel>();
       flightResultViewModel.init(widget.searchResult);
+      _streamSubscription = flightResultViewModel.setStream(context);
     });
 
     _pageViewController = PageController();
@@ -54,6 +60,7 @@ class _FlightResultScreenState extends State<FlightResultScreen>
   void dispose() {
     _pageViewController.dispose();
     _tabController.dispose();
+    _streamSubscription?.cancel();
     super.dispose();
   }
 
@@ -134,11 +141,50 @@ class _FlightResultScreenState extends State<FlightResultScreen>
                         ]
                       : [
                           PageViewFlightListWidget(
-                              flightList: flightResultState.fromFlight),
+                            flightList: flightResultState.fromFlightResultList,
+                            selectFlight: flightResultState.selectFromFlight,
+                            selectFunction:
+                                flightResultViewModel.selectFromFlight,
+                          ),
                           PageViewFlightListWidget(
-                              flightList: flightResultState.toFlightList),
+                            flightList: flightResultState.toFlightResultList,
+                            selectFlight: flightResultState.selectToFlight,
+                            selectFunction:
+                                flightResultViewModel.selectToFlight,
+                          ),
                         ],
                 ),
+              ),
+            ),
+            SizedBox(
+              height: MediaQuery.of(context).size.width * 0.20,
+              child: Column(
+                children: [
+                  const Divider(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      CommonButton(
+                        width: MediaQuery.of(context).size.width * 0.3,
+                        height: MediaQuery.of(context).size.width * 0.12,
+                        text: 'Continue',
+                        onTap: () {
+                          if (flightResultViewModel.flightSelectValid()) {
+                            context.go('/book', extra: {
+                              "departure_flight":
+                                  flightResultState.selectFromFlight,
+                              "arrival_flight":
+                                  flightResultState.selectToFlight,
+                            });
+                          } else {
+                            logger.info(
+                                'flightResultState.fligthSelectList error');
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
           ],

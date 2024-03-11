@@ -1,7 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:griffin/domain/model/flight_result/flight_result_model.dart';
 import 'package:griffin/domain/use_cases/search/search_flight_use_case.dart';
+import 'package:griffin/presentation/common/common.dart';
 import 'package:griffin/presentation/search/flight_result/flight_result_state.dart';
+import 'package:griffin/presentation/search/search_ui_event.dart';
 
 class FlightResultViewModel with ChangeNotifier {
   FlightResultViewModel({
@@ -12,14 +16,18 @@ class FlightResultViewModel with ChangeNotifier {
   FlightResultState _flightResultState = FlightResultState();
   FlightResultState get flightResultState => _flightResultState;
 
+  final _searchUiEventStreamController = StreamController<SearchUiEvent>();
+  Stream<SearchUiEvent> get searchUiEventStreamController =>
+      _searchUiEventStreamController.stream;
+
   Future<void> init(Map<String, dynamic> searchResult) async {
     _flightResultState = flightResultState.copyWith(isLoading: true);
     notifyListeners();
 
     // setFligthResult
     _flightResultState = flightResultState.copyWith(
-      fromFlight: searchResult['from_flight'] ?? [],
-      toFlightList: searchResult['to_flight'] ?? [],
+      fromFlightResultList: searchResult['from_flight'] ?? [],
+      toFlightResultList: searchResult['to_flight'] ?? [],
     );
 
     sortFlight(0, true, false);
@@ -31,20 +39,31 @@ class FlightResultViewModel with ChangeNotifier {
     notifyListeners();
   }
 
+  StreamSubscription? setStream(BuildContext context) {
+    return searchUiEventStreamController.listen((event) {
+      switch (event) {
+        case ShowSnackBar():
+          showSnackBar(context, event.message);
+        case ViewAirportMap():
+          break;
+      }
+    });
+  }
+
   void sortFlight(int index, bool cheeper, bool faster) {
     _flightResultState = flightResultState.copyWith(isLoading: true);
     notifyListeners();
 
     List<FlightResultModel> sortList = [];
     sortList = List.from(index == 0
-        ? flightResultState.fromFlight
-        : flightResultState.toFlightList);
+        ? flightResultState.fromFlightResultList
+        : flightResultState.toFlightResultList);
     sortList.sort((a, b) => cheeper
         ? a.payAmount.compareTo(b.payAmount)
         : b.payAmount.compareTo(a.payAmount));
     _flightResultState = index == 0
-        ? flightResultState.copyWith(fromFlight: sortList)
-        : flightResultState.copyWith(toFlightList: sortList);
+        ? flightResultState.copyWith(fromFlightResultList: sortList)
+        : flightResultState.copyWith(toFlightResultList: sortList);
 
     _flightResultState = flightResultState.copyWith(isLoading: false);
     notifyListeners();
@@ -58,5 +77,30 @@ class FlightResultViewModel with ChangeNotifier {
     _flightResultState = flightResultState.copyWith(selectedPage: selectedPage);
     notifyListeners();
   }
-  // double
+
+  bool flightSelectValid() {
+    String message = '비행편을 모두 선택해주세요.';
+    if (flightResultState.selectFromFlight != null &&
+        flightResultState.selectToFlight != null) {
+      return true;
+    } else if (flightResultState.selectFromFlight == null) {
+      message = '출발 비행편을 선택해주세요.';
+    } else {
+      message = '도착 비행편을 선택해주세요.';
+    }
+    _searchUiEventStreamController.add(SearchUiEvent.showSnackBar(message));
+    return false;
+  }
+
+  void selectFromFlight(FlightResultModel flightResultModel) {
+    _flightResultState =
+        flightResultState.copyWith(selectFromFlight: flightResultModel);
+    notifyListeners();
+  }
+
+  void selectToFlight(FlightResultModel flightResultModel) {
+    _flightResultState =
+        flightResultState.copyWith(selectToFlight: flightResultModel);
+    notifyListeners();
+  }
 }
