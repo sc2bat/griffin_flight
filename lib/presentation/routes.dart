@@ -1,6 +1,5 @@
 import 'package:go_router/go_router.dart';
 import 'package:griffin/di/get_it.dart';
-import 'package:griffin/domain/model/flight_result/flight_result_model.dart';
 import 'package:griffin/domain/model/payment/payment_model.dart';
 import 'package:griffin/presentation/book/books/books_screen.dart';
 import 'package:griffin/presentation/book/books/books_viewmodel.dart';
@@ -25,8 +24,6 @@ import 'package:griffin/presentation/sign/sign_view_model.dart';
 import 'package:griffin/presentation/splash/splash_screen.dart';
 import 'package:griffin/presentation/splash/splash_view_model.dart';
 import 'package:provider/provider.dart';
-
-import '../domain/model/books/books_model.dart';
 
 final router = GoRouter(
   initialLocation: '/',
@@ -100,10 +97,8 @@ final router = GoRouter(
           return ChangeNotifierProvider(
             create: (_) => getIt<BooksViewModel>(),
             child: BooksScreen(
-              departureFlightResultModel:
-                  map["departure_flight"] as FlightResultModel,
-              arrivalFlightResultModel:
-                  map["arrival_flight"] as FlightResultModel,
+              departureFlightResultModel: map["departure_flight"],
+              arrivalFlightResultModel: map["arrival_flight"],
             ),
           );
         } else {
@@ -118,8 +113,7 @@ final router = GoRouter(
               final map = state.extra! as Map<String, dynamic>;
               return ChangeNotifierProvider(
                 create: (_) => getIt<PassportViewModel>(),
-                child: PassportScreen(
-                    bookIdList: map['bookIdList'] as List<BooksModel>),
+                child: PassportScreen(bookIdList: map['bookIdList']),
               );
             },
             routes: [

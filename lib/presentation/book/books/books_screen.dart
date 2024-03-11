@@ -146,15 +146,17 @@ class _BooksScreenState extends State<BooksScreen> {
                         width: MediaQuery.of(context).size.width * 0.3,
                         height: MediaQuery.of(context).size.width * 0.12,
                         text: 'Continue',
-                        onTap: () {
-                          viewModel.postBookData(context, [
+                        onTap: () async {
+                          List<BooksModel> bookIdList = await viewModel
+                              .postBookData([
                             widget.departureFlightResultModel,
                             widget.arrivalFlightResultModel
                           ]);
-                          // if (bookIdList.isNotEmpty) {
-                          //   context.go('/book/passport',
-                          //       extra: {"bookIdList": bookIdList});
-                          // }
+
+                          if (bookIdList.isNotEmpty && mounted) {
+                            context.push('/book/passport',
+                                extra: {"bookIdList": bookIdList});
+                          }
                         }),
                   ],
                 ),

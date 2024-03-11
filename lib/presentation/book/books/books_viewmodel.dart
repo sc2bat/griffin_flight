@@ -1,9 +1,7 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
-import 'package:go_router/go_router.dart';
 import 'package:griffin/domain/model/books/books_model.dart';
-import 'package:griffin/domain/model/flight/flight_model.dart';
 import 'package:griffin/presentation/book/books/books_state.dart';
+
 import '../../../data/core/result.dart';
 import '../../../domain/model/flight_result/flight_result_model.dart';
 import '../../../domain/model/user/user_account_model.dart';
@@ -43,16 +41,15 @@ class BooksViewModel with ChangeNotifier {
     }
   }
 
-  Future<void> postBookData(BuildContext context,
+  Future<List<BooksModel>> postBookData(
       List<FlightResultModel> flightResultModelList) async {
+    List<BooksModel> bookIdList = [];
     if (state.userAccountModel != null && flightResultModelList.isNotEmpty) {
-      List<BooksModel> bookIdList = [];
       for (var item in flightResultModelList) {
         final result = await _booksUseCase.execute(
             userId: state.userAccountModel!.userId,
             flightId: item.flightId,
             payAmount: item.payAmount);
-
         switch (result) {
           case Success<BooksModel>():
             bookIdList.add(result.data);
@@ -60,9 +57,7 @@ class BooksViewModel with ChangeNotifier {
             throw Exception(result.message);
         }
       }
-      if (bookIdList.isNotEmpty) {
-        context.go('/book/passport', extra: {"bookIdList": bookIdList});
-      }
     }
+    return bookIdList;
   }
 }
