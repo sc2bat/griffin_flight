@@ -154,5 +154,3 @@ app.*.map.json
 
 # bak
 *.bak
-
-android/app/src/main/AndroidManifest.xml
