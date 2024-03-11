@@ -43,6 +43,8 @@ class BooksViewModel with ChangeNotifier {
 
   Future<List<BooksModel>> postBookData(
       List<FlightResultModel> flightResultModelList) async {
+    _state = state.copyWith(isLoading: true);
+    notifyListeners();
     List<BooksModel> bookIdList = [];
     if (state.userAccountModel != null && flightResultModelList.isNotEmpty) {
       for (var item in flightResultModelList) {
@@ -58,6 +60,8 @@ class BooksViewModel with ChangeNotifier {
         }
       }
     }
+    _state = state.copyWith(isLoading: false);
+    notifyListeners();
     return bookIdList;
   }
 }

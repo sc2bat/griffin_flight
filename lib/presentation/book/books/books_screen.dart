@@ -38,6 +38,7 @@ class _BooksScreenState extends State<BooksScreen> {
   @override
   Widget build(BuildContext context) {
     final viewModel = context.watch<BooksViewModel>();
+    final state = viewModel.state;
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -143,21 +144,24 @@ class _BooksScreenState extends State<BooksScreen> {
                       ),
                     ),
                     CommonButton(
-                        width: MediaQuery.of(context).size.width * 0.3,
-                        height: MediaQuery.of(context).size.width * 0.12,
-                        text: 'Continue',
-                        onTap: () async {
-                          List<BooksModel> bookIdList = await viewModel
-                              .postBookData([
-                            widget.departureFlightResultModel,
-                            widget.arrivalFlightResultModel
-                          ]);
+                      width: MediaQuery.of(context).size.width * 0.3,
+                      height: MediaQuery.of(context).size.width * 0.12,
+                      text: state.isLoading ? 'Loading...' : 'Continue',
+                      onTap: state.isLoading
+                          ? () {}
+                          : () async {
+                              List<BooksModel> bookIdList = await viewModel
+                                  .postBookData([
+                                widget.departureFlightResultModel,
+                                widget.arrivalFlightResultModel
+                              ]);
 
-                          if (bookIdList.isNotEmpty && mounted) {
-                            context.push('/book/passport',
-                                extra: {"bookIdList": bookIdList});
-                          }
-                        }),
+                              if (bookIdList.isNotEmpty && mounted) {
+                                context.push('/book/passport',
+                                    extra: {"bookIdList": bookIdList});
+                              }
+                            },
+                    ),
                   ],
                 ),
               ],
