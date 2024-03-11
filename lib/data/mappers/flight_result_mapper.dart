@@ -1,5 +1,4 @@
 import 'package:griffin/data/dtos/flight_dto.dart';
-import 'package:griffin/domain/model/flight/flight_model.dart';
 import 'package:griffin/domain/model/flight_result/flight_result_model.dart';
 
 class FlightResultMapper {
@@ -21,7 +20,7 @@ class FlightResultMapper {
     );
   }
 
-  static FlightDTO toDTO(FlightModel model) {
+  static FlightDTO toDTO(FlightResultModel model) {
     return FlightDTO(
       flightId: model.flightId,
       airplaneId: model.airplaneId,

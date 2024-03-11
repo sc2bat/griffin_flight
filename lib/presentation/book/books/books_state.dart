@@ -9,6 +9,7 @@ part 'books_state.g.dart';
 @freezed
 class BooksState with _$BooksState {
   factory BooksState({
+    @Default(false) bool isLoading,
     FlightResultModel? flightResultModel,
     UserAccountModel? userAccountModel,
   }) = _BooksState;
