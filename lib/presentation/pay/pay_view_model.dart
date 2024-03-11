@@ -10,12 +10,13 @@ import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:griffin/domain/model/books/books_model.dart';
 import 'package:griffin/domain/use_cases/my_books/total_my_books_use_case.dart';
+import 'package:griffin/domain/use_cases/payment/get_pay_data_use_case.dart';
 import 'package:griffin/presentation/pay/pay_state.dart';
 
 import '../../data/core/result.dart';
 import '../../domain/model/payment/payment_model.dart';
 import '../../domain/model/user/user_account_model.dart';
-import '../../domain/use_cases/payment/payment_use_case.dart';
+import '../../domain/use_cases/payment/post_pay_data_use_case.dart';
 import '../../domain/use_cases/splash/get_session_use_case.dart';
 import '../../env/env.dart';
 import '../../utils/simple_logger.dart';
@@ -23,15 +24,18 @@ import '../../utils/simple_logger.dart';
 class PayViewModel extends ChangeNotifier {
   final GetSessionUseCase _getSessionUseCase;
   final TotalMyBooksUseCase _totalMyBooksUseCase;
-  final PaymentUseCase _paymentUseCase;
+  final PostPayDataUseCase _postPayDataUseCase;
+  final GetPayDataUseCase _getPayDataUseCase;
 
-  PayViewModel({
-    required GetSessionUseCase getSessionUseCase,
-    required TotalMyBooksUseCase totalMyBooksUseCase,
-    required PaymentUseCase paymentUseCase,
-  })  : _getSessionUseCase = getSessionUseCase,
+  PayViewModel(
+      {required GetSessionUseCase getSessionUseCase,
+      required TotalMyBooksUseCase totalMyBooksUseCase,
+      required PostPayDataUseCase postPayDataUseCase,
+      required GetPayDataUseCase getPayDataUseCase})
+      : _getSessionUseCase = getSessionUseCase,
         _totalMyBooksUseCase = totalMyBooksUseCase,
-        _paymentUseCase = paymentUseCase {
+        _postPayDataUseCase = postPayDataUseCase,
+        _getPayDataUseCase = getPayDataUseCase {
     fetchData();
   }
 
@@ -53,7 +57,11 @@ class PayViewModel extends ChangeNotifier {
     }
   }
 
+  // pay status 변경 전 예약된 리스트 요청
   Future<void> fetchData() async {
+    _state = state.copyWith(isLoading: true);
+    notifyListeners();
+
     try {
       await getSession();
       if (_state.userAccountModel != null) {
@@ -73,7 +81,29 @@ class PayViewModel extends ChangeNotifier {
       }
     } catch (error) {
       // 에러 처리
-      debugPrint('Error fetching data: $error');
+      logger.info('Error fetching data: $error');
+    } finally {
+      _state = state.copyWith(isLoading: false);
+      notifyListeners();
+    }
+  }
+
+  void init(List<int> forPayBookIdList) async {
+    try {
+      final result = await _getPayDataUseCase.execute(data: forPayBookIdList);
+      switch (result) {
+        case Success<List<PaymentModel>>():
+          _state = state.copyWith(forPaymentList: result.data);
+          notifyListeners();
+          break;
+        case Error<List<PaymentModel>>():
+          logger.info(result.message);
+          notifyListeners();
+          break;
+      }
+    } catch (error) {
+      // 에러 처리
+      logger.info('Error init data: $error');
     }
   }
 
@@ -95,7 +125,7 @@ class PayViewModel extends ChangeNotifier {
       paidList.add(postItem);
     }
     logger.info(paidList);
-    _paymentUseCase.execute(data: paidList);
+    _postPayDataUseCase.execute(data: paidList);
   }
 
   void bootpayPayment(BuildContext context, List<PaymentModel> forPaymentList,

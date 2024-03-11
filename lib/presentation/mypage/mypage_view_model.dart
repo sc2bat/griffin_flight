@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:griffin/domain/use_cases/sign/delete_session_use_case.dart';
 import 'package:griffin/presentation/mypage/mypage_state.dart';
 
 class MypageViewModel with ChangeNotifier {
+  MypageViewModel({
+    required DeleteSessionUseCase deleteSessionUseCase,
+  }) : _deleteSessionUseCase = deleteSessionUseCase;
+  final DeleteSessionUseCase _deleteSessionUseCase;
   // MypageViewModel({});
 
   MypageState _mypageState = const MypageState();
+
   MypageState get mypageState => _mypageState;
 
   Future<void> init() async {
@@ -62,4 +68,9 @@ class MypageViewModel with ChangeNotifier {
     _mypageState = mypageState.copyWith(pastList: pastList);
     notifyListeners();
   }
+
+  void signOut() async {
+    await _deleteSessionUseCase.execute();
+  }
+
 }

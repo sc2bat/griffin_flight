@@ -96,6 +96,11 @@ void setupDependencies() {
         sessionRepository: getIt<SessionRepository>(),
       ),
     )
+    ..registerSingleton<DeleteSessionUseCase>(
+      DeleteSessionUseCase(
+        sessionRepository: getIt<SessionRepository>(),
+      ),
+    )
     ..registerSingleton<SignUpUseCase>(
       SignUpUseCase(
         signRepository: getIt<SignRepository>(),
@@ -137,16 +142,18 @@ void setupDependencies() {
         booksRepository: getIt<BooksRepository>(),
       ),
     )
-    ..registerSingleton<PaymentUseCase>(
-      PaymentUseCase(
+    ..registerSingleton<PostPayDataUseCase>(
+      PostPayDataUseCase(
         paymentRepository: getIt<PaymentRepository>(),
       ),
     )
     ..registerSingleton<BooksUseCase>(
       BooksUseCase(booksRepository: getIt<BooksRepository>()),
     )
-    ..registerSingleton<DirectPayUseCase>(
-      DirectPayUseCase(),
+    ..registerSingleton<GetPayDataUseCase>(
+      GetPayDataUseCase(
+        paymentRepository: getIt<PaymentRepository>(),
+      ),
     );
 
   // view models
@@ -177,7 +184,7 @@ void setupDependencies() {
       ),
     )
     ..registerFactory<MypageViewModel>(
-      () => MypageViewModel(),
+      () => MypageViewModel(deleteSessionUseCase: getIt<DeleteSessionUseCase>()),
     )
     ..registerFactory<MyBooksViewModel>(
       () => MyBooksViewModel(
@@ -199,8 +206,9 @@ void setupDependencies() {
     ..registerFactory<PayViewModel>(
       () => PayViewModel(
         totalMyBooksUseCase: getIt<TotalMyBooksUseCase>(),
-        paymentUseCase: getIt<PaymentUseCase>(),
+        postPayDataUseCase: getIt<PostPayDataUseCase>(),
         getSessionUseCase: getIt<GetSessionUseCase>(),
+        getPayDataUseCase: getIt<GetPayDataUseCase>(),
       ),
     );
 }

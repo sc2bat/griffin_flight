@@ -136,7 +136,7 @@ final router = GoRouter(
       path: '/pay',
       builder: (_, state) => ChangeNotifierProvider(
         create: (_) => getIt<PayViewModel>(),
-        child: PayScreen(forPaymentList: state.extra as List<PaymentModel>),
+        child: PayScreen(forPayBookIdList: state.extra as List<int>,),
       ),
       routes: const [],
     ),

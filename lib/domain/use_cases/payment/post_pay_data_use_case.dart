@@ -3,8 +3,8 @@ import 'package:griffin/data/mappers/books_mapper.dart';
 import 'package:griffin/domain/model/books/books_model.dart';
 import 'package:griffin/domain/repositories/payment_repository.dart';
 
-class PaymentUseCase {
-  PaymentUseCase({
+class PostPayDataUseCase {
+  PostPayDataUseCase({
     required PaymentRepository paymentRepository,
   }) : _paymentRepository = paymentRepository;
 
