@@ -1,14 +1,11 @@
 import 'package:go_router/go_router.dart';
 import 'package:griffin/di/get_it.dart';
-import 'package:griffin/domain/model/flight_result/flight_result_model.dart';
 import 'package:griffin/domain/model/payment/payment_model.dart';
 import 'package:griffin/presentation/book/books/books_screen.dart';
 import 'package:griffin/presentation/book/books/books_viewmodel.dart';
 import 'package:griffin/presentation/book/passport/passport_screen.dart';
 import 'package:griffin/presentation/book/passport/passport_view_model.dart';
 import 'package:griffin/presentation/book/seat/seat_screen.dart';
-import 'package:griffin/presentation/counter/counter_screen.dart';
-import 'package:griffin/presentation/counter/sample_screen.dart';
 import 'package:griffin/presentation/index_screen.dart';
 import 'package:griffin/presentation/my_books/my_books_screen.dart';
 import 'package:griffin/presentation/my_books/my_books_view_model.dart';
@@ -98,10 +95,8 @@ final router = GoRouter(
           return ChangeNotifierProvider(
             create: (_) => getIt<BooksViewModel>(),
             child: BooksScreen(
-              departureFlightResultModel:
-                  map["departure_flight"] as FlightResultModel,
-              arrivalFlightResultModel:
-                  map["arrival_flight"] as FlightResultModel,
+              departureFlightResultModel: map["departure_flight"],
+              arrivalFlightResultModel: map["arrival_flight"],
             ),
           );
         } else {
@@ -112,10 +107,13 @@ final router = GoRouter(
         GoRoute(
             name: 'passport',
             path: 'passport',
-            builder: (_, __) => ChangeNotifierProvider(
-                  create: (_) => getIt<PassportViewModel>(),
-                  child: const PassportScreen(),
-                ),
+            builder: (_, state) {
+              final map = state.extra! as Map<String, dynamic>;
+              return ChangeNotifierProvider(
+                create: (_) => getIt<PassportViewModel>(),
+                child: PassportScreen(bookIdList: map['bookIdList']),
+              );
+            },
             routes: [
               GoRoute(
                 name: 'seat',
@@ -142,27 +140,12 @@ final router = GoRouter(
       ),
       routes: const [],
     ),
-    GoRoute(
-      name: 'counter',
-      path: '/counter',
-      builder: (_, __) => CounterScreen(),
-      routes: const [],
-    ),
-    GoRoute(
-      name: 'sample',
-      path: '/sample',
-      builder: (_, __) => const SampleScreen(),
-      routes: const [],
-    ),
   ],
 );
 
 List<String> routeList = [
-  'search',
-  'book',
   'myBooks',
   'pay',
-  'sample',
   'splash',
   'sign',
   'mypage',
