@@ -160,18 +160,22 @@ class _PassportScreenState extends State<PassportScreen>
                       ),
                       const SizedBox(width: 15),
                       Expanded(
-                        child: DatePickButtonWidget(
-                          title: 'DOB',
-                          textAlign: Alignment.centerLeft,
-                          lastDate: DateTime.now(),
-                          selectedTextStyle: const TextStyle(
-                              fontSize: 16, color: Colors.white),
-                          defaultTextStyle: const TextStyle(
-                              fontSize: 16, color: AppColors.greyText),
-                          firstDate: DateTime(1800),
-                          showRequiredText: true,
-                          onDatedSelected: (selectedDate) {
-                          },
+                        child: Column(
+                          children: [
+                            DatePickButtonWidget(
+                              title: 'DOB',
+                              textAlign: Alignment.centerLeft,
+                              lastDate: DateTime.now(),
+                              selectedTextStyle: const TextStyle(
+                                  fontSize: 16, color: Colors.white),
+                              defaultTextStyle: const TextStyle(
+                                  fontSize: 16, color: AppColors.greyText),
+                              firstDate: DateTime(1800),
+                              showRequiredText: true,
+                              onDatedSelected: (selectedDate) {
+                              },
+                            ),
+                          ],
                         ),
                       )
                     ],

@@ -70,11 +70,15 @@ class _DatePickButtonWidgetState extends State<DatePickButtonWidget> {
             },
             child: Align(
               alignment: widget.textAlign,
-              child: Text(
-                date != null
-                    ? '${date!.year.toString()}-${date!.month.toString().padLeft(2, '0')}-${date!.day.toString().padLeft(2, '0')}'
-                    : widget.title,
-                style: effectiveTextStyle,
+              child: Column(
+                children: [
+                  Text(
+                    date != null
+                        ? '${date!.year.toString()}-${date!.month.toString().padLeft(2, '0')}-${date!.day.toString().padLeft(2, '0')}'
+                        : widget.title,
+                    style: effectiveTextStyle,
+                  ),
+                ],
               ),
             ),
           ),
