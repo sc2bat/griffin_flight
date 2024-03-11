@@ -81,7 +81,7 @@ class PayViewModel extends ChangeNotifier {
       }
     } catch (error) {
       // 에러 처리
-      debugPrint('Error fetching data: $error');
+      logger.info('Error fetching data: $error');
     } finally {
       _state = state.copyWith(isLoading: false);
       notifyListeners();
@@ -103,7 +103,7 @@ class PayViewModel extends ChangeNotifier {
       }
     } catch (error) {
       // 에러 처리
-      debugPrint('Error init data: $error');
+      logger.info('Error init data: $error');
     }
   }
 
