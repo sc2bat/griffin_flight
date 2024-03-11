@@ -146,7 +146,7 @@ void setupDependencies() {
       ),
     )
     ..registerSingleton<BooksUseCase>(
-      BooksUseCase(),
+      BooksUseCase(booksRepository: getIt<BooksRepository>()),
     )
     ..registerSingleton<DirectPayUseCase>(
       DirectPayUseCase(),

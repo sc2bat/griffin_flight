@@ -9,10 +9,12 @@ import 'package:griffin/presentation/common/date_pick_button_widget.dart';
 import 'package:griffin/presentation/common/total_fare_bar_widget.dart';
 import 'package:provider/provider.dart';
 
+import '../../../domain/model/books/books_model.dart';
 import '../../common/colors.dart';
 
 class PassportScreen extends StatefulWidget {
-  const PassportScreen({super.key});
+  final List<BooksModel> bookIdList;
+  const PassportScreen({super.key, required this.bookIdList});
 
   @override
   State<PassportScreen> createState() => _PassportScreenState();

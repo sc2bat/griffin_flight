@@ -26,6 +26,8 @@ import 'package:griffin/presentation/splash/splash_screen.dart';
 import 'package:griffin/presentation/splash/splash_view_model.dart';
 import 'package:provider/provider.dart';
 
+import '../domain/model/books/books_model.dart';
+
 final router = GoRouter(
   initialLocation: '/',
   routes: [
@@ -112,10 +114,14 @@ final router = GoRouter(
         GoRoute(
             name: 'passport',
             path: 'passport',
-            builder: (_, __) => ChangeNotifierProvider(
-                  create: (_) => getIt<PassportViewModel>(),
-                  child: const PassportScreen(),
-                ),
+            builder: (_, state) {
+              final map = state.extra! as Map<String, dynamic>;
+              return ChangeNotifierProvider(
+                create: (_) => getIt<PassportViewModel>(),
+                child: PassportScreen(
+                    bookIdList: map['bookIdList'] as List<BooksModel>),
+              );
+            },
             routes: [
               GoRoute(
                 name: 'seat',

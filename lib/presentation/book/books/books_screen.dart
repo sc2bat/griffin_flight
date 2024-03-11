@@ -6,6 +6,7 @@ import 'package:griffin/presentation/book/books/books_viewmodel.dart';
 import 'package:griffin/presentation/book/books/widgets/flight_icon_widget.dart';
 import 'package:provider/provider.dart';
 
+import '../../../domain/model/books/books_model.dart';
 import '../../common/colors.dart';
 import '../../common/common_button.dart';
 import '../../common/flight_card.dart';
@@ -36,6 +37,7 @@ class _BooksScreenState extends State<BooksScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final viewModel = context.watch<BooksViewModel>();
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -141,11 +143,19 @@ class _BooksScreenState extends State<BooksScreen> {
                       ),
                     ),
                     CommonButton(
-                      width: MediaQuery.of(context).size.width * 0.3,
-                      height: MediaQuery.of(context).size.width * 0.12,
-                      text: 'Continue',
-                      onTap: () {},
-                    ),
+                        width: MediaQuery.of(context).size.width * 0.3,
+                        height: MediaQuery.of(context).size.width * 0.12,
+                        text: 'Continue',
+                        onTap: () {
+                          viewModel.postBookData(context, [
+                            widget.departureFlightResultModel,
+                            widget.arrivalFlightResultModel
+                          ]);
+                          // if (bookIdList.isNotEmpty) {
+                          //   context.go('/book/passport',
+                          //       extra: {"bookIdList": bookIdList});
+                          // }
+                        }),
                   ],
                 ),
               ],
