@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -5,6 +6,8 @@ import 'package:go_router/go_router.dart';
 import 'package:griffin/presentation/mypage/mypage_state.dart';
 import 'package:griffin/presentation/mypage/mypage_view_model.dart';
 import 'package:provider/provider.dart';
+
+import '../splash/sign_status.dart';
 
 class MypageScreen extends StatefulWidget {
   const MypageScreen({super.key});
@@ -17,6 +20,9 @@ class _MypageScreenState extends State<MypageScreen>
     with TickerProviderStateMixin {
   late PageController _pageViewController;
   late TabController _tabController;
+
+  StreamSubscription? _streamSubscription;
+  StreamSubscription? _signStatusSubscription;
 
   List<Widget> pages = <Widget>[
     const Text('Upcoming'),
@@ -40,23 +46,48 @@ class _MypageScreenState extends State<MypageScreen>
   void initState() {
     Future.microtask(() {
       final MypageViewModel mypageViewModel = context.read<MypageViewModel>();
+      _streamSubscription =
+          mypageViewModel.getSignUiEventStreamController.listen((event) {
+        event.when(showSnackBar: (message) {
+          final snackBar = SnackBar(
+            content: Text(message),
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        });
+      });
+      _signStatusSubscription = mypageViewModel.signStatus.listen((event) {
+        switch (event) {
+          case SignStatus.signIn:
+            context.go('/mypage');
+            break;
+          case SignStatus.signOut:
+            context.go('/sign');
+            break;
+          case SignStatus.signUp:
+            context.go('/sign');
+            break;
+        }
+      });
+
       mypageViewModel.init();
     });
     _pageViewController = PageController();
-
     _tabController = TabController(
       initialIndex: 0,
       length: 2,
       vsync: this,
     );
+
     super.initState();
   }
 
   @override
   void dispose() {
-    super.dispose();
+    _streamSubscription?.cancel();
+    _signStatusSubscription?.cancel();
     _pageViewController.dispose();
     _tabController.dispose();
+    super.dispose();
   }
 
   @override
@@ -69,8 +100,19 @@ class _MypageScreenState extends State<MypageScreen>
         actions: [
           ElevatedButton(
             onPressed: () {
-              mypageViewModel.signOut();
-              context.go('/sign');
+              context.go('/myBooks');
+            },
+            style: ButtonStyle(
+              //테두리 모양 조절
+              shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10))),
+            ),
+            child:
+                const Text('MY BOOKS', style: TextStyle(color: Colors.white)),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              await mypageViewModel.signOut();
             },
             style: ButtonStyle(
               //테두리 모양 조절
@@ -81,40 +123,40 @@ class _MypageScreenState extends State<MypageScreen>
           )
         ],
       ),
-      body: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(16.0),
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.all(
-                Radius.circular(
-                  16.0,
+      body: mypageState.isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(16.0),
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(
+                        16.0,
+                      ),
+                    ),
+                    color: Colors.white30,
+                  ),
+                  child: ToggleButtons(
+                    direction: Axis.horizontal,
+                    onPressed: (int index) {
+                      mypageViewModel.updateToggle(index);
+                      _updateCurrentPageIndex(index);
+                    },
+                    borderRadius: const BorderRadius.all(Radius.circular(8)),
+                    selectedBorderColor: Colors.red[700],
+                    selectedColor: Colors.white,
+                    fillColor: Colors.red[200],
+                    color: Colors.red[400],
+                    constraints: BoxConstraints(
+                      minHeight: 48.0,
+                      minWidth: MediaQuery.of(context).size.width * 0.3,
+                    ),
+                    isSelected: mypageState.selectedPage,
+                    children: pages,
+                  ),
                 ),
-              ),
-              color: Colors.white30,
-            ),
-            child: ToggleButtons(
-              direction: Axis.horizontal,
-              onPressed: (int index) {
-                mypageViewModel.updateToggle(index);
-                _updateCurrentPageIndex(index);
-              },
-              borderRadius: const BorderRadius.all(Radius.circular(8)),
-              selectedBorderColor: Colors.red[700],
-              selectedColor: Colors.white,
-              fillColor: Colors.red[200],
-              color: Colors.red[400],
-              constraints: BoxConstraints(
-                minHeight: 48.0,
-                minWidth: MediaQuery.of(context).size.width * 0.3,
-              ),
-              isSelected: mypageState.selectedPage,
-              children: pages,
-            ),
-          ),
-          mypageState.isLoading
-              ? const CircularProgressIndicator()
-              : Expanded(
+                Expanded(
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: PageView(
@@ -128,8 +170,8 @@ class _MypageScreenState extends State<MypageScreen>
                     ),
                   ),
                 ),
-        ],
-      ),
+              ],
+            ),
     );
   }
 }

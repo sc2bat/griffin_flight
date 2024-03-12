@@ -21,15 +21,14 @@ import 'package:griffin/domain/repositories/sign_repository.dart';
 import 'package:griffin/domain/repositories/user_repository.dart';
 import 'package:griffin/domain/use_cases/airport/airport_list_use_case.dart';
 import 'package:griffin/domain/use_cases/books/books_use_case.dart';
-import 'package:griffin/domain/use_cases/books/direct_pay_use_case.dart';
 import 'package:griffin/domain/use_cases/my_books/my_books_for_pay_use_case.dart';
 import 'package:griffin/domain/use_cases/my_books/total_my_books_use_case.dart';
 import 'package:griffin/domain/use_cases/passport/passport_use_case.dart';
-import 'package:griffin/domain/use_cases/payment/payment_use_case.dart';
 import 'package:griffin/domain/use_cases/sample_use_case.dart';
 import 'package:griffin/domain/use_cases/search/search_flight_use_case.dart';
 import 'package:griffin/domain/use_cases/sign/save_session_use_case.dart';
 import 'package:griffin/domain/use_cases/sign/sign_in_use_case.dart';
+import 'package:griffin/domain/use_cases/sign/sign_out_use_case.dart';
 import 'package:griffin/domain/use_cases/sign/sign_up_use_case.dart';
 import 'package:griffin/domain/use_cases/splash/get_session_use_case.dart';
 import 'package:griffin/domain/use_cases/splash/splash_get_user_info_use_case.dart';
@@ -42,6 +41,10 @@ import 'package:griffin/presentation/search/flight_result/flight_result_view_mod
 import 'package:griffin/presentation/search/search_view_model.dart';
 import 'package:griffin/presentation/sign/sign_view_model.dart';
 import 'package:griffin/presentation/splash/splash_view_model.dart';
+
+import '../domain/use_cases/payment/get_pay_data_use_case.dart';
+import '../domain/use_cases/payment/post_pay_data_use_case.dart';
+import '../domain/use_cases/sign/delete_session_use_case.dart';
 
 final getIt = GetIt.instance;
 
@@ -108,6 +111,11 @@ void setupDependencies() {
     )
     ..registerSingleton<SignInUseCase>(
       SignInUseCase(
+        signRepository: getIt<SignRepository>(),
+      ),
+    )
+    ..registerSingleton<SignOutUseCase>(
+      SignOutUseCase(
         signRepository: getIt<SignRepository>(),
       ),
     )
@@ -184,7 +192,9 @@ void setupDependencies() {
       ),
     )
     ..registerFactory<MypageViewModel>(
-      () => MypageViewModel(deleteSessionUseCase: getIt<DeleteSessionUseCase>()),
+      () => MypageViewModel(
+          deleteSessionUseCase: getIt<DeleteSessionUseCase>(),
+          signOutUseCase: getIt<SignOutUseCase>()),
     )
     ..registerFactory<MyBooksViewModel>(
       () => MyBooksViewModel(

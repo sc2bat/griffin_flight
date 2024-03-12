@@ -1,17 +1,38 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:griffin/domain/use_cases/sign/delete_session_use_case.dart';
+import 'package:griffin/domain/use_cases/sign/sign_out_use_case.dart';
 import 'package:griffin/presentation/mypage/mypage_state.dart';
+
+import '../sign/sign_ui_event.dart';
+import '../splash/sign_status.dart';
 
 class MypageViewModel with ChangeNotifier {
   MypageViewModel({
     required DeleteSessionUseCase deleteSessionUseCase,
-  }) : _deleteSessionUseCase = deleteSessionUseCase;
+    required SignOutUseCase signOutUseCase,
+  }) : _deleteSessionUseCase = deleteSessionUseCase,
+        _signOutUseCase = signOutUseCase;
   final DeleteSessionUseCase _deleteSessionUseCase;
+  final SignOutUseCase _signOutUseCase;
   // MypageViewModel({});
 
   MypageState _mypageState = const MypageState();
 
   MypageState get mypageState => _mypageState;
+
+  // ui event
+  final _searchUiEventStreamController = StreamController<SignUiEvent>();
+  Stream<SignUiEvent> get getSignUiEventStreamController =>
+      _searchUiEventStreamController.stream;
+
+  // sign Status
+  final StreamController<SignStatus> _signStatus = StreamController();
+  Stream<SignStatus> get signStatus => _signStatus.stream;
+  
+  
+  
 
   Future<void> init() async {
     _mypageState = mypageState.copyWith(isLoading: true);
@@ -69,8 +90,21 @@ class MypageViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  void signOut() async {
-    await _deleteSessionUseCase.execute();
+  Future<void> signOut() async {
+    _mypageState = mypageState.copyWith(isLoading: true);
+    notifyListeners();
+    final result = await _signOutUseCase.execute();
+
+    result.when(
+      success: (data) async {
+        _signStatus.add(SignStatus.signOut);
+        await _deleteSessionUseCase.execute();
+      },
+      error: (message) =>
+          _searchUiEventStreamController.add(SignUiEvent.showSnackBar(message)),
+    );
+    _mypageState = mypageState.copyWith(isLoading: false);
+    notifyListeners();
   }
 
 }
