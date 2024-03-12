@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:griffin/domain/use_cases/passport/passport_use_case.dart';
 import 'package:griffin/presentation/book/passport/passport_state.dart';
+import 'package:griffin/presentation/book/passport/widgets/gender_widget.dart';
 import '../../../data/core/result.dart';
 import '../../../data/dtos/passport_dto.dart';
 import '../../../domain/model/books/books_model.dart';
@@ -84,5 +85,23 @@ class PassportViewModel extends ChangeNotifier {
       case Error<List<PassportModel>>():
         throw Exception(result.message);
     }
+  }
+
+  //gender change 함수
+  void changeGender(Gender gender) {
+    _state = state.copyWith(selectedGender: gender);
+    notifyListeners();
+  }
+
+//nationality change 함수
+  void changeNationality(String country) {
+    _state = state.copyWith(selectedCountry: country);
+    notifyListeners();
+  }
+
+//dob change 함수
+  void changeDob(DateTime date) {
+    _state = state.copyWith(selectedDate: date);
+    notifyListeners();
   }
 }

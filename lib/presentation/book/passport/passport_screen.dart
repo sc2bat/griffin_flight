@@ -33,9 +33,6 @@ class _PassportScreenState extends State<PassportScreen>
   final emailController = TextEditingController();
   final phoneNumberController = TextEditingController();
   final validationCodeController = TextEditingController();
-  Gender? selectedGender;
-  String? selectedCountry;
-  DateTime? selectedDate;
 
   List<GlobalKey<FormState>> _formKeys = [];
 
@@ -74,6 +71,7 @@ class _PassportScreenState extends State<PassportScreen>
   @override
   Widget build(BuildContext context) {
     final viewModel = context.watch<PassportViewModel>();
+    final state = viewModel.state;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -120,11 +118,7 @@ class _PassportScreenState extends State<PassportScreen>
                   const SizedBox(height: 10),
                   GenderSelectionWidget(
                     onGenderSelected: (Gender gender) {
-                      setState(() {
-                        selectedGender = gender;
-                        // logger.info('screen gender: $gender');
-                        // logger.info('screen selectedGender: $selectedGender');
-                      });
+                      viewModel.changeGender(gender);
                     },
                   ),
                   const SizedBox(height: 20),
@@ -175,9 +169,7 @@ class _PassportScreenState extends State<PassportScreen>
                       Expanded(
                         child: CountryTextFieldWidget(
                           onCountrySelected: (country) {
-                            setState(() {
-                              selectedCountry = country;
-                            });
+                            viewModel.changeNationality(country);
                           },
                         ),
                       ),
@@ -196,11 +188,7 @@ class _PassportScreenState extends State<PassportScreen>
                               firstDate: DateTime(1800),
                               showRequiredText: true,
                               onDatedSelected: (date) {
-                                setState(() {
-                                  selectedDate = date;
-                                  logger.info(selectedDate.toString());
-                                  logger.info(selectedDate?.year);
-                                });
+                                viewModel.changeDob(date);
                               },
                             ),
                           ],
@@ -213,12 +201,13 @@ class _PassportScreenState extends State<PassportScreen>
                     if (_formKeys[index].currentState?.validate() ?? false) {
                       await viewModel.postPassportData(
                           PassportDTO(
-                              gender: selectedGender == Gender.male ? 0 : 1,
+                              gender:
+                                  state.selectedGender == Gender.male ? 0 : 1,
                               firstName: firstNameController.text,
                               lastName: lastNameController.text,
                               email: emailController.text,
                               birthday:
-                                  '${selectedDate?.year}${selectedDate?.month.toString().padLeft(2,'0')}${selectedDate?.day.toString().padLeft(2,'0')}',
+                                  '${state.selectedDate?.year}${state.selectedDate?.month.toString().padLeft(2, '0')}${state.selectedDate?.day.toString().padLeft(2, '0')}',
                               phone: phoneNumberController.text,
                               isDeleted: 0),
                           widget.bookIdList);
