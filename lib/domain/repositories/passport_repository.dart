@@ -1,10 +1,7 @@
-import '../model/passport/passport_model.dart';
+import '../../data/dtos/passport_dto.dart';
 import '../../data/core/result.dart';
 
 abstract interface class PassportRepository {
-  Future<Result<void>> getPassport(PassportModel passport);
-  Future<Result<void>> insertPassport(PassportModel passport);
-  Future<Result<void>> updatePassport(PassportModel passport);
-  Future<Result<void>> deletePassport(PassportModel passport);
+  Future<Result<PassportDTO>> insertPassport(PassportDTO passport);
 }
 

@@ -1,16 +1,16 @@
 class PassportDTO {
-  final int? passportId;
-  final int? gender;
-  final String? firstName;
-  final String? lastName;
-  final String? email;
-  final String? phone;
-  final String? birthday;
-  final int? bookId;
-  final DateTime? createdAt;
-  final bool? isDeleted;
+  int? passportId;
+  int? gender;
+  String? firstName;
+  String? lastName;
+  String? email;
+  String? phone;
+  String? birthday;
+  int? bookId;
+  DateTime? createdAt;
+  int? isDeleted;
 
-   PassportDTO({
+  PassportDTO({
     this.passportId,
     this.gender,
     this.firstName,
@@ -23,33 +23,29 @@ class PassportDTO {
     this.isDeleted,
   });
 
-  Map<String, dynamic> toJson() {
-    return {
-      'passportId': passportId,
-      'gender': gender,
-      'firstName': firstName,
-      'lastName': lastName,
-      'email': email,
-      'phone': phone,
-      'birthday': birthday,
-      'bookId': bookId,
-      'createdAt': createdAt,
-      'isDeleted': isDeleted,
-    };
-  }
+  factory PassportDTO.fromJson(Map<String, dynamic> json) => PassportDTO(
+    passportId: json['passport_id'] as int?,
+    gender: json['gender'] as int?,
+    firstName: json['first_name'] as String?,
+    lastName: json['last_name'] as String?,
+    email: json['email'] as String?,
+    phone: json['phone'] as String?,
+    birthday: json['birthday'] as String?,
+    bookId: json['book_id'] as int?,
+    createdAt: json['created_at'] == null ? null : DateTime.parse(json['created_at']),
+    isDeleted: json['is_deleted'] as int?,
+  );
 
-  factory PassportDTO.fromJson(Map<String, dynamic> json) {
-    return PassportDTO(
-      passportId: json['passportId'],
-      gender: json['gender'],
-      firstName: json['firstName'],
-      lastName: json['lastName'],
-      email: json['email'],
-      phone: json['phone'],
-      birthday: json['birthday'],
-      bookId: json['bookId'],
-      createdAt: json['createdAt'],
-      isDeleted: json['isDeleted'],
-    );
-  }
+  Map<String, dynamic> toJson() => {
+    'passport_id': passportId,
+    'gender': gender,
+    'first_name': firstName,
+    'last_name': lastName,
+    'email': email,
+    'phone': phone,
+    'birthday': birthday,
+    'book_id': bookId,
+    'created_at': createdAt?.toIso8601String(),
+    'is_deleted': isDeleted,
+  };
 }

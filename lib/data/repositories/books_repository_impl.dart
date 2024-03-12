@@ -1,12 +1,9 @@
 import 'dart:convert';
-
 import 'package:griffin/data/core/result.dart';
 import 'package:griffin/data/data_sources/apis/books_api.dart';
 import 'package:griffin/data/dtos/books_dto.dart';
-import 'package:griffin/data/dtos/flight_dto.dart';
 import 'package:griffin/domain/model/books/books_model.dart';
 import 'package:http/http.dart' as http;
-
 import '../../domain/repositories/books_repository.dart';
 import '../../env/env.dart';
 import '../../utils/simple_logger.dart';

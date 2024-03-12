@@ -211,6 +211,7 @@ void setupDependencies() {
     ..registerFactory<PassportViewModel>(
       () => PassportViewModel(
         passportUsecase: getIt<PassportUsecase>(),
+        getSessionUseCase: getIt<GetSessionUseCase>(),
       ),
     )
     ..registerFactory<PayViewModel>(

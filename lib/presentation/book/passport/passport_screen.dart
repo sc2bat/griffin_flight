@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:griffin/data/dtos/passport_dto.dart';
+import 'package:griffin/domain/model/passport/passport_model.dart';
 import 'package:griffin/presentation/book/passport/passport_view_model.dart';
 import 'package:griffin/presentation/book/passport/widgets/country_textfield_widget.dart';
 import 'package:griffin/presentation/book/passport/widgets/custom_textfield_widget.dart';
@@ -10,10 +12,12 @@ import 'package:griffin/presentation/common/total_fare_bar_widget.dart';
 import 'package:provider/provider.dart';
 
 import '../../../domain/model/books/books_model.dart';
+import '../../../utils/simple_logger.dart';
 import '../../common/colors.dart';
 
 class PassportScreen extends StatefulWidget {
   final List<BooksModel> bookIdList;
+
   const PassportScreen({super.key, required this.bookIdList});
 
   @override
@@ -29,10 +33,15 @@ class _PassportScreenState extends State<PassportScreen>
   final emailController = TextEditingController();
   final phoneNumberController = TextEditingController();
   final validationCodeController = TextEditingController();
+
   List<GlobalKey<FormState>> _formKeys = [];
 
   @override
   void initState() {
+    Future.microtask(() {
+      final passportViewModel = context.read<PassportViewModel>();
+      passportViewModel.init();
+    });
     super.initState();
     _tabController = TabController(
       length: _numberOfPeople,
@@ -41,10 +50,11 @@ class _PassportScreenState extends State<PassportScreen>
     );
     _formKeys =
         List.generate(_numberOfPeople, (index) => GlobalKey<FormState>());
+
     firstNameController.text = 'test';
     lastNameController.text = 'test';
-    emailController.text = 'test@naver.com';
-    phoneNumberController.text = '0100000000';
+    emailController.text = 'ddd@ddd.com';
+    phoneNumberController.text = '01000000';
   }
 
   @override
@@ -61,6 +71,7 @@ class _PassportScreenState extends State<PassportScreen>
   @override
   Widget build(BuildContext context) {
     final viewModel = context.watch<PassportViewModel>();
+    final state = viewModel.state;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -106,7 +117,9 @@ class _PassportScreenState extends State<PassportScreen>
                 children: [
                   const SizedBox(height: 10),
                   GenderSelectionWidget(
-                    onGenderSelected: (Gender gender) {},
+                    onGenderSelected: (Gender gender) {
+                      viewModel.changeGender(gender);
+                    },
                   ),
                   const SizedBox(height: 20),
                   Row(
@@ -146,10 +159,9 @@ class _PassportScreenState extends State<PassportScreen>
                   ),
                   const SizedBox(height: 30),
                   PhoneTextFieldWidget(
-                      controller: phoneNumberController,
-                      onPhoneNumberChanged: (number) {
-                      },
-                      ),
+                    controller: phoneNumberController,
+                    onPhoneNumberChanged: (number) {},
+                  ),
                   const SizedBox(height: 30),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -157,6 +169,7 @@ class _PassportScreenState extends State<PassportScreen>
                       Expanded(
                         child: CountryTextFieldWidget(
                           onCountrySelected: (country) {
+                            viewModel.changeNationality(country);
                           },
                         ),
                       ),
@@ -174,7 +187,8 @@ class _PassportScreenState extends State<PassportScreen>
                                   fontSize: 16, color: AppColors.greyText),
                               firstDate: DateTime(1800),
                               showRequiredText: true,
-                              onDatedSelected: (selectedDate) {
+                              onDatedSelected: (date) {
+                                viewModel.changeDob(date);
                               },
                             ),
                           ],
@@ -183,9 +197,23 @@ class _PassportScreenState extends State<PassportScreen>
                     ],
                   ),
                   const Spacer(),
-                  TotalFareBarWidget(onTap: () {
+                  TotalFareBarWidget(onTap: () async {
                     if (_formKeys[index].currentState?.validate() ?? false) {
-                      context.go('/book/passport/seat');
+                      await viewModel.postPassportData(
+                          PassportDTO(
+                              gender:
+                                  state.selectedGender == Gender.male ? 0 : 1,
+                              firstName: firstNameController.text,
+                              lastName: lastNameController.text,
+                              email: emailController.text,
+                              birthday:
+                                  '${state.selectedDate?.year}${state.selectedDate?.month.toString().padLeft(2, '0')}${state.selectedDate?.day.toString().padLeft(2, '0')}',
+                              phone: phoneNumberController.text,
+                              isDeleted: 0),
+                          widget.bookIdList);
+                      if (mounted) {
+                        context.push('/book/passport/seat');
+                      }
                     }
                   }),
                 ],
