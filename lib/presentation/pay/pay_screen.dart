@@ -93,7 +93,7 @@ class _PayScreenState extends State<PayScreen> {
                               style: TextStyle(fontSize: 16.0))),
                       TextButton(
                           onPressed: () {
-                            context.push('/myBooks');
+                            context.go('/myBooks');
                           },
                           child: const Text('취소',
                               style: TextStyle(fontSize: 16.0))),

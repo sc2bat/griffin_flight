@@ -34,13 +34,30 @@ class _MyBooksScreenState extends State<MyBooksScreen> {
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          leading: IconButton(
+          leadingWidth: 80,
+          leading: ElevatedButton(
             onPressed: () {
-              context.go('/');
+              context.go('/search');
             },
-            icon: const Icon(Icons.arrow_back_ios),
+            style: ButtonStyle(
+              //테두리 모양 조절
+              shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10))),
+            ),
+            child: const Text('조회', style: TextStyle(color: Colors.white)),
           ),
           title: const Text('나의 예약'),
+          actions: [ElevatedButton(
+            onPressed: () {
+              context.go('/mypage');
+            },
+            style: ButtonStyle(
+              //테두리 모양 조절
+              shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10))),
+            ),
+            child: const Text('MY PAGE', style: TextStyle(color: Colors.white)),
+          ),],
         ),
         body: (state.isLoading)
             ? const Center(

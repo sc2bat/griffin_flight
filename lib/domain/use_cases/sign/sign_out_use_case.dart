@@ -7,7 +7,7 @@ class SignOutUseCase {
   }) : _signRepository = signRepository;
   final SignRepository _signRepository;
 
-  Future<Result<void>> execute(String userName, String password) async {
+  Future<Result<void>> execute() async {
     final result = await _signRepository.signOut();
 
     return result.when(

@@ -3,6 +3,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 import 'package:griffin/domain/model/airport/airport_model.dart';
 import 'package:griffin/presentation/common/colors.dart';
 import 'package:griffin/presentation/common/date_pick_button_widget.dart';
@@ -59,6 +60,22 @@ class _SearchScreenState extends State<SearchScreen> {
     double panelHeightOpen = MediaQuery.of(context).size.height * 0.8;
 
     return Scaffold(
+      appBar: AppBar(
+        actions: [
+          ElevatedButton(
+            onPressed: () {
+              context.go('/mypage');
+            },
+            style: ButtonStyle(
+              //테두리 모양 조절
+              shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10))),
+            ),
+            child:
+            const Text('MY PAGE', style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
       body: SafeArea(
         child: SlidingUpPanel(
           color: AppColors.greyCard,
@@ -256,7 +273,7 @@ class _SearchScreenState extends State<SearchScreen> {
             topRight: Radius.circular(20),
           ),
           body: Container(
-            padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
+            // padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
             child: SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(20),
