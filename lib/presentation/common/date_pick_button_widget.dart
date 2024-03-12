@@ -65,7 +65,9 @@ class _DatePickButtonWidgetState extends State<DatePickButtonWidget> {
                 setState(() {
                   date = selectedDate;
                 });
-                widget.onDatedSelected(selectedDate);
+                if (date != null) {
+                  widget.onDatedSelected(date!);
+                }
               }
             },
             child: Align(

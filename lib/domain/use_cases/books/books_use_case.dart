@@ -1,8 +1,6 @@
 import 'package:griffin/data/mappers/books_mapper.dart';
-
 import '../../../data/core/result.dart';
 import '../../../data/dtos/books_dto.dart';
-import '../../../utils/simple_logger.dart';
 import '../../model/books/books_model.dart';
 import '../../repositories/books_repository.dart';
 

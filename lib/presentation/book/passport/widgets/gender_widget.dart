@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:griffin/presentation/common/colors.dart';
 
+import '../../../../utils/simple_logger.dart';
+
 enum Gender { male, female, none }
 
 class GenderSelectionWidget extends StatefulWidget {
@@ -22,6 +24,7 @@ class _GenderSelectionWidgetState extends State<GenderSelectionWidget> {
         IconButton(
           onPressed: () {
             selectedGender = Gender.male;
+            logger.info(selectedGender);
             widget.onGenderSelected(selectedGender);
             setState(() {});
           },
