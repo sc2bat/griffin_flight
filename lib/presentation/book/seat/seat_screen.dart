@@ -174,8 +174,44 @@ class _SeatScreenState extends State<SeatScreen> with TickerProviderStateMixin {
                       width: MediaQuery.of(context).size.width * 0.3,
                       height: MediaQuery.of(context).size.width * 0.12,
                       text: 'Continue',
-                      onTap: () {},
-                    ),
+                      onTap: () => showDialog(
+                        context: context,
+                        builder: (BuildContext context) => Dialog(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                const Text(
+                                  'Proceed to payment?',
+                                  style: TextStyle(fontSize: 20),
+                                ),
+                                const SizedBox(height: 6),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      TextButton(
+                                        onPressed: () {},
+                                        child: Text('NO'),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {},
+                                        child: Text('YES'),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
                   ],
                 ),
               ],
