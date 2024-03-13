@@ -32,8 +32,9 @@ class _PassportScreenState extends State<PassportScreen>
   final emailController = TextEditingController();
   final phoneNumberController = TextEditingController();
   final validationCodeController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  List<GlobalKey<FormState>> _formKeys = [];
+  // List<GlobalKey<FormState>> _formKeys = [];
 
   @override
   void initState() {
@@ -42,13 +43,15 @@ class _PassportScreenState extends State<PassportScreen>
       passportViewModel.init();
     });
     super.initState();
-    _tabController = TabController(
-      length: _numberOfPeople,
-      vsync: this,
-      animationDuration: const Duration(milliseconds: 150),
-    );
-    _formKeys =
-        List.generate(_numberOfPeople, (index) => GlobalKey<FormState>());
+    // _tabController = TabController(
+    //   length: _numberOfPeople,
+    //   vsync: this,
+    //   animationDuration: const Duration(milliseconds: 150),
+    // );
+    // _formKeys =
+    //     List.generate(_numberOfPeople, (index) => GlobalKey<FormState>());
+
+
 
     firstNameController.text = 'test';
     lastNameController.text = 'test';
@@ -82,35 +85,38 @@ class _PassportScreenState extends State<PassportScreen>
           },
           icon: const Icon(Icons.arrow_back_ios),
         ),
-        bottom: _numberOfPeople > 1
-            ? TabBar(
-                controller: _tabController,
-                tabs: List.generate(
-                  _numberOfPeople,
-                  (index) => Tab(text: 'Person ${index + 1}'),
-                ),
-                isScrollable: true,
-                indicatorColor: AppColors.greenColor,
-                labelColor: AppColors.greenColor,
-                labelStyle: const TextStyle(fontWeight: FontWeight.bold),
-                labelPadding: EdgeInsets.only(
-                    right: MediaQuery.of(context).size.width * 0.2),
-                unselectedLabelColor: AppColors.greyText,
-                overlayColor:
-                    const MaterialStatePropertyAll(Colors.transparent),
-                splashFactory: NoSplash.splashFactory,
-              )
-            : null,
+        // bottom: _numberOfPeople > 1
+        //     ? TabBar(
+        //         controller: _tabController,
+        //         tabs: List.generate(
+        //           _numberOfPeople,
+        //           (index) => Tab(text: 'Person ${index + 1}'),
+        //         ),
+        //         isScrollable: true,
+        //         indicatorColor: AppColors.greenColor,
+        //         labelColor: AppColors.greenColor,
+        //         labelStyle: const TextStyle(fontWeight: FontWeight.bold),
+        //         labelPadding: EdgeInsets.only(
+        //             right: MediaQuery.of(context).size.width * 0.2),
+        //         unselectedLabelColor: AppColors.greyText,
+        //         overlayColor:
+        //             const MaterialStatePropertyAll(Colors.transparent),
+        //         splashFactory: NoSplash.splashFactory,
+        //       )
+        //     : null,
       ),
-      body: TabBarView(
-        controller: _tabController,
-        children: List.generate(
-          _numberOfPeople,
-          (index) => Padding(
+      body:
+      // TabBarView(
+      //   controller: _tabController,
+      //   children: List.generate(
+      //     _numberOfPeople,
+      //     (index) =>
+              Padding(
             padding: const EdgeInsets.all(16.0),
             child: Form(
               autovalidateMode: AutovalidateMode.always,
-              key: _formKeys[index],
+              // key: _formKeys[index],
+              key: _formKey,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -264,7 +270,7 @@ class _PassportScreenState extends State<PassportScreen>
                               onTap: state.isLoading
                                   ? () {}
                                   : () async {
-                                      if (_formKeys[index]
+                                      if (_formKey
                                               .currentState
                                               ?.validate() ??
                                           false) {
@@ -285,7 +291,6 @@ class _PassportScreenState extends State<PassportScreen>
                                                     phoneNumberController.text,
                                                 isDeleted: 0),
                                             widget.bookIdList);
-
                                         if (mounted) {
                                           context.push('/book/passport/seat', extra: {"bookIdList": widget.bookIdList, "totalFare" : widget.totalFare});
                                         }
@@ -299,8 +304,6 @@ class _PassportScreenState extends State<PassportScreen>
               ),
             ),
           ),
-        ),
-      ),
-    );
+        );
   }
 }

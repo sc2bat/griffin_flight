@@ -117,6 +117,6 @@ String calculateDuration(String startTime, String endTime) {
   int hours = diffMinutes ~/ 60;
   int minutes = diffMinutes % 60;
 
-  String result = '$hours시간 $minutes분';
+  String result = '$hours h $minutes m';
   return result;
 }

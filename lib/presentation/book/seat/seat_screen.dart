@@ -188,24 +188,24 @@ class _SeatScreenState extends State<SeatScreen> with TickerProviderStateMixin {
                                   style: TextStyle(fontSize: 20),
                                 ),
                                 const SizedBox(height: 6),
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: Row(
+                               Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                     children: [
                                       TextButton(
                                         onPressed: () {},
-                                        child: Text('NO'),
+                                        child: const Text('NO'),
                                       ),
                                       TextButton(
-                                        onPressed: () {},
-                                        child: Text('YES'),
+                                        onPressed: ()  {
+                                          // await viewModel.updateBookData();
+                                          if (mounted) {
+                                          context.push('/book/passport/seat', extra: {"bookIdList": widget.bookIdList});
+                                        }
+                                          },
+                                        child: const Text('YES'),
                                       ),
                                     ],
                                   ),
-                                ),
                               ],
                             ),
                           ),

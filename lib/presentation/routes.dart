@@ -108,28 +108,36 @@ final router = GoRouter(
         GoRoute(
             name: 'passport',
             path: 'passport',
-            builder: (_, state) {
-              final map = state.extra! as Map<String, dynamic>;
-              return ChangeNotifierProvider(
-                create: (_) => getIt<PassportViewModel>(),
-                child: PassportScreen(
-                    bookIdList: map['bookIdList'], totalFare: map['totalFare']),
-              );
+            builder: (context, state) {
+              if (state.extra != null) {
+                final map = state.extra! as Map<String, dynamic>;
+                return ChangeNotifierProvider(
+                  create: (_) => getIt<PassportViewModel>(),
+                  child: PassportScreen(
+                      bookIdList: map['bookIdList'],
+                      totalFare: map['totalFare']),
+                );
+              } else {
+                return const IndexScreen();
+              }
             },
             routes: [
               GoRoute(
-                name: 'seat',
-                path: 'seat',
-                builder: (_, state) {
-                  final map = state.extra! as Map<String, dynamic>;
-                  return ChangeNotifierProvider(
-                    create: (_) => getIt<SeatViewModel>(),
-                    child: SeatScreen(
-                        bookIdList: map['bookIdList'],
-                        totalFare: map['totalFare']),
-                  );
-                },
-              ),
+                  name: 'seat',
+                  path: 'seat',
+                  builder: (context, state) {
+                    if (state.extra != null) {
+                      final map = state.extra! as Map<String, dynamic>;
+                      return ChangeNotifierProvider(
+                        create: (_) => getIt<SeatViewModel>(),
+                        child: SeatScreen(
+                            bookIdList: map['bookIdList'],
+                            totalFare: map['totalFare']),
+                      );
+                    } else {
+                      return const IndexScreen();
+                    }
+                  }),
             ]),
       ],
     ),
