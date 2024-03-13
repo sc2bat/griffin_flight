@@ -1,6 +1,5 @@
 import 'package:go_router/go_router.dart';
 import 'package:griffin/di/get_it.dart';
-import 'package:griffin/domain/model/payment/payment_model.dart';
 import 'package:griffin/presentation/book/books/books_screen.dart';
 import 'package:griffin/presentation/book/books/books_viewmodel.dart';
 import 'package:griffin/presentation/book/passport/passport_screen.dart';
@@ -11,6 +10,7 @@ import 'package:griffin/presentation/my_books/my_books_screen.dart';
 import 'package:griffin/presentation/my_books/my_books_view_model.dart';
 import 'package:griffin/presentation/mypage/mypage_screen.dart';
 import 'package:griffin/presentation/mypage/mypage_view_model.dart';
+import 'package:griffin/presentation/navigation/navigation_screen.dart';
 import 'package:griffin/presentation/pay/pay_screen.dart';
 import 'package:griffin/presentation/pay/pay_view_model.dart';
 import 'package:griffin/presentation/search/flight_result/flight_result_screen.dart';
@@ -47,15 +47,6 @@ final router = GoRouter(
       builder: (_, __) => ChangeNotifierProvider(
         create: (_) => getIt<SignViewModel>(),
         child: const SignScreen(),
-      ),
-      routes: const [],
-    ),
-    GoRoute(
-      name: 'mypage',
-      path: '/mypage',
-      builder: (_, __) => ChangeNotifierProvider(
-        create: (_) => getIt<MypageViewModel>(),
-        child: const MypageScreen(),
       ),
       routes: const [],
     ),
@@ -124,19 +115,37 @@ final router = GoRouter(
       ],
     ),
     GoRoute(
-      name: 'myBooks',
-      path: '/myBooks',
-      builder: (_, __) => ChangeNotifierProvider(
-          create: (_) => getIt<MyBooksViewModel>(),
-          child: const MyBooksScreen()),
-      routes: const [],
+      name: 'navigation',
+      path: '/navigation',
+      builder: (_, __) => const NavigationScreen(),
+      routes: [
+        GoRoute(
+          name: 'myBooks',
+          path: 'myBooks',
+          builder: (_, __) => ChangeNotifierProvider(
+              create: (_) => getIt<MyBooksViewModel>(),
+              child: const MyBooksScreen()),
+          routes: const [],
+        ),
+        GoRoute(
+          name: 'mypage',
+          path: 'mypage',
+          builder: (_, __) => ChangeNotifierProvider(
+            create: (_) => getIt<MypageViewModel>(),
+            child: const MypageScreen(),
+          ),
+          routes: const [],
+        ),
+      ],
     ),
     GoRoute(
       name: 'pay',
       path: '/pay',
       builder: (_, state) => ChangeNotifierProvider(
         create: (_) => getIt<PayViewModel>(),
-        child: PayScreen(forPayBookIdList: state.extra as List<int>,),
+        child: PayScreen(
+          forPayBookIdList: state.extra as List<int>,
+        ),
       ),
       routes: const [],
     ),
@@ -144,6 +153,7 @@ final router = GoRouter(
 );
 
 List<String> routeList = [
+  'navigation',
   'myBooks',
   'pay',
   'splash',

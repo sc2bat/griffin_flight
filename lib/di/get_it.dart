@@ -193,13 +193,17 @@ void setupDependencies() {
     )
     ..registerFactory<MypageViewModel>(
       () => MypageViewModel(
-          deleteSessionUseCase: getIt<DeleteSessionUseCase>(),
-          signOutUseCase: getIt<SignOutUseCase>()),
+        deleteSessionUseCase: getIt<DeleteSessionUseCase>(),
+        signOutUseCase: getIt<SignOutUseCase>(),
+        getSessionUseCase: getIt<GetSessionUseCase>(),
+        myBooksUseCase: getIt<MyBooksForPayUseCase>(),
+      ),
     )
     ..registerFactory<MyBooksViewModel>(
       () => MyBooksViewModel(
         myBooksUseCase: getIt<MyBooksForPayUseCase>(),
         getSessionUseCase: getIt<GetSessionUseCase>(),
+        postPayDataUseCase: getIt<PostPayDataUseCase>(),
       ),
     )
     ..registerFactory<BooksViewModel>(

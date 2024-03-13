@@ -17,6 +17,7 @@ class PaymentModel with _$PaymentModel {
     @JsonKey(name: 'pay_status') int? payStatus,
     @JsonKey(name: 'pay_amount') double? payAmount,
     @JsonKey(name: 'flight_date') String? flightDate,
+    @JsonKey(name: 'departure_time') String? flightTime,
     @JsonKey(name: 'passenger_name') String? passengerName,
     @JsonKey(name: 'departure_code') String? departureCode,
     @JsonKey(name: 'departure_name') String? departureName,

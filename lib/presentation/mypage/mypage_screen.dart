@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:griffin/presentation/mypage/mypage_state.dart';
 import 'package:griffin/presentation/mypage/mypage_view_model.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../splash/sign_status.dart';
@@ -58,13 +59,11 @@ class _MypageScreenState extends State<MypageScreen>
       _signStatusSubscription = mypageViewModel.signStatus.listen((event) {
         switch (event) {
           case SignStatus.signIn:
-            context.go('/mypage');
             break;
           case SignStatus.signOut:
             context.go('/sign');
             break;
           case SignStatus.signUp:
-            context.go('/sign');
             break;
         }
       });
@@ -98,29 +97,36 @@ class _MypageScreenState extends State<MypageScreen>
     return Scaffold(
       appBar: AppBar(
         actions: [
-          ElevatedButton(
-            onPressed: () {
-              context.go('/myBooks');
-            },
-            style: ButtonStyle(
-              //테두리 모양 조절
-              shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10))),
-            ),
-            child:
-                const Text('MY BOOKS', style: TextStyle(color: Colors.white)),
-          ),
-          ElevatedButton(
-            onPressed: () async {
+          InkWell(
+            onTap: () async {
               await mypageViewModel.signOut();
             },
-            style: ButtonStyle(
-              //테두리 모양 조절
-              shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10))),
+            child: Container(
+              height: 40,
+              width: 100,
+              alignment: Alignment.center,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Color(0xFFF88264),
+                    Color(0xFFFFE3C5),
+                  ],
+                ),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(10),
+                ),
+              ),
+              child: const Text(
+                'Log Out',
+                style: TextStyle(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 16,
+                    color: Colors.black),
+              ),
             ),
-            child: const Text('LOG OUT', style: TextStyle(color: Colors.white)),
-          )
+          ),
         ],
       ),
       body: mypageState.isLoading
@@ -256,14 +262,40 @@ class PageViewListWidget extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                      Flexible(
+                        child: Text(
+                          '${item['fromCountry']}',
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            color: Colors.black87,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.15,
+                      ),
+                      Flexible(
+                        child: Text(
+                          '${item['toCountry']}',
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            color: Colors.black87,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
                       Text(
-                        '${item['fromCountry']}, ${item['fromCountryCode']}',
+                        'FLIGHT: ${item['FlightId']}',
                         style: const TextStyle(
                           color: Colors.black87,
                         ),
                       ),
                       Text(
-                        '${item['toCountry']}, ${item['toCountryCode']}',
+                        'SEAT: ${item['SeatNumber']}',
                         style: const TextStyle(
                           color: Colors.black87,
                         ),
@@ -274,30 +306,13 @@ class PageViewListWidget extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        '${item['fromTime']}',
+                        'Date: ${DateFormat("yyyy년 MM월 dd일").format(DateTime.parse(item['fromDate']))} ${item['fromTime'].substring(0, 2)}:${item['fromTime'].substring(2)}',
                         style: const TextStyle(
                           color: Colors.black87,
                         ),
                       ),
-                      Text(
-                        '${item['toTime']}',
-                        style: const TextStyle(
-                          color: Colors.black87,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Terminal 3',
-                        style: TextStyle(
-                          color: Colors.black87,
-                        ),
-                      ),
-                      Text(
-                        'Terminal 2',
+                      const Text(
+                        '',
                         style: TextStyle(
                           color: Colors.black87,
                         ),
