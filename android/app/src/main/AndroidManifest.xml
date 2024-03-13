@@ -4,6 +4,8 @@
         android:label="griffin"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        <meta-data android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBeYjabpcFaOcoKU5retP7BhpE_7H8IYNI"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"

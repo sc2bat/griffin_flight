@@ -151,3 +151,6 @@ app.*.map.json
 
 # sql
 *.sql
+
+# bak
+*.bak
