@@ -8,6 +8,7 @@ part 'passport_state.g.dart';
 @freezed
 class PassportState with _$PassportState {
   factory PassportState({
+    @Default(false) bool isLoading,
     PassportModel? passportModel,
     UserAccountModel? userAccountModel,
     Gender? selectedGender,

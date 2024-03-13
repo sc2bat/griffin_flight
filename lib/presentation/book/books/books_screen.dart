@@ -7,6 +7,7 @@ import 'package:griffin/presentation/book/books/widgets/flight_icon_widget.dart'
 import 'package:provider/provider.dart';
 
 import '../../../domain/model/books/books_model.dart';
+import '../../../utils/simple_logger.dart';
 import '../../common/colors.dart';
 import '../../common/common_button.dart';
 import '../../common/flight_card.dart';
@@ -39,6 +40,7 @@ class _BooksScreenState extends State<BooksScreen> {
   Widget build(BuildContext context) {
     final viewModel = context.watch<BooksViewModel>();
     final state = viewModel.state;
+    int totalFare = (widget.arrivalFlightResultModel.payAmount + widget.departureFlightResultModel.payAmount).floor();
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -135,7 +137,7 @@ class _BooksScreenState extends State<BooksScreen> {
                           children: [
                             const Icon(Icons.attach_money),
                             Text(
-                                '${(widget.arrivalFlightResultModel.payAmount + widget.departureFlightResultModel.payAmount).floor()}',
+                                '$totalFare',
                                 style: const TextStyle(
                                   fontSize: 20,
                                 )),
@@ -158,8 +160,9 @@ class _BooksScreenState extends State<BooksScreen> {
 
                               if (bookIdList.isNotEmpty && mounted) {
                                 context.push('/book/passport',
-                                    extra: {"bookIdList": bookIdList});
+                                    extra: {"bookIdList": bookIdList, "totalFare" : totalFare});
                               }
+                              // logger.info('totalFare: $totalFare');
                             },
                     ),
                   ],

@@ -75,6 +75,8 @@ class PassportViewModel extends ChangeNotifier {
   //post
   Future<void> postPassportData(
       PassportDTO passportDTO, List<BooksModel> booksModel) async {
+    _state = state.copyWith(isLoading: true);
+    notifyListeners();
     final result = await _passportUsecase.execute(
       bookIdList: booksModel.map((e) => e.bookId).toList(),
       paramPassportDTO: passportDTO,

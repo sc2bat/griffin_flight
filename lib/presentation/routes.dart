@@ -6,6 +6,7 @@ import 'package:griffin/presentation/book/books/books_viewmodel.dart';
 import 'package:griffin/presentation/book/passport/passport_screen.dart';
 import 'package:griffin/presentation/book/passport/passport_view_model.dart';
 import 'package:griffin/presentation/book/seat/seat_screen.dart';
+import 'package:griffin/presentation/book/seat/seat_view_model.dart';
 import 'package:griffin/presentation/index_screen.dart';
 import 'package:griffin/presentation/my_books/my_books_screen.dart';
 import 'package:griffin/presentation/my_books/my_books_view_model.dart';
@@ -111,14 +112,23 @@ final router = GoRouter(
               final map = state.extra! as Map<String, dynamic>;
               return ChangeNotifierProvider(
                 create: (_) => getIt<PassportViewModel>(),
-                child: PassportScreen(bookIdList: map['bookIdList']),
+                child: PassportScreen(
+                    bookIdList: map['bookIdList'], totalFare: map['totalFare']),
               );
             },
             routes: [
               GoRoute(
                 name: 'seat',
                 path: 'seat',
-                builder: (_, __) => const SeatScreen(),
+                builder: (_, state) {
+                  final map = state.extra! as Map<String, dynamic>;
+                  return ChangeNotifierProvider(
+                    create: (_) => getIt<SeatViewModel>(),
+                    child: SeatScreen(
+                        bookIdList: map['bookIdList'],
+                        totalFare: map['totalFare']),
+                  );
+                },
               ),
             ]),
       ],
@@ -136,7 +146,9 @@ final router = GoRouter(
       path: '/pay',
       builder: (_, state) => ChangeNotifierProvider(
         create: (_) => getIt<PayViewModel>(),
-        child: PayScreen(forPayBookIdList: state.extra as List<int>,),
+        child: PayScreen(
+          forPayBookIdList: state.extra as List<int>,
+        ),
       ),
       routes: const [],
     ),

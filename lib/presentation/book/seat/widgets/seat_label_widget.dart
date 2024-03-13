@@ -21,7 +21,7 @@ class SeatLabelWidget extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 5),
-        const Text('First Class'),
+        const Text('First'),
         const SizedBox(width: 15),
         Container(
           height: 20,
@@ -34,7 +34,7 @@ class SeatLabelWidget extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 5),
-        const Text('Business Class'),
+        const Text('Business'),
         const SizedBox(width: 15),
         Container(
           height: 20,
@@ -47,7 +47,7 @@ class SeatLabelWidget extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 5),
-        const Text('Economy Class'),
+        const Text('Economy'),
       ],
     );
   }

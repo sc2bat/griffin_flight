@@ -2,24 +2,26 @@ import 'package:flutter/material.dart';
 
 import '../../../../utils/simple_logger.dart';
 
-class FirstClass extends StatefulWidget {
+class SeatContainer extends StatefulWidget {
   final Color color;
   final bool isSelected;
   final int index;
   final List<String> list;
+  final int bookIdListLength;
 
-  const FirstClass(
+  const SeatContainer(
       {super.key,
       required this.color,
       required this.isSelected,
       required this.index,
-      required this.list});
+      required this.list,
+      required this.bookIdListLength});
 
   @override
-  State<FirstClass> createState() => _FirstClassState();
+  State<SeatContainer> createState() => _SeatContainerState();
 }
 
-class _FirstClassState extends State<FirstClass> {
+class _SeatContainerState extends State<SeatContainer> {
   bool isFirstSelected = false;
 
   @override
@@ -29,26 +31,30 @@ class _FirstClassState extends State<FirstClass> {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8),
             border: Border.all(
-              color: isFirstSelected ? Colors.pink.shade50 : widget.color,
+              color: isFirstSelected ? Colors.red.shade200 : widget.color,
               width: 3,
             ),
-            color: isFirstSelected ? Colors.pink.shade50 : Colors.transparent,
+            color: isFirstSelected ? Colors.red.shade200 : Colors.transparent,
           ),
           height: 10,
           width: 10,
         ),
         onTap: () {
-          String selectedSeat = returnSeatString(widget.index);
-          logger.info(returnSeatString(widget.index));
-          setState(() {
-            isFirstSelected = !isFirstSelected;
-            isFirstSelected
-                ? widget.isSelected
-                    ? widget.list.add(selectedSeat)
-                    : null
-                : widget.list.removeWhere((element) => element == selectedSeat);
-          });
-          logger.info(widget.list);
+          if (widget.list.length < widget.bookIdListLength ~/ 2 &&
+              isFirstSelected) {
+            String selectedSeat = returnSeatString(widget.index);
+            logger.info(returnSeatString(widget.index));
+            setState(() {
+              isFirstSelected = !isFirstSelected;
+              isFirstSelected
+                  ? widget.isSelected
+                      ? widget.list.add(selectedSeat)
+                      : null
+                  : widget.list
+                      .removeWhere((element) => element == selectedSeat);
+            });
+            logger.info(widget.list);
+          }
         });
   }
 
