@@ -59,13 +59,11 @@ class _MypageScreenState extends State<MypageScreen>
       _signStatusSubscription = mypageViewModel.signStatus.listen((event) {
         switch (event) {
           case SignStatus.signIn:
-            context.go('/mypage');
             break;
           case SignStatus.signOut:
             context.go('/sign');
             break;
           case SignStatus.signUp:
-            context.go('/sign');
             break;
         }
       });
@@ -99,29 +97,36 @@ class _MypageScreenState extends State<MypageScreen>
     return Scaffold(
       appBar: AppBar(
         actions: [
-          ElevatedButton(
-            onPressed: () {
-              context.go('/myBooks');
-            },
-            style: ButtonStyle(
-              //테두리 모양 조절
-              shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10))),
-            ),
-            child:
-                const Text('MY BOOKS', style: TextStyle(color: Colors.white)),
-          ),
-          ElevatedButton(
-            onPressed: () async {
+          InkWell(
+            onTap: () async {
               await mypageViewModel.signOut();
             },
-            style: ButtonStyle(
-              //테두리 모양 조절
-              shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10))),
+            child: Container(
+              height: 40,
+              width: 100,
+              alignment: Alignment.center,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Color(0xFFF88264),
+                    Color(0xFFFFE3C5),
+                  ],
+                ),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(10),
+                ),
+              ),
+              child: const Text(
+                'Log Out',
+                style: TextStyle(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 16,
+                    color: Colors.black),
+              ),
             ),
-            child: const Text('LOG OUT', style: TextStyle(color: Colors.white)),
-          )
+          ),
         ],
       ),
       body: mypageState.isLoading

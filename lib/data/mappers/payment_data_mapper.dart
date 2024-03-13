@@ -14,7 +14,7 @@ extension PaymentDataMapper on PaymentData{
       bookStatus: dto.status,
       payStatus: dto.payStatus,
       payAmount: dto.payAmount,
-      passengerName: '${dto.firstName} ${dto.lastName}',
+      passengerName: '${dto.firstName ?? ''} ${dto.lastName ?? ''}',
       departureCode: dto.departureCode,
       departureName: dto.departureName,
       arrivalCode: dto.arrivalCode,

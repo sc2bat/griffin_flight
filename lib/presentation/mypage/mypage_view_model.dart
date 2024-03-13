@@ -119,7 +119,6 @@ class MypageViewModel with ChangeNotifier {
 
   void getUpcomingList() {
     final today = DateTime.now();
-    logger.info(_mypageState.myPaidBooksList);
     if (_mypageState.myPaidBooksList.isNotEmpty) {
       final myPaidBooksUpcomingList = _mypageState.myPaidBooksList
           .where((e) => DateTime.parse(e.flightDate!).isAfter(today))
@@ -182,14 +181,16 @@ class MypageViewModel with ChangeNotifier {
           error: (message) {
             _searchUiEventStreamController
                 .add(SignUiEvent.showSnackBar(message));
+            _mypageState = mypageState.copyWith(isLoading: false);
+            notifyListeners();
           },
         );
       },
       error: (message) {
         _searchUiEventStreamController.add(SignUiEvent.showSnackBar(message));
+        _mypageState = mypageState.copyWith(isLoading: false);
+        notifyListeners();
       },
     );
-    _mypageState = mypageState.copyWith(isLoading: false);
-    notifyListeners();
   }
 }

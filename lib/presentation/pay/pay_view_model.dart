@@ -114,14 +114,7 @@ class PayViewModel extends ChangeNotifier {
           .firstWhere((e) => e.bookId == bookItem.bookId);
       BooksModel postItem = BooksModel(
           bookId: paidItem.bookId,
-          classSeat: paidItem.classSeat,
-          status: paidItem.status,
-          payStatus: 1,
-          payAmount: paidItem.payAmount,
-          createdAt: paidItem.createdAt,
-          isDeleted: paidItem.isDeleted,
-          userId: paidItem.userId,
-          flightId: paidItem.flightId);
+          payStatus: 1,);
       paidList.add(postItem);
     }
     logger.info(paidList);
@@ -150,7 +143,7 @@ class PayViewModel extends ChangeNotifier {
       onClose: () {
         logger.info('------- onClose');
         Bootpay().dismiss(context); //명시적으로 부트페이 뷰 종료 호출
-        context.go('/myBooks');
+        context.go('/navigation');
       },
       onIssued: (String data) {
         logger.info('------- onIssued: $data');

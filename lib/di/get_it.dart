@@ -203,6 +203,7 @@ void setupDependencies() {
       () => MyBooksViewModel(
         myBooksUseCase: getIt<MyBooksForPayUseCase>(),
         getSessionUseCase: getIt<GetSessionUseCase>(),
+        postPayDataUseCase: getIt<PostPayDataUseCase>(),
       ),
     )
     ..registerFactory<BooksViewModel>(
