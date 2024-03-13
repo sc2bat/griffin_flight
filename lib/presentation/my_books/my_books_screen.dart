@@ -152,7 +152,7 @@ class _MyBooksScreenState extends State<MyBooksScreen> {
                                                                             .spaceBetween,
                                                                     children: [
                                                                       Text(
-                                                                        '예약번호: ${myBookItem.bookId}',
+                                                                        'Book NO.: ${myBookItem.bookId}',
                                                                         style: const TextStyle(
                                                                             fontSize:
                                                                                 15,
@@ -207,7 +207,7 @@ class _MyBooksScreenState extends State<MyBooksScreen> {
                                                                                 Colors.black),
                                                                       ),
                                                                       Text(
-                                                                        'PASSENGER: ${myBookItem.passengerName}',
+                                                                        'Name: ${myBookItem.passengerName}',
                                                                         style: const TextStyle(
                                                                             fontSize:
                                                                                 13,
@@ -340,7 +340,7 @@ class _MyBooksScreenState extends State<MyBooksScreen> {
                                                                   .spaceBetween,
                                                           children: [
                                                             Text(
-                                                              'RESERVATION NO.: ${myBookItem.bookId}',
+                                                              'Book NO.: ${myBookItem.bookId}',
                                                               style: const TextStyle(
                                                                   fontSize: 15,
                                                                   color: Colors
@@ -408,7 +408,7 @@ class _MyBooksScreenState extends State<MyBooksScreen> {
                                                                       .black),
                                                             ),
                                                             Text(
-                                                              'PASSENGER: ${myBookItem.passengerName}',
+                                                              'Name: ${myBookItem.passengerName}',
                                                               style: const TextStyle(
                                                                   fontSize: 13,
                                                                   color: Colors
@@ -438,7 +438,7 @@ class _MyBooksScreenState extends State<MyBooksScreen> {
                                                       SizedBox(
                                                         height: 10,
                                                       ),
-                                                      Text('Complete',
+                                                      Text('Done',
                                                           style: TextStyle(
                                                               color:
                                                                   Colors.grey))

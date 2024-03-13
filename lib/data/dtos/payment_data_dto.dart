@@ -29,7 +29,9 @@ class PaymentData {
   int? status;
   int? payStatus;
   double? payAmount;
+  String? createdAt;
   String? userName;
+  String? flightDate;
   String? departureTime;
   String? departureCode;
   String? departureName;
@@ -46,7 +48,9 @@ class PaymentData {
         this.status,
         this.payStatus,
         this.payAmount,
+        this.createdAt,
         this.userName,
+        this.flightDate,
         this.departureTime,
         this.departureCode,
         this.departureName,
@@ -63,7 +67,9 @@ class PaymentData {
     status = json['status'];
     payStatus = json['pay_status'];
     payAmount = json['pay_amount'];
+    createdAt = json['created_at'];
     userName = json['user_name'];
+    flightDate = json['flight_date'];
     departureTime = json['departure_time'];
     departureCode = json['departure_code'];
     departureName = json['departure_name'];
@@ -82,7 +88,9 @@ class PaymentData {
     data['status'] = status;
     data['pay_status'] = payStatus;
     data['pay_amount'] = payAmount;
+    data['created_at'] = createdAt;
     data['user_name'] = userName;
+    data['flight_date'] = flightDate;
     data['departure_time'] = departureTime;
     data['departure_code'] = departureCode;
     data['departure_name'] = departureName;

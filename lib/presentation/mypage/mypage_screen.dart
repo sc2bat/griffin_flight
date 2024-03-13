@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:griffin/presentation/mypage/mypage_state.dart';
 import 'package:griffin/presentation/mypage/mypage_view_model.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../splash/sign_status.dart';
@@ -256,14 +257,40 @@ class PageViewListWidget extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                      Flexible(
+                        child: Text(
+                          '${item['fromCountry']}',
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            color: Colors.black87,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.15,
+                      ),
+                      Flexible(
+                        child: Text(
+                          '${item['toCountry']}',
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            color: Colors.black87,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
                       Text(
-                        '${item['fromCountry']}, ${item['fromCountryCode']}',
+                        'FLIGHT: ${item['FlightId']}',
                         style: const TextStyle(
                           color: Colors.black87,
                         ),
                       ),
                       Text(
-                        '${item['toCountry']}, ${item['toCountryCode']}',
+                        'SEAT: ${item['SeatNumber']}',
                         style: const TextStyle(
                           color: Colors.black87,
                         ),
@@ -274,30 +301,13 @@ class PageViewListWidget extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        '${item['fromTime']}',
+                        'Date: ${DateFormat("yyyy년 MM월 dd일").format(DateTime.parse(item['fromDate']))} ${item['fromTime'].substring(0, 2)}:${item['fromTime'].substring(2)}',
                         style: const TextStyle(
                           color: Colors.black87,
                         ),
                       ),
-                      Text(
-                        '${item['toTime']}',
-                        style: const TextStyle(
-                          color: Colors.black87,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Terminal 3',
-                        style: TextStyle(
-                          color: Colors.black87,
-                        ),
-                      ),
-                      Text(
-                        'Terminal 2',
+                      const Text(
+                        '',
                         style: TextStyle(
                           color: Colors.black87,
                         ),
