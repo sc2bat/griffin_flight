@@ -46,7 +46,9 @@ strangecoderK</b></sub></a><br /></td>
 ### LINKS
 
 #### github Link
-https://github.com/sc2bat/griffin_flight
+flutter app : https://github.com/sc2bat/griffin_flight
+flutter web admin page :
+Django API Server :
 
 #### figma Link
 https://www.figma.com/file/gKpmKS1cd79DqgLYphCHkN/Griffin_flight?type=design&node-id=0%3A1&mode=design&t=MKmpCuLIjFrEZkFe-1

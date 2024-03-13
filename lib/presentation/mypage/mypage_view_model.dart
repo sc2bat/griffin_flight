@@ -12,7 +12,7 @@ class MypageViewModel with ChangeNotifier {
   MypageViewModel({
     required DeleteSessionUseCase deleteSessionUseCase,
     required SignOutUseCase signOutUseCase,
-  }) : _deleteSessionUseCase = deleteSessionUseCase,
+  })  : _deleteSessionUseCase = deleteSessionUseCase,
         _signOutUseCase = signOutUseCase;
   final DeleteSessionUseCase _deleteSessionUseCase;
   final SignOutUseCase _signOutUseCase;
@@ -30,9 +30,6 @@ class MypageViewModel with ChangeNotifier {
   // sign Status
   final StreamController<SignStatus> _signStatus = StreamController();
   Stream<SignStatus> get signStatus => _signStatus.stream;
-  
-  
-  
 
   Future<void> init() async {
     _mypageState = mypageState.copyWith(isLoading: true);
@@ -96,15 +93,25 @@ class MypageViewModel with ChangeNotifier {
     final result = await _signOutUseCase.execute();
 
     result.when(
-      success: (data) async {
-        _signStatus.add(SignStatus.signOut);
-        await _deleteSessionUseCase.execute();
-      },
-      error: (message) =>
-          _searchUiEventStreamController.add(SignUiEvent.showSnackBar(message)),
-    );
-    _mypageState = mypageState.copyWith(isLoading: false);
-    notifyListeners();
-  }
+      success: (_) async {
+        final sessionResult = await _deleteSessionUseCase.execute();
 
+        sessionResult.when(
+          success: (_) => _signStatus.add(SignStatus.signOut),
+          error: (message) {
+            _searchUiEventStreamController
+                .add(SignUiEvent.showSnackBar(message));
+            _mypageState = mypageState.copyWith(isLoading: false);
+            notifyListeners();
+          },
+        );
+      },
+      error: (message) {
+        _searchUiEventStreamController.add(SignUiEvent.showSnackBar(message));
+
+        _mypageState = mypageState.copyWith(isLoading: false);
+        notifyListeners();
+      },
+    );
+  }
 }

@@ -27,6 +27,7 @@ class PageViewFlightListWidget extends StatelessWidget {
             child: InkWell(
               onTap: () {
                 logger.info('flightModel click $index');
+                logger.info('flightModel click ${flightModel.flightId}');
                 selectFunction(flightModel);
               },
               child: Container(
@@ -61,7 +62,7 @@ class PageViewFlightListWidget extends StatelessWidget {
                           Expanded(
                             child: Container(
                               alignment: Alignment.centerRight,
-                              child: const Text('FASTEST'),
+                              child: Text(index == 0 ? 'FASTEST' : ''),
                             ),
                           ),
                         ],
@@ -120,7 +121,7 @@ class PageViewFlightListWidget extends StatelessWidget {
 bool isSelectedFunction(
     FlightResultModel flightResultModel, FlightResultModel? selectFlight) {
   return (selectFlight != null &&
-          flightResultModel.airplaneId == selectFlight.airplaneId)
+          flightResultModel.flightId == selectFlight.flightId)
       ? true
       : false;
 }

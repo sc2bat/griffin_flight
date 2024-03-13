@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:griffin/data/dtos/passport_dto.dart';
-import 'package:griffin/domain/model/passport/passport_model.dart';
 import 'package:griffin/presentation/book/passport/passport_view_model.dart';
 import 'package:griffin/presentation/book/passport/widgets/country_textfield_widget.dart';
 import 'package:griffin/presentation/book/passport/widgets/custom_textfield_widget.dart';
@@ -12,7 +11,6 @@ import 'package:griffin/presentation/common/total_fare_bar_widget.dart';
 import 'package:provider/provider.dart';
 
 import '../../../domain/model/books/books_model.dart';
-import '../../../utils/simple_logger.dart';
 import '../../common/colors.dart';
 
 class PassportScreen extends StatefulWidget {
