@@ -44,7 +44,9 @@ import 'package:griffin/presentation/splash/splash_view_model.dart';
 
 import '../domain/use_cases/payment/get_pay_data_use_case.dart';
 import '../domain/use_cases/payment/post_pay_data_use_case.dart';
+import '../domain/use_cases/seat/seat_use_case.dart';
 import '../domain/use_cases/sign/delete_session_use_case.dart';
+import '../presentation/book/seat/seat_view_model.dart';
 
 final getIt = GetIt.instance;
 
@@ -162,6 +164,11 @@ void setupDependencies() {
       GetPayDataUseCase(
         paymentRepository: getIt<PaymentRepository>(),
       ),
+    )
+    ..registerSingleton<SeatUseCase>(
+      SeatUseCase(
+        paymentRepository: getIt<PaymentRepository>(),
+      ),
     );
 
   // view models
@@ -225,5 +232,12 @@ void setupDependencies() {
         getSessionUseCase: getIt<GetSessionUseCase>(),
         getPayDataUseCase: getIt<GetPayDataUseCase>(),
       ),
-    );
+    )
+    ..registerFactory<SeatViewModel>(
+          () => SeatViewModel(
+        seatUseCase: getIt<SeatUseCase>(),
+        getSessionUseCase: getIt<GetSessionUseCase>(),
+      ),
+    )
+  ;
 }

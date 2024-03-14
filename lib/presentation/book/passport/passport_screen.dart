@@ -6,17 +6,18 @@ import 'package:griffin/presentation/book/passport/widgets/country_textfield_wid
 import 'package:griffin/presentation/book/passport/widgets/custom_textfield_widget.dart';
 import 'package:griffin/presentation/book/passport/widgets/gender_widget.dart';
 import 'package:griffin/presentation/book/passport/widgets/phone_textfield_widget.dart';
-import 'package:griffin/presentation/common/date_pick_button_widget.dart';
-import 'package:griffin/presentation/common/total_fare_bar_widget.dart';
 import 'package:provider/provider.dart';
 
 import '../../../domain/model/books/books_model.dart';
 import '../../common/colors.dart';
+import '../../common/common_button.dart';
 
 class PassportScreen extends StatefulWidget {
   final List<BooksModel> bookIdList;
+  final int totalFare;
 
-  const PassportScreen({super.key, required this.bookIdList});
+  const PassportScreen(
+      {super.key, required this.bookIdList, required this.totalFare});
 
   @override
   State<PassportScreen> createState() => _PassportScreenState();
@@ -31,8 +32,9 @@ class _PassportScreenState extends State<PassportScreen>
   final emailController = TextEditingController();
   final phoneNumberController = TextEditingController();
   final validationCodeController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  List<GlobalKey<FormState>> _formKeys = [];
+  // List<GlobalKey<FormState>> _formKeys = [];
 
   @override
   void initState() {
@@ -41,13 +43,15 @@ class _PassportScreenState extends State<PassportScreen>
       passportViewModel.init();
     });
     super.initState();
-    _tabController = TabController(
-      length: _numberOfPeople,
-      vsync: this,
-      animationDuration: const Duration(milliseconds: 150),
-    );
-    _formKeys =
-        List.generate(_numberOfPeople, (index) => GlobalKey<FormState>());
+    // _tabController = TabController(
+    //   length: _numberOfPeople,
+    //   vsync: this,
+    //   animationDuration: const Duration(milliseconds: 150),
+    // );
+    // _formKeys =
+    //     List.generate(_numberOfPeople, (index) => GlobalKey<FormState>());
+
+
 
     firstNameController.text = 'test';
     lastNameController.text = 'test';
@@ -81,35 +85,38 @@ class _PassportScreenState extends State<PassportScreen>
           },
           icon: const Icon(Icons.arrow_back_ios),
         ),
-        bottom: _numberOfPeople > 1
-            ? TabBar(
-                controller: _tabController,
-                tabs: List.generate(
-                  _numberOfPeople,
-                  (index) => Tab(text: 'Person ${index + 1}'),
-                ),
-                isScrollable: true,
-                indicatorColor: AppColors.greenColor,
-                labelColor: AppColors.greenColor,
-                labelStyle: const TextStyle(fontWeight: FontWeight.bold),
-                labelPadding: EdgeInsets.only(
-                    right: MediaQuery.of(context).size.width * 0.2),
-                unselectedLabelColor: AppColors.greyText,
-                overlayColor:
-                    const MaterialStatePropertyAll(Colors.transparent),
-                splashFactory: NoSplash.splashFactory,
-              )
-            : null,
+        // bottom: _numberOfPeople > 1
+        //     ? TabBar(
+        //         controller: _tabController,
+        //         tabs: List.generate(
+        //           _numberOfPeople,
+        //           (index) => Tab(text: 'Person ${index + 1}'),
+        //         ),
+        //         isScrollable: true,
+        //         indicatorColor: AppColors.greenColor,
+        //         labelColor: AppColors.greenColor,
+        //         labelStyle: const TextStyle(fontWeight: FontWeight.bold),
+        //         labelPadding: EdgeInsets.only(
+        //             right: MediaQuery.of(context).size.width * 0.2),
+        //         unselectedLabelColor: AppColors.greyText,
+        //         overlayColor:
+        //             const MaterialStatePropertyAll(Colors.transparent),
+        //         splashFactory: NoSplash.splashFactory,
+        //       )
+        //     : null,
       ),
-      body: TabBarView(
-        controller: _tabController,
-        children: List.generate(
-          _numberOfPeople,
-          (index) => Padding(
+      body:
+      // TabBarView(
+      //   controller: _tabController,
+      //   children: List.generate(
+      //     _numberOfPeople,
+      //     (index) =>
+              Padding(
             padding: const EdgeInsets.all(16.0),
             child: Form(
               autovalidateMode: AutovalidateMode.always,
-              key: _formKeys[index],
+              // key: _formKeys[index],
+              key: _formKey,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -175,51 +182,128 @@ class _PassportScreenState extends State<PassportScreen>
                       Expanded(
                         child: Column(
                           children: [
-                            DatePickButtonWidget(
-                              title: 'DOB',
-                              textAlign: Alignment.centerLeft,
-                              lastDate: DateTime.now(),
-                              selectedTextStyle: const TextStyle(
-                                  fontSize: 16, color: Colors.white),
-                              defaultTextStyle: const TextStyle(
-                                  fontSize: 16, color: AppColors.greyText),
-                              firstDate: DateTime(1800),
-                              showRequiredText: true,
-                              onDatedSelected: (date) {
-                                viewModel.changeDob(date);
-                              },
+                            Container(
+                              height: 40,
+                              decoration: BoxDecoration(
+                                color: AppColors.greyCard,
+                                borderRadius: BorderRadius.circular(3),
+                                border: Border(
+                                  bottom: BorderSide(
+                                    color: viewModel.state.selectedDate == null
+                                        ? const Color(0xFFE5ACA6)
+                                        : Colors.transparent,
+                                  ),
+                                ),
+                              ),
+                              child: TextButton(
+                                onPressed: () async {
+                                  await showDatePicker(
+                                    context: context,
+                                    lastDate: DateTime.now(),
+                                    firstDate: DateTime(1800),
+                                    initialEntryMode:
+                                        DatePickerEntryMode.calendarOnly,
+                                  ).then((date) {
+                                    if (date != null) {
+                                      viewModel.changeDob(date);
+                                    }
+                                  });
+                                },
+                                child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    viewModel.state.selectedDate != null
+                                        ? '${viewModel.state.selectedDate!.year.toString()}-${viewModel.state.selectedDate!.month.toString().padLeft(2, '0')}-${viewModel.state.selectedDate!.day.toString().padLeft(2, '0')}'
+                                        : 'DOB',
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        color:
+                                            viewModel.state.selectedDate == null
+                                                ? AppColors.greyText
+                                                : Colors.white),
+                                  ),
+                                ),
+                              ),
                             ),
+                            const SizedBox(height: 10),
+                            viewModel.state.selectedDate == null
+                                ? const Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      'DOB is required.',
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          color: Color(0xFFE5ACA6)),
+                                    ),
+                                  )
+                                : const Text('')
                           ],
                         ),
                       )
                     ],
                   ),
                   const Spacer(),
-                  TotalFareBarWidget(onTap: () async {
-                    if (_formKeys[index].currentState?.validate() ?? false) {
-                      await viewModel.postPassportData(
-                          PassportDTO(
-                              gender:
-                                  state.selectedGender == Gender.male ? 0 : 1,
-                              firstName: firstNameController.text,
-                              lastName: lastNameController.text,
-                              email: emailController.text,
-                              birthday:
-                                  '${state.selectedDate?.year}${state.selectedDate?.month.toString().padLeft(2, '0')}${state.selectedDate?.day.toString().padLeft(2, '0')}',
-                              phone: phoneNumberController.text,
-                              isDeleted: 0),
-                          widget.bookIdList);
-                      if (mounted) {
-                        context.push('/book/passport/seat');
-                      }
-                    }
-                  }),
+                  Column(
+                    children: [
+                      const Divider(),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: ListTile(
+                              title: const Text('TOTAL FARE',
+                                  style: TextStyle(color: AppColors.greyText)),
+                              subtitle: Row(
+                                children: [
+                                  const Icon(Icons.attach_money),
+                                  Text('${widget.totalFare}',
+                                      style: const TextStyle(
+                                        fontSize: 20,
+                                      )),
+                                ],
+                              ),
+                            ),
+                          ),
+                          CommonButton(
+                              width: MediaQuery.of(context).size.width * 0.3,
+                              height: MediaQuery.of(context).size.width * 0.12,
+                              text: state.isLoading ? 'Loading...' : 'Continue',
+                              onTap: state.isLoading
+                                  ? () {}
+                                  : () async {
+                                      if (_formKey
+                                              .currentState
+                                              ?.validate() ??
+                                          false) {
+                                        await viewModel.postPassportData(
+                                            PassportDTO(
+                                                gender: state.selectedGender ==
+                                                        Gender.male
+                                                    ? 0
+                                                    : 1,
+                                                firstName:
+                                                    firstNameController.text,
+                                                lastName:
+                                                    lastNameController.text,
+                                                email: emailController.text,
+                                                birthday:
+                                                    '${state.selectedDate?.year}${state.selectedDate?.month.toString().padLeft(2, '0')}${state.selectedDate?.day.toString().padLeft(2, '0')}',
+                                                phone:
+                                                    phoneNumberController.text,
+                                                isDeleted: 0),
+                                            widget.bookIdList);
+                                        if (mounted) {
+                                          context.push('/book/passport/seat', extra: {"bookIdList": widget.bookIdList, "totalFare" : widget.totalFare});
+                                        }
+                                      }
+                                    }),
+                        ],
+                      ),
+                    ],
+                  )
                 ],
               ),
             ),
           ),
-        ),
-      ),
-    );
+        );
   }
 }

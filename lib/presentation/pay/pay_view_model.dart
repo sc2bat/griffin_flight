@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:bootpay/bootpay.dart';
 import 'package:bootpay/model/extra.dart';
 import 'package:bootpay/model/item.dart';

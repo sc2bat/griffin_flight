@@ -5,6 +5,7 @@ import 'package:griffin/presentation/book/books/books_viewmodel.dart';
 import 'package:griffin/presentation/book/passport/passport_screen.dart';
 import 'package:griffin/presentation/book/passport/passport_view_model.dart';
 import 'package:griffin/presentation/book/seat/seat_screen.dart';
+import 'package:griffin/presentation/book/seat/seat_view_model.dart';
 import 'package:griffin/presentation/index_screen.dart';
 import 'package:griffin/presentation/my_books/my_books_screen.dart';
 import 'package:griffin/presentation/my_books/my_books_view_model.dart';
@@ -98,19 +99,36 @@ final router = GoRouter(
         GoRoute(
             name: 'passport',
             path: 'passport',
-            builder: (_, state) {
-              final map = state.extra! as Map<String, dynamic>;
-              return ChangeNotifierProvider(
-                create: (_) => getIt<PassportViewModel>(),
-                child: PassportScreen(bookIdList: map['bookIdList']),
-              );
+            builder: (context, state) {
+              if (state.extra != null) {
+                final map = state.extra! as Map<String, dynamic>;
+                return ChangeNotifierProvider(
+                  create: (_) => getIt<PassportViewModel>(),
+                  child: PassportScreen(
+                      bookIdList: map['bookIdList'],
+                      totalFare: map['totalFare']),
+                );
+              } else {
+                return const IndexScreen();
+              }
             },
             routes: [
               GoRoute(
-                name: 'seat',
-                path: 'seat',
-                builder: (_, __) => const SeatScreen(),
-              ),
+                  name: 'seat',
+                  path: 'seat',
+                  builder: (context, state) {
+                    if (state.extra != null) {
+                      final map = state.extra! as Map<String, dynamic>;
+                      return ChangeNotifierProvider(
+                        create: (_) => getIt<SeatViewModel>(),
+                        child: SeatScreen(
+                            bookIdList: map['bookIdList'],
+                            totalFare: map['totalFare']),
+                      );
+                    } else {
+                      return const IndexScreen();
+                    }
+                  }),
             ]),
       ],
     ),
