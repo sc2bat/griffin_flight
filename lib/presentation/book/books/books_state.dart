@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:griffin/domain/model/books/books_model.dart';
 import 'package:griffin/domain/model/flight_result/flight_result_model.dart';
 
 import '../../../domain/model/user/user_account_model.dart';
@@ -10,7 +11,12 @@ part 'books_state.g.dart';
 class BooksState with _$BooksState {
   factory BooksState({
     @Default(false) bool isLoading,
-    FlightResultModel? flightResultModel,
+    FlightResultModel? arrivalFlightResultModel,
+    FlightResultModel? departureFlightResultModel,
+    @Default(0) int numberOfPeople,
+    @Default('') String seatClass,
+    @Default([]) List<BooksModel> departureBookList,
+    @Default([]) List<BooksModel> arrivalBookList,
     UserAccountModel? userAccountModel,
   }) = _BooksState;
 

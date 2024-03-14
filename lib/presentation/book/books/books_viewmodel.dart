@@ -1,5 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:griffin/domain/model/books/books_model.dart';
+import 'package:griffin/domain/use_cases/books/get_from_flight_use_case.dart';
+import 'package:griffin/domain/use_cases/books/get_number_of_people_use_case.dart';
+import 'package:griffin/domain/use_cases/books/get_seat_use_case.dart';
+import 'package:griffin/domain/use_cases/books/get_to_flight_use_case.dart';
 import 'package:griffin/presentation/book/books/books_state.dart';
 
 import '../../../data/core/result.dart';
@@ -10,14 +14,26 @@ import '../../../domain/use_cases/splash/get_session_use_case.dart';
 import '../../../utils/simple_logger.dart';
 
 class BooksViewModel with ChangeNotifier {
-  BooksViewModel(
-      {required GetSessionUseCase getSessionUseCase,
-      required BooksUseCase booksUseCase})
-      : _getSessionUseCase = getSessionUseCase,
-        _booksUseCase = booksUseCase;
+  BooksViewModel({
+    required GetSessionUseCase getSessionUseCase,
+    required BooksUseCase booksUseCase,
+    required GetFromFlightUseCase getFromFlightUseCase,
+    required GetToFlightUseCase getToFlightUseCase,
+    required GetNumberOfPeopleUseCase getNumberOfPeopleUseCase,
+    required GetSeatUseCase getSeatUseCase,
+  })  : _getSessionUseCase = getSessionUseCase,
+        _booksUseCase = booksUseCase,
+        _getFromFlightUseCase = getFromFlightUseCase,
+        _getToFlightUseCase = getToFlightUseCase,
+        _getNumberOfPeopleUseCase = getNumberOfPeopleUseCase,
+        _getSeatUseCase = getSeatUseCase;
 
   final GetSessionUseCase _getSessionUseCase;
   final BooksUseCase _booksUseCase;
+  final GetFromFlightUseCase _getFromFlightUseCase;
+  final GetToFlightUseCase _getToFlightUseCase;
+  final GetNumberOfPeopleUseCase _getNumberOfPeopleUseCase;
+  final GetSeatUseCase _getSeatUseCase;
 
   BooksState _state = BooksState();
 
@@ -40,6 +56,8 @@ class BooksViewModel with ChangeNotifier {
         break;
     }
   }
+
+  Future<void> getFligthResultDate() async {}
 
   //Post
   Future<List<BooksModel>> postBookData(

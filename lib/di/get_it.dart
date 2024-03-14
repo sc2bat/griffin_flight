@@ -5,7 +5,6 @@ import 'package:griffin/data/repositories/flight_repository_impl.dart';
 import 'package:griffin/data/repositories/my_books_for_pay_repository_impl.dart';
 import 'package:griffin/data/repositories/passport_repository_impl.dart';
 import 'package:griffin/data/repositories/payment_repository_impl.dart';
-import 'package:griffin/data/repositories/sample_repository_impl.dart';
 import 'package:griffin/data/repositories/session_repository_impl.dart';
 import 'package:griffin/data/repositories/sign_repository_impl.dart';
 import 'package:griffin/data/repositories/user_repository_impl.dart';
@@ -21,10 +20,18 @@ import 'package:griffin/domain/repositories/sign_repository.dart';
 import 'package:griffin/domain/repositories/user_repository.dart';
 import 'package:griffin/domain/use_cases/airport/airport_list_use_case.dart';
 import 'package:griffin/domain/use_cases/books/books_use_case.dart';
+import 'package:griffin/domain/use_cases/books/get_from_flight_use_case.dart';
+import 'package:griffin/domain/use_cases/books/get_number_of_people_use_case.dart';
+import 'package:griffin/domain/use_cases/books/get_seat_use_case.dart';
+import 'package:griffin/domain/use_cases/books/get_to_flight_use_case.dart';
 import 'package:griffin/domain/use_cases/my_books/my_books_for_pay_use_case.dart';
 import 'package:griffin/domain/use_cases/my_books/total_my_books_use_case.dart';
 import 'package:griffin/domain/use_cases/passport/passport_use_case.dart';
 import 'package:griffin/domain/use_cases/sample_use_case.dart';
+import 'package:griffin/domain/use_cases/search/reset_flight_result_use_case.dart';
+import 'package:griffin/domain/use_cases/search/save_flight_result_use_case.dart';
+import 'package:griffin/domain/use_cases/search/save_number_of_people_use_case.dart';
+import 'package:griffin/domain/use_cases/search/save_seat_class_use_case.dart';
 import 'package:griffin/domain/use_cases/search/search_flight_use_case.dart';
 import 'package:griffin/domain/use_cases/sign/save_session_use_case.dart';
 import 'package:griffin/domain/use_cases/sign/sign_in_use_case.dart';
@@ -53,9 +60,6 @@ final getIt = GetIt.instance;
 void setupDependencies() {
   // repository
   getIt
-    ..registerSingleton<SampleRepository>(
-      SampleRepositoryImpl(),
-    )
     ..registerSingleton<SessionRepository>(
       SessionRepositoryImpl(),
     )
@@ -137,6 +141,27 @@ void setupDependencies() {
         airportRepository: getIt<AirportRepository>(),
       ),
     )
+    // book use case
+    ..registerSingleton<GetToFlightUseCase>(
+      GetToFlightUseCase(
+        flightRepository: getIt<FlightRepository>(),
+      ),
+    )
+    ..registerSingleton<GetFromFlightUseCase>(
+      GetFromFlightUseCase(
+        flightRepository: getIt<FlightRepository>(),
+      ),
+    )
+    ..registerSingleton<GetNumberOfPeopleUseCase>(
+      GetNumberOfPeopleUseCase(
+        flightRepository: getIt<FlightRepository>(),
+      ),
+    )
+    ..registerSingleton<GetSeatUseCase>(
+      GetSeatUseCase(
+        flightRepository: getIt<FlightRepository>(),
+      ),
+    )
     ..registerSingleton<PassportUsecase>(
       PassportUsecase(
         passportRepository: getIt<PassportRepository>(),
@@ -178,11 +203,14 @@ void setupDependencies() {
         getSessionUseCase: getIt<GetSessionUseCase>(),
         airportListUseCase: getIt<AirportListUseCase>(),
         searchFlightUseCase: getIt<SearchFlightUseCase>(),
+        resetFlightResultUseCase: getIt<ResetFlightResultUseCase>(),
+        saveSeatClassUseCase: getIt<SaveSeatClassUseCase>(),
+        saveNumberOfPeopleUseCase: getIt<SaveNumberOfPeopleUseCase>(),
       ),
     )
     ..registerFactory<FlightResultViewModel>(
       () => FlightResultViewModel(
-        searchFlightUseCase: getIt<SearchFlightUseCase>(),
+        saveFlightResultUseCase: getIt<SaveFlightResultUseCase>(),
       ),
     )
     ..registerFactory<SplashViewModel>(
@@ -217,6 +245,10 @@ void setupDependencies() {
       () => BooksViewModel(
         booksUseCase: getIt<BooksUseCase>(),
         getSessionUseCase: getIt<GetSessionUseCase>(),
+        getFromFlightUseCase: getIt<GetFromFlightUseCase>(),
+        getToFlightUseCase: getIt<GetToFlightUseCase>(),
+        getNumberOfPeopleUseCase: getIt<GetNumberOfPeopleUseCase>(),
+        getSeatUseCase: getIt<GetSeatUseCase>(),
       ),
     )
     ..registerFactory<PassportViewModel>(
@@ -234,10 +266,9 @@ void setupDependencies() {
       ),
     )
     ..registerFactory<SeatViewModel>(
-          () => SeatViewModel(
+      () => SeatViewModel(
         seatUseCase: getIt<SeatUseCase>(),
         getSessionUseCase: getIt<GetSessionUseCase>(),
       ),
-    )
-  ;
+    );
 }

@@ -9,14 +9,14 @@ class AirportMapWidget extends StatefulWidget {
   const AirportMapWidget({
     super.key,
     required this.goResultFunction,
-    required this.isLoading,
     required this.fromAirport,
     required this.toAirport,
+    required this.isFlightAvailable,
   });
   final Function(BuildContext context) goResultFunction;
-  final bool isLoading;
   final AirportModel fromAirport;
   final AirportModel toAirport;
+  final bool isFlightAvailable;
 
   @override
   State<AirportMapWidget> createState() => _AirportMapWidgetState();
@@ -25,10 +25,27 @@ class AirportMapWidget extends StatefulWidget {
 class _AirportMapWidgetState extends State<AirportMapWidget> {
   final Completer<GoogleMapController> _controller = Completer();
   final Set<Polyline> _polylines = {};
+  late Timer timer;
+  int _timerSeconds = 10;
 
   @override
   void initState() {
+    _startTimer();
     super.initState();
+  }
+
+  void _startTimer() {
+    if (widget.isFlightAvailable) {
+      timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+        setState(() {
+          _timerSeconds--;
+        });
+        if (_timerSeconds == 0) {
+          timer.cancel();
+          context.pop();
+        }
+      });
+    }
   }
 
   @override
@@ -147,21 +164,28 @@ class _AirportMapWidgetState extends State<AirportMapWidget> {
               ),
               Expanded(
                 child: InkWell(
-                  onTap: () => widget.isLoading
-                      ? null
+                  onTap: () => widget.isFlightAvailable
+                      ? {}
                       : widget.goResultFunction(context),
                   child: Center(
                     child: Text(
-                      widget.isLoading ? 'Searching...' : 'View Search Results',
+                      widget.isFlightAvailable
+                          ? 'There are no flights Return to Search'
+                          : 'View Search Results',
                       style: const TextStyle(
-                        fontSize: 24.0,
-                      ),
+                          fontSize: 20.0, overflow: TextOverflow.ellipsis),
                     ),
                   ),
                 ),
               ),
-              widget.isLoading
-                  ? const CircularProgressIndicator()
+              widget.isFlightAvailable
+                  ? Text(
+                      '$_timerSeconds',
+                      style: TextStyle(
+                        color: Colors.lightGreen[600],
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )
                   : InkWell(
                       onTap: () => widget.goResultFunction(context),
                       child: Icon(
@@ -196,8 +220,5 @@ class _AirportMapWidgetState extends State<AirportMapWidget> {
     await controller.animateCamera(
       CameraUpdate.zoomTo(12),
     );
-    // await controller.animateCamera(
-    //   CameraUpdate.newLatLng(endLocation),
-    // );
   }
 }

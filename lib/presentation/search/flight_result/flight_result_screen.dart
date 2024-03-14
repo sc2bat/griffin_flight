@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import 'package:griffin/presentation/common/common_button.dart';
 import 'package:griffin/presentation/search/flight_result/flight_result_state.dart';
 import 'package:griffin/presentation/search/flight_result/flight_result_view_model.dart';
-import 'package:griffin/utils/simple_logger.dart';
 import 'package:provider/provider.dart';
 
 import 'widget/page_view_flight_list_widget.dart';
@@ -168,17 +167,10 @@ class _FlightResultScreenState extends State<FlightResultScreen>
                         width: MediaQuery.of(context).size.width * 0.3,
                         height: MediaQuery.of(context).size.width * 0.12,
                         text: 'Continue',
-                        onTap: () {
-                          if (flightResultViewModel.flightSelectValid()) {
-                            context.go('/book', extra: {
-                              "departure_flight":
-                                  flightResultState.selectFromFlight,
-                              "arrival_flight":
-                                  flightResultState.selectToFlight,
-                            });
-                          } else {
-                            logger.info(
-                                'flightResultState.fligthSelectList error');
+                        onTap: () async {
+                          if (flightResultViewModel.flightSelectValid() &&
+                              mounted) {
+                            context.go('/book');
                           }
                         },
                       ),
