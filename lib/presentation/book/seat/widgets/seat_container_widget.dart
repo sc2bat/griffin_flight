@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../utils/simple_logger.dart';
+import '../seat_view_model.dart';
 
 class SeatContainer extends StatefulWidget {
   final Color color;
@@ -8,6 +10,7 @@ class SeatContainer extends StatefulWidget {
   final int index;
   final List<String> list;
   final int bookIdListLength;
+  final bool isDeparture;
 
   const SeatContainer(
       {super.key,
@@ -15,46 +18,44 @@ class SeatContainer extends StatefulWidget {
       required this.isSelected,
       required this.index,
       required this.list,
-      required this.bookIdListLength});
+      required this.bookIdListLength,
+      required this.isDeparture});
 
   @override
   State<SeatContainer> createState() => _SeatContainerState();
 }
 
 class _SeatContainerState extends State<SeatContainer> {
-  bool isFirstSelected = false;
-
   @override
   Widget build(BuildContext context) {
+    final viewModel = context.watch<SeatViewModel>();
+    bool isSelected = viewModel.isSeatSelected(
+        returnSeatString(widget.index), widget.isDeparture);
     return GestureDetector(
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8),
             border: Border.all(
-              color: isFirstSelected ? Colors.red.shade200 : widget.color,
+              color: isSelected ? Colors.red.shade200 : widget.color,
               width: 3,
             ),
-            color: isFirstSelected ? Colors.red.shade200 : Colors.transparent,
+            color: isSelected ? Colors.red.shade200 : Colors.transparent,
           ),
           height: 10,
           width: 10,
         ),
         onTap: () {
-          if (widget.list.length < widget.bookIdListLength ~/ 2 &&
-              isFirstSelected) {
-            String selectedSeat = returnSeatString(widget.index);
-            logger.info(returnSeatString(widget.index));
-            setState(() {
-              isFirstSelected = !isFirstSelected;
-              isFirstSelected
-                  ? widget.isSelected
-                      ? widget.list.add(selectedSeat)
-                      : null
-                  : widget.list
-                      .removeWhere((element) => element == selectedSeat);
-            });
-            logger.info(widget.list);
+          String selectedSeat = returnSeatString(widget.index);
+          if (!isSelected) {
+            viewModel.selectSeat(
+                selectedSeat, widget.bookIdListLength, widget.isDeparture);
+          } else {
+            viewModel.removeSeat(selectedSeat, widget.isDeparture);
           }
+          viewModel.updateFare(widget.index, !isSelected);
+          logger.info(widget.isDeparture
+              ? viewModel.state.departureSelectedSeats
+              : viewModel.state.returnSelectedSeats);
         });
   }
 

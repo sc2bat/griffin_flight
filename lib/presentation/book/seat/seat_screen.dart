@@ -28,11 +28,11 @@ class _SeatScreenState extends State<SeatScreen> with TickerProviderStateMixin {
 
   @override
   void initState() {
-    Future.microtask(() {
-      final booksViewModel = context.read<SeatViewModel>();
-      booksViewModel.init();
-    });
     super.initState();
+    Future.microtask(() {
+      final seatViewModel = context.read<SeatViewModel>();
+      seatViewModel.init(widget.totalFare);
+    });
     _tabController = TabController(
       length: 2,
       vsync: this,
@@ -50,6 +50,7 @@ class _SeatScreenState extends State<SeatScreen> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     final viewModel = context.watch<SeatViewModel>();
     final state = viewModel.state;
+
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
@@ -124,7 +125,7 @@ class _SeatScreenState extends State<SeatScreen> with TickerProviderStateMixin {
                                 selectedSeatList.length < _numberOfPeople,
                             index: index,
                             list: selectedSeatList,
-                            bookIdListLength: widget.bookIdList.length,
+                            bookIdListLength: widget.bookIdList.length, isDeparture:  _tabController.index == 0,
                           );
                         } else if (adjustedIndex < 21) {
                           // return BusinessClass();
@@ -134,7 +135,7 @@ class _SeatScreenState extends State<SeatScreen> with TickerProviderStateMixin {
                                 selectedSeatList.length < _numberOfPeople,
                             list: selectedSeatList,
                             index: index,
-                            bookIdListLength: widget.bookIdList.length,
+                            bookIdListLength: widget.bookIdList.length, isDeparture:  _tabController.index == 0,
                           );
                         } else {
                           // return EconomyClass();
@@ -144,7 +145,7 @@ class _SeatScreenState extends State<SeatScreen> with TickerProviderStateMixin {
                                 selectedSeatList.length < _numberOfPeople,
                             list: selectedSeatList,
                             index: index,
-                            bookIdListLength: widget.bookIdList.length,
+                            bookIdListLength: widget.bookIdList.length, isDeparture:  _tabController.index == 0,
                           );
                         }
                       }),
@@ -162,7 +163,7 @@ class _SeatScreenState extends State<SeatScreen> with TickerProviderStateMixin {
                         subtitle: Row(
                           children: [
                             const Icon(Icons.attach_money),
-                            Text('${widget.totalFare}',
+                            Text('${state.totalFare}',
                                 style: const TextStyle(
                                   fontSize: 20,
                                 )),
@@ -197,7 +198,6 @@ class _SeatScreenState extends State<SeatScreen> with TickerProviderStateMixin {
                                       ),
                                       TextButton(
                                         onPressed: ()  {
-                                          // await viewModel.updateBookData();
                                           if (mounted) {
                                           context.push('/book/passport/seat', extra: {"bookIdList": widget.bookIdList});
                                         }
