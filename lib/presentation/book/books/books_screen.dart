@@ -33,6 +33,7 @@ class _BooksScreenState extends State<BooksScreen> {
   Widget build(BuildContext context) {
     final viewModel = context.watch<BooksViewModel>();
     final state = viewModel.state;
+
     int totalFare = (widget.arrivalFlightResultModel.payAmount +
             widget.departureFlightResultModel.payAmount)
         .floor();
@@ -64,20 +65,21 @@ class _BooksScreenState extends State<BooksScreen> {
                     FlightDetailsCard(
                         width: MediaQuery.of(context).size.width * 0.8,
                         height: MediaQuery.of(context).size.height * 0.15,
-                        departureAirportCode: widget
-                            .departureFlightResultModel.departureAirportCode,
-                        arrivalAirportCode: widget
-                            .departureFlightResultModel.arrivalAirportCode,
-                        price: widget.departureFlightResultModel.payAmount,
+                        departureAirportCode: state.departureFlightResultModel
+                                ?.departureAirportCode ??
+                            '',
+                        arrivalAirportCode:
+                            state.departureFlightResultModel.arrivalAirportCode,
+                        price: state.departureFlightResultModel.payAmount,
                         departureTime:
-                            widget.departureFlightResultModel.departureTime,
+                            state.departureFlightResultModel.departureTime,
                         arrivalTime:
-                            widget.departureFlightResultModel.arrivalTime,
+                            state.departureFlightResultModel.arrivalTime,
                         airlineName: 'United Airlines',
                         direct: 'direct'),
                     ListTile(
                       title: Text(
-                          widget.departureFlightResultModel.arrivalAirportName),
+                          state.departureFlightResultModel.arrivalAirportName),
                       subtitle: const Text('Arrival'),
                     ),
                   ]),
@@ -92,21 +94,13 @@ class _BooksScreenState extends State<BooksScreen> {
                   child: Column(children: [
                     ListTile(
                       title: Text(
-                          widget.arrivalFlightResultModel.departureAirportName),
+                          state.arrivalFlightResultModel.departureAirportName),
                       subtitle: const Text('Departure'),
                     ),
                     FlightDetailsCard(
                         width: MediaQuery.of(context).size.width * 0.8,
                         height: MediaQuery.of(context).size.height * 0.15,
-                        departureAirportCode: widget
-                            .arrivalFlightResultModel.departureAirportCode,
-                        arrivalAirportCode:
-                            widget.arrivalFlightResultModel.arrivalAirportCode,
-                        price: widget.arrivalFlightResultModel.payAmount,
-                        departureTime:
-                            widget.arrivalFlightResultModel.departureTime,
-                        arrivalTime:
-                            widget.arrivalFlightResultModel.arrivalTime,
+                        flightResultModel: state.arrivalFlightResultModel,
                         airlineName: 'United Airlines',
                         direct: 'direct'),
                     ListTile(

@@ -6,7 +6,7 @@ class GetSeatUseCase {
   }) : _flightRepository = flightRepository;
   final FlightRepository _flightRepository;
 
-  Future<String> execute(List<String> seatNumberOfPeople) async {
+  Future<String> execute() async {
     final seatResult =
         await _flightRepository.getSearchResultData('seat_class');
 

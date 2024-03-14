@@ -40,7 +40,15 @@ class BooksViewModel with ChangeNotifier {
   BooksState get state => _state;
 
   void init() async {
+    _state = state.copyWith(isLoading: true);
+    notifyListeners();
+
     await getSession();
+
+    await getFligthResultDate();
+
+    _state = state.copyWith(isLoading: false);
+    notifyListeners();
   }
 
   Future<void> getSession() async {
@@ -57,7 +65,20 @@ class BooksViewModel with ChangeNotifier {
     }
   }
 
-  Future<void> getFligthResultDate() async {}
+  Future<void> getFligthResultDate() async {
+    FlightResultModel departureFlightResultModel =
+        await _getFromFlightUseCase.execute();
+    FlightResultModel arrivalFlightResultModel =
+        await _getToFlightUseCase.execute();
+    String numberOfPeople = await _getNumberOfPeopleUseCase.execute();
+    String seatClass = await _getSeatUseCase.execute();
+    _state = state.copyWith(
+        departureFlightResultModel: departureFlightResultModel,
+        arrivalFlightResultModel: arrivalFlightResultModel,
+        numberOfPeople: int.parse(numberOfPeople),
+        seatClass: seatClass);
+    notifyListeners();
+  }
 
   //Post
   Future<List<BooksModel>> postBookData(
