@@ -145,10 +145,9 @@ class _BooksScreenState extends State<BooksScreen> {
                                   context.push(
                                     '/book/passport',
                                     extra: {
-                                      "departure_flight_result_model":
+                                      "departure_flight":
                                           state.departureBookList,
-                                      "arrival_flight_result_model":
-                                          state.arrivalBookList
+                                      "arrival_flight": state.arrivalBookList
                                     },
                                   );
                                 }
