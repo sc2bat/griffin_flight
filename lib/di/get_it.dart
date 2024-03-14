@@ -14,7 +14,6 @@ import 'package:griffin/domain/repositories/flight_repository.dart';
 import 'package:griffin/domain/repositories/my_books_for_pay_repository.dart';
 import 'package:griffin/domain/repositories/passport_repository.dart';
 import 'package:griffin/domain/repositories/payment_repository.dart';
-import 'package:griffin/domain/repositories/sample_repository.dart';
 import 'package:griffin/domain/repositories/session_repository.dart';
 import 'package:griffin/domain/repositories/sign_repository.dart';
 import 'package:griffin/domain/repositories/user_repository.dart';
@@ -27,7 +26,6 @@ import 'package:griffin/domain/use_cases/books/get_to_flight_use_case.dart';
 import 'package:griffin/domain/use_cases/my_books/my_books_for_pay_use_case.dart';
 import 'package:griffin/domain/use_cases/my_books/total_my_books_use_case.dart';
 import 'package:griffin/domain/use_cases/passport/passport_use_case.dart';
-import 'package:griffin/domain/use_cases/sample_use_case.dart';
 import 'package:griffin/domain/use_cases/search/reset_flight_result_use_case.dart';
 import 'package:griffin/domain/use_cases/search/save_flight_result_use_case.dart';
 import 'package:griffin/domain/use_cases/search/save_number_of_people_use_case.dart';
@@ -90,11 +88,6 @@ void setupDependencies() {
 
   // use case
   getIt
-    ..registerSingleton<SampleUseCase>(
-      SampleUseCase(
-        sampleRepository: getIt<SampleRepository>(),
-      ),
-    )
     ..registerSingleton<GetSessionUseCase>(
       GetSessionUseCase(
         sessionRepository: getIt<SessionRepository>(),
