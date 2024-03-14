@@ -39,7 +39,7 @@ import 'package:griffin/domain/use_cases/sign/sign_out_use_case.dart';
 import 'package:griffin/domain/use_cases/sign/sign_up_use_case.dart';
 import 'package:griffin/domain/use_cases/splash/get_session_use_case.dart';
 import 'package:griffin/domain/use_cases/splash/splash_get_user_info_use_case.dart';
-import 'package:griffin/presentation/book/books/books_viewmodel.dart';
+import 'package:griffin/presentation/book/books/books_view_model.dart';
 import 'package:griffin/presentation/book/passport/passport_view_model.dart';
 import 'package:griffin/presentation/my_books/my_books_view_model.dart';
 import 'package:griffin/presentation/mypage/mypage_view_model.dart';

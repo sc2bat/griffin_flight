@@ -1,7 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:griffin/presentation/book/books/books_viewmodel.dart';
+import 'package:griffin/presentation/book/books/books_view_model.dart';
 import 'package:griffin/presentation/book/books/widgets/flight_icon_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -33,10 +33,10 @@ class _BooksScreenState extends State<BooksScreen> {
     final viewModel = context.watch<BooksViewModel>();
     final state = viewModel.state;
 
-    int totalFare = (state.arrivalFlightResultModel?.payAmount ??
-            0.0 + state.departureFlightResultModel?.payAmount ??
-            0.0)
-        .floor();
+    int totalFare = ((state.arrivalFlightResultModel?.payAmount ?? 0.0) +
+                (state.departureFlightResultModel?.payAmount ?? 0.0))
+            .floor() *
+        state.numberOfPeople;
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -58,28 +58,21 @@ class _BooksScreenState extends State<BooksScreen> {
                 Expanded(
                   child: Column(children: [
                     ListTile(
-                      title: Text(widget
-                          .departureFlightResultModel.departureAirportName),
+                      title: Text(state.departureFlightResultModel
+                              ?.departureAirportName ??
+                          ''),
                       subtitle: const Text('Departure'),
                     ),
                     FlightDetailsCard(
                         width: MediaQuery.of(context).size.width * 0.8,
                         height: MediaQuery.of(context).size.height * 0.15,
-                        departureAirportCode: state.departureFlightResultModel
-                                ?.departureAirportCode ??
-                            '',
-                        arrivalAirportCode:
-                            state.departureFlightResultModel.arrivalAirportCode,
-                        price: state.departureFlightResultModel.payAmount,
-                        departureTime:
-                            state.departureFlightResultModel.departureTime,
-                        arrivalTime:
-                            state.departureFlightResultModel.arrivalTime,
+                        flightResultModel: state.departureFlightResultModel,
                         airlineName: 'United Airlines',
                         direct: 'direct'),
                     ListTile(
-                      title: Text(
-                          state.departureFlightResultModel.arrivalAirportName),
+                      title: Text(state
+                              .departureFlightResultModel?.arrivalAirportName ??
+                          ''),
                       subtitle: const Text('Arrival'),
                     ),
                   ]),

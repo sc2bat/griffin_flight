@@ -1,7 +1,7 @@
 import 'package:go_router/go_router.dart';
 import 'package:griffin/di/get_it.dart';
 import 'package:griffin/presentation/book/books/books_screen.dart';
-import 'package:griffin/presentation/book/books/books_viewmodel.dart';
+import 'package:griffin/presentation/book/books/books_view_model.dart';
 import 'package:griffin/presentation/book/passport/passport_screen.dart';
 import 'package:griffin/presentation/book/passport/passport_view_model.dart';
 import 'package:griffin/presentation/book/seat/seat_screen.dart';
