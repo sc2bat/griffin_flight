@@ -81,27 +81,43 @@ class BooksViewModel with ChangeNotifier {
   }
 
   //Post
-  Future<List<BooksModel>> postBookData(
-      List<FlightResultModel> flightResultModelList) async {
+  Future<void> postBookData() async {
     _state = state.copyWith(isLoading: true);
     notifyListeners();
-    List<BooksModel> bookIdList = [];
-    if (state.userAccountModel != null && flightResultModelList.isNotEmpty) {
-      for (var item in flightResultModelList) {
-        final result = await _booksUseCase.execute(
+
+    List<BooksModel> departureBookList = [];
+    List<BooksModel> arrivalBookList = [];
+    if (state.userAccountModel != null &&
+        state.departureFlightResultModel != null &&
+        state.arrivalFlightResultModel != null) {
+      for (var i = 0; i < state.numberOfPeople; i++) {
+        final departureResult = await _booksUseCase.execute(
             userId: state.userAccountModel!.userId,
-            flightId: item.flightId,
-            payAmount: item.payAmount);
-        switch (result) {
+            flightId: state.departureFlightResultModel!.flightId,
+            payAmount: state.departureFlightResultModel!.payAmount);
+        switch (departureResult) {
           case Success<BooksModel>():
-            bookIdList.add(result.data);
+            departureBookList.add(departureResult.data);
           case Error<BooksModel>():
-            throw Exception(result.message);
+            throw Exception(departureResult.message);
+        }
+        final arrivalResult = await _booksUseCase.execute(
+            userId: state.userAccountModel!.userId,
+            flightId: state.arrivalFlightResultModel!.flightId,
+            payAmount: state.arrivalFlightResultModel!.payAmount);
+        switch (arrivalResult) {
+          case Success<BooksModel>():
+            arrivalBookList.add(arrivalResult.data);
+          case Error<BooksModel>():
+            throw Exception(arrivalResult.message);
         }
       }
     }
-    _state = state.copyWith(isLoading: false);
+    _state = state.copyWith(
+      isLoading: false,
+      departureBookList: departureBookList,
+      arrivalBookList: arrivalBookList,
+    );
     notifyListeners();
-    return bookIdList;
   }
 }

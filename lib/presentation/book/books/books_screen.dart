@@ -5,7 +5,6 @@ import 'package:griffin/presentation/book/books/books_viewmodel.dart';
 import 'package:griffin/presentation/book/books/widgets/flight_icon_widget.dart';
 import 'package:provider/provider.dart';
 
-import '../../../domain/model/books/books_model.dart';
 import '../../common/colors.dart';
 import '../../common/common_button.dart';
 import '../../common/flight_card.dart';
@@ -34,8 +33,9 @@ class _BooksScreenState extends State<BooksScreen> {
     final viewModel = context.watch<BooksViewModel>();
     final state = viewModel.state;
 
-    int totalFare = (widget.arrivalFlightResultModel.payAmount +
-            widget.departureFlightResultModel.payAmount)
+    int totalFare = (state.arrivalFlightResultModel?.payAmount ??
+            0.0 + state.departureFlightResultModel?.payAmount ??
+            0.0)
         .floor();
     return Scaffold(
       appBar: AppBar(
@@ -93,8 +93,9 @@ class _BooksScreenState extends State<BooksScreen> {
                 Expanded(
                   child: Column(children: [
                     ListTile(
-                      title: Text(
-                          state.arrivalFlightResultModel.departureAirportName),
+                      title: Text(state
+                              .arrivalFlightResultModel?.departureAirportName ??
+                          ''),
                       subtitle: const Text('Departure'),
                     ),
                     FlightDetailsCard(
@@ -105,7 +106,8 @@ class _BooksScreenState extends State<BooksScreen> {
                         direct: 'direct'),
                     ListTile(
                       title: Text(
-                          widget.arrivalFlightResultModel.arrivalAirportName),
+                          state.arrivalFlightResultModel?.arrivalAirportName ??
+                              ''),
                       subtitle: const Text('Arrival'),
                     ),
                   ]),
@@ -140,26 +142,24 @@ class _BooksScreenState extends State<BooksScreen> {
                       onTap: state.isLoading
                           ? () {}
                           : () async {
-                              List<BooksModel> bookIdList = await viewModel
-                                  .postBookData([
-                                widget.departureFlightResultModel,
-                                widget.arrivalFlightResultModel
-                              ]);
+                              if (state.departureFlightResultModel != null &&
+                                  state.arrivalFlightResultModel != null) {
+                                await viewModel.postBookData();
 
-                              if (bookIdList.isNotEmpty && mounted) {
-                                context.push(
-                                  '/book/passport',
-                                  extra: {
-                                    "departure_flight_result_model": [
-                                      widget.departureFlightResultModel
-                                    ],
-                                    "arrival_flight_result_model": [
-                                      widget.arrivalFlightResultModel
-                                    ]
-                                  },
-                                );
+                                if (state.departureBookList.isNotEmpty &&
+                                    state.arrivalBookList.isNotEmpty &&
+                                    mounted) {
+                                  context.push(
+                                    '/book/passport',
+                                    extra: {
+                                      "departure_flight_result_model":
+                                          state.departureBookList,
+                                      "arrival_flight_result_model":
+                                          state.arrivalBookList
+                                    },
+                                  );
+                                }
                               }
-                              // logger.info('totalFare: $totalFare');
                             },
                     ),
                   ],
