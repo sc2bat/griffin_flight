@@ -6,6 +6,7 @@ import 'package:griffin/presentation/book/passport/widgets/country_textfield_wid
 import 'package:griffin/presentation/book/passport/widgets/custom_textfield_widget.dart';
 import 'package:griffin/presentation/book/passport/widgets/gender_widget.dart';
 import 'package:griffin/presentation/book/passport/widgets/phone_textfield_widget.dart';
+import 'package:griffin/utils/simple_logger.dart';
 import 'package:provider/provider.dart';
 
 import '../../common/colors.dart';
@@ -43,14 +44,15 @@ class _PassportScreenState extends State<PassportScreen>
       final passportViewModel = context.read<PassportViewModel>();
       passportViewModel.init(widget.departureBookList, widget.arrivalBookList);
     });
+
+    logger.info(widget.departureBookList.length);
+    _tabController = TabController(
+      initialIndex: 0,
+      length: widget.departureBookList.length,
+      vsync: this,
+      animationDuration: const Duration(milliseconds: 150),
+    );
     super.initState();
-    // _tabController = TabController(
-    //   length: _numberOfPeople,
-    //   vsync: this,
-    //   animationDuration: const Duration(milliseconds: 150),
-    // );
-    // _formKeys =
-    //     List.generate(_numberOfPeople, (index) => GlobalKey<FormState>());
 
     firstNameController.text = 'test';
     lastNameController.text = 'test';
@@ -87,7 +89,7 @@ class _PassportScreenState extends State<PassportScreen>
         bottom: TabBar(
           controller: _tabController,
           tabs: List.generate(
-            state.numberOfPeople,
+            widget.departureBookList.length,
             (index) => Tab(text: 'Person ${index + 1}'),
           ),
           isScrollable: true,

@@ -137,20 +137,7 @@ class _BooksScreenState extends State<BooksScreen> {
                           : () async {
                               if (state.departureFlightResultModel != null &&
                                   state.arrivalFlightResultModel != null) {
-                                await viewModel.postBookData();
-
-                                if (state.departureBookList.isNotEmpty &&
-                                    state.arrivalBookList.isNotEmpty &&
-                                    mounted) {
-                                  context.push(
-                                    '/book/passport',
-                                    extra: {
-                                      "departure_flight":
-                                          state.departureBookList,
-                                      "arrival_flight": state.arrivalBookList
-                                    },
-                                  );
-                                }
+                                await viewModel.postBookData(context, mounted);
                               }
                             },
                     ),

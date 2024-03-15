@@ -95,8 +95,8 @@ final router = GoRouter(
                 return ChangeNotifierProvider(
                   create: (_) => getIt<PassportViewModel>(),
                   child: PassportScreen(
-                    departureBookList: map["departure_flight"],
-                    arrivalBookList: map["arrival_flight"],
+                    departureBookList: map["departure_book"],
+                    arrivalBookList: map["arrival_book"],
                   ),
                 );
               } else {

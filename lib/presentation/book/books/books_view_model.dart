@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:go_router/go_router.dart';
 import 'package:griffin/domain/model/books/books_model.dart';
 import 'package:griffin/domain/use_cases/books/get_from_flight_use_case.dart';
 import 'package:griffin/domain/use_cases/books/get_number_of_people_use_case.dart';
@@ -81,7 +82,7 @@ class BooksViewModel with ChangeNotifier {
   }
 
   //Post
-  Future<void> postBookData() async {
+  Future<void> postBookData(BuildContext context, bool mounted) async {
     _state = state.copyWith(isLoading: true);
     notifyListeners();
 
@@ -99,6 +100,8 @@ class BooksViewModel with ChangeNotifier {
           case Success<BooksModel>():
             departureBookList.add(departureResult.data);
           case Error<BooksModel>():
+            _state = state.copyWith(isLoading: false);
+            notifyListeners();
             throw Exception(departureResult.message);
         }
         final arrivalResult = await _booksUseCase.execute(
@@ -109,6 +112,8 @@ class BooksViewModel with ChangeNotifier {
           case Success<BooksModel>():
             arrivalBookList.add(arrivalResult.data);
           case Error<BooksModel>():
+            _state = state.copyWith(isLoading: false);
+            notifyListeners();
             throw Exception(arrivalResult.message);
         }
       }
@@ -118,5 +123,17 @@ class BooksViewModel with ChangeNotifier {
       arrivalBookList: arrivalBookList,
     );
     notifyListeners();
+
+    if (state.departureBookList.isNotEmpty &&
+        state.arrivalBookList.isNotEmpty &&
+        mounted) {
+      context.push(
+        '/book/passport',
+        extra: {
+          "departure_book": state.departureBookList,
+          "arrival_book": state.arrivalBookList
+        },
+      );
+    }
   }
 }
