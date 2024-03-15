@@ -134,6 +134,22 @@ void setupDependencies() {
         airportRepository: getIt<AirportRepository>(),
       ),
     )
+    ..registerSingleton<ResetFlightResultUseCase>(
+      ResetFlightResultUseCase(
+        flightRepository: getIt<FlightRepository>(),
+      ),
+    )
+    ..registerSingleton<SaveSeatClassUseCase>(
+      SaveSeatClassUseCase(
+        flightRepository: getIt<FlightRepository>(),
+      ),
+    )
+    ..registerSingleton<SaveNumberOfPeopleUseCase>(
+      SaveNumberOfPeopleUseCase(
+        flightRepository: getIt<FlightRepository>(),
+      ),
+    )
+
     // book use case
     ..registerSingleton<GetToFlightUseCase>(
       GetToFlightUseCase(
@@ -181,6 +197,11 @@ void setupDependencies() {
     ..registerSingleton<GetPayDataUseCase>(
       GetPayDataUseCase(
         paymentRepository: getIt<PaymentRepository>(),
+      ),
+    )
+    ..registerSingleton<SaveFlightResultUseCase>(
+      SaveFlightResultUseCase(
+        flightRepository: getIt<FlightRepository>(),
       ),
     )
     ..registerSingleton<SeatUseCase>(

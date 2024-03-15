@@ -71,8 +71,7 @@ class _SearchScreenState extends State<SearchScreen> {
               shape: MaterialStateProperty.all(RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10))),
             ),
-            child:
-            const Text('MY PAGE', style: TextStyle(color: Colors.white)),
+            child: const Text('MY PAGE', style: TextStyle(color: Colors.white)),
           ),
         ],
       ),
@@ -604,8 +603,6 @@ class _SearchScreenState extends State<SearchScreen> {
                                                   alignment:
                                                       Alignment.centerRight,
                                                   icon: const SizedBox.shrink(),
-                                                  //드롭다운 밑줄/화살표 가려줌
-
                                                   value: state.selectClass,
                                                   items: state.selectedClassList
                                                       .map((e) {
@@ -642,7 +639,10 @@ class _SearchScreenState extends State<SearchScreen> {
                     ),
                     const Gap(30),
                     InkWell(
-                      onTap: searchViewModel.searchFilght,
+                      onTap: () async {
+                        await searchViewModel.setNumberOfPeople();
+                        await searchViewModel.searchFilght();
+                      },
                       child: Container(
                         height: 80,
                         alignment: Alignment.center,

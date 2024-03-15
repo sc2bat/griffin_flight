@@ -114,7 +114,6 @@ class BooksViewModel with ChangeNotifier {
       }
     }
     _state = state.copyWith(
-      isLoading: false,
       departureBookList: departureBookList,
       arrivalBookList: arrivalBookList,
     );

@@ -25,7 +25,7 @@ class AirportMapWidget extends StatefulWidget {
 class _AirportMapWidgetState extends State<AirportMapWidget> {
   final Completer<GoogleMapController> _controller = Completer();
   final Set<Polyline> _polylines = {};
-  late Timer timer;
+  Timer? timer;
   int _timerSeconds = 10;
 
   @override
@@ -146,6 +146,7 @@ class _AirportMapWidgetState extends State<AirportMapWidget> {
                             ),
                             TextButton(
                               onPressed: () {
+                                timer?.cancel();
                                 context.pop();
                                 context.pop();
                               },
@@ -170,10 +171,10 @@ class _AirportMapWidgetState extends State<AirportMapWidget> {
                   child: Center(
                     child: Text(
                       widget.isFlightAvailable
-                          ? 'There are no flights Return to Search'
+                          ? 'No flights Return'
                           : 'View Search Results',
                       style: const TextStyle(
-                          fontSize: 20.0, overflow: TextOverflow.ellipsis),
+                          fontSize: 18.0, overflow: TextOverflow.ellipsis),
                     ),
                   ),
                 ),
@@ -182,6 +183,7 @@ class _AirportMapWidgetState extends State<AirportMapWidget> {
                   ? Text(
                       '$_timerSeconds',
                       style: TextStyle(
+                        fontSize: 16.0,
                         color: Colors.lightGreen[600],
                         fontWeight: FontWeight.bold,
                       ),

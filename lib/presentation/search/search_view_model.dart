@@ -147,10 +147,16 @@ class SearchViewModel with ChangeNotifier {
     }
   }
 
-  void setClassList() {
+  Future<void> setNumberOfPeople() async {
+    await _saveNumberOfPeopleUseCase.execute(state.currentPersonValue);
+  }
+
+  void setClassList() async {
+    List<String> classList = ['Economy', 'Business', 'First'];
     _state =
-        state.copyWith(selectedClassList: ['Economy', 'Business', 'First']);
+        state.copyWith(selectClass: classList[0], selectedClassList: classList);
     notifyListeners();
+    await _saveSeatClassUseCase.execute(classList[0]);
   }
 
   void onChangeClass(String selectClass) async {
@@ -235,11 +241,10 @@ class SearchViewModel with ChangeNotifier {
   }
 
   bool isFlightAvailableValid() {
-    List<FlightResultModel> fromFlightList =
-        state.searchResult['from_flight'] ?? [];
-    List<FlightResultModel> toFlightList =
-        state.searchResult['from_flight'] ?? [];
-    return fromFlightList.isNotEmpty && toFlightList.isNotEmpty;
+    // if(state.searchResult)
+    List<FlightResultModel> fromFlightList = state.searchResult['from_flight'];
+    List<FlightResultModel> toFlightList = state.searchResult['to_flight'];
+    return !(fromFlightList.isNotEmpty && toFlightList.isNotEmpty);
   }
 
   Future<void> resetResult() async {
