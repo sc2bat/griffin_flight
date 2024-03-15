@@ -2,16 +2,16 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:griffin/domain/model/flight_result/flight_result_model.dart';
-import 'package:griffin/domain/use_cases/search/search_flight_use_case.dart';
+import 'package:griffin/domain/use_cases/search/save_flight_result_use_case.dart';
 import 'package:griffin/presentation/common/common.dart';
 import 'package:griffin/presentation/search/flight_result/flight_result_state.dart';
 import 'package:griffin/presentation/search/search_ui_event.dart';
 
 class FlightResultViewModel with ChangeNotifier {
   FlightResultViewModel({
-    required SearchFlightUseCase searchFlightUseCase,
-  }) : _searchFlightUseCase = searchFlightUseCase;
-  final SearchFlightUseCase _searchFlightUseCase;
+    required SaveFlightResultUseCase saveFlightResultUseCase,
+  }) : _saveFlightResultUseCase = saveFlightResultUseCase;
+  final SaveFlightResultUseCase _saveFlightResultUseCase;
 
   FlightResultState _flightResultState = FlightResultState();
   FlightResultState get flightResultState => _flightResultState;
@@ -92,15 +92,22 @@ class FlightResultViewModel with ChangeNotifier {
     return false;
   }
 
-  void selectFromFlight(FlightResultModel flightResultModel) {
+  void selectFromFlight(FlightResultModel flightResultModel) async {
     _flightResultState =
         flightResultState.copyWith(selectFromFlight: flightResultModel);
     notifyListeners();
+    await saveFlightResult('from_flight', flightResultModel);
   }
 
-  void selectToFlight(FlightResultModel flightResultModel) {
+  void selectToFlight(FlightResultModel flightResultModel) async {
     _flightResultState =
         flightResultState.copyWith(selectToFlight: flightResultModel);
     notifyListeners();
+    await saveFlightResult('to_flight', flightResultModel);
+  }
+
+  Future<void> saveFlightResult(
+      String key, FlightResultModel flightResultModel) async {
+    await _saveFlightResultUseCase.execute(key, flightResultModel);
   }
 }

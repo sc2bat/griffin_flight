@@ -13,29 +13,50 @@ class PassportUsecase {
   final PassportRepository _passportRepository;
 
   Future<Result<List<PassportModel>>> execute({
-    required List<int> bookIdList,
-    required PassportDTO paramPassportDTO,
+    required List<int> arrivalbookId,
+    required List<int> departurebookId,
+    required List<PassportDTO> passportDTOList,
   }) async {
     try {
       final List<PassportModel> list = [];
-      for (int value in bookIdList) {
-        PassportDTO passportDTO = PassportDTO(
-          gender: paramPassportDTO.gender,
-          firstName: paramPassportDTO.firstName,
-          lastName: paramPassportDTO.lastName,
-          birthday: paramPassportDTO.birthday,
-          email: paramPassportDTO.email,
-          phone: paramPassportDTO.phone,
-          bookId: value,
+      for (int i = 0; i < passportDTOList.length; i++) {
+        PassportDTO departurePassportDTO = PassportDTO(
+          gender: passportDTOList[i].gender,
+          firstName: passportDTOList[i].firstName,
+          lastName: passportDTOList[i].lastName,
+          birthday: passportDTOList[i].birthday,
+          email: passportDTOList[i].email,
+          phone: passportDTOList[i].phone,
+          bookId: departurebookId[i],
           isDeleted: 0,
         );
-        final result = await _passportRepository.insertPassport(passportDTO);
+        final departureResult =
+            await _passportRepository.insertPassport(departurePassportDTO);
 
-        switch (result) {
+        switch (departureResult) {
           case Success<PassportDTO>():
-            list.add(PassportMapper.fromDTO(result.data));
+            list.add(PassportMapper.fromDTO(departureResult.data));
           case Error<PassportDTO>():
-            return Result.error(result.message);
+            return Result.error(departureResult.message);
+        }
+        PassportDTO arrivalPassportDTO = PassportDTO(
+          gender: passportDTOList[i].gender,
+          firstName: passportDTOList[i].firstName,
+          lastName: passportDTOList[i].lastName,
+          birthday: passportDTOList[i].birthday,
+          email: passportDTOList[i].email,
+          phone: passportDTOList[i].phone,
+          bookId: arrivalbookId[i],
+          isDeleted: 0,
+        );
+        final arrivalResult =
+            await _passportRepository.insertPassport(arrivalPassportDTO);
+
+        switch (arrivalResult) {
+          case Success<PassportDTO>():
+            list.add(PassportMapper.fromDTO(arrivalResult.data));
+          case Error<PassportDTO>():
+            return Result.error(arrivalResult.message);
         }
       }
       return Result.success(list);

@@ -1,25 +1,17 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:griffin/domain/model/flight_result/flight_result_model.dart';
-import 'package:griffin/presentation/book/books/books_viewmodel.dart';
+import 'package:griffin/presentation/book/books/books_view_model.dart';
 import 'package:griffin/presentation/book/books/widgets/flight_icon_widget.dart';
 import 'package:provider/provider.dart';
 
-import '../../../domain/model/books/books_model.dart';
-import '../../../utils/simple_logger.dart';
 import '../../common/colors.dart';
 import '../../common/common_button.dart';
 import '../../common/flight_card.dart';
 
 class BooksScreen extends StatefulWidget {
-  final FlightResultModel departureFlightResultModel;
-  final FlightResultModel arrivalFlightResultModel;
-
   const BooksScreen({
     Key? key,
-    required this.departureFlightResultModel,
-    required this.arrivalFlightResultModel,
   }) : super(key: key);
 
   @override
@@ -40,7 +32,11 @@ class _BooksScreenState extends State<BooksScreen> {
   Widget build(BuildContext context) {
     final viewModel = context.watch<BooksViewModel>();
     final state = viewModel.state;
-    int totalFare = (widget.arrivalFlightResultModel.payAmount + widget.departureFlightResultModel.payAmount).floor();
+
+    int totalFare = ((state.arrivalFlightResultModel?.payAmount ?? 0.0) +
+                (state.departureFlightResultModel?.payAmount ?? 0.0))
+            .floor() *
+        state.numberOfPeople;
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -62,27 +58,21 @@ class _BooksScreenState extends State<BooksScreen> {
                 Expanded(
                   child: Column(children: [
                     ListTile(
-                      title: Text(widget
-                          .departureFlightResultModel.departureAirportName),
+                      title: Text(state.departureFlightResultModel
+                              ?.departureAirportName ??
+                          ''),
                       subtitle: const Text('Departure'),
                     ),
                     FlightDetailsCard(
                         width: MediaQuery.of(context).size.width * 0.8,
                         height: MediaQuery.of(context).size.height * 0.15,
-                        departureAirportCode: widget
-                            .departureFlightResultModel.departureAirportCode,
-                        arrivalAirportCode: widget
-                            .departureFlightResultModel.arrivalAirportCode,
-                        price: widget.departureFlightResultModel.payAmount,
-                        departureTime:
-                            widget.departureFlightResultModel.departureTime,
-                        arrivalTime:
-                            widget.departureFlightResultModel.arrivalTime,
+                        flightResultModel: state.departureFlightResultModel,
                         airlineName: 'United Airlines',
                         direct: 'direct'),
                     ListTile(
-                      title: Text(
-                          widget.departureFlightResultModel.arrivalAirportName),
+                      title: Text(state
+                              .departureFlightResultModel?.arrivalAirportName ??
+                          ''),
                       subtitle: const Text('Arrival'),
                     ),
                   ]),
@@ -96,27 +86,21 @@ class _BooksScreenState extends State<BooksScreen> {
                 Expanded(
                   child: Column(children: [
                     ListTile(
-                      title: Text(
-                          widget.arrivalFlightResultModel.departureAirportName),
+                      title: Text(state
+                              .arrivalFlightResultModel?.departureAirportName ??
+                          ''),
                       subtitle: const Text('Departure'),
                     ),
                     FlightDetailsCard(
                         width: MediaQuery.of(context).size.width * 0.8,
                         height: MediaQuery.of(context).size.height * 0.15,
-                        departureAirportCode: widget
-                            .arrivalFlightResultModel.departureAirportCode,
-                        arrivalAirportCode:
-                            widget.arrivalFlightResultModel.arrivalAirportCode,
-                        price: widget.arrivalFlightResultModel.payAmount,
-                        departureTime:
-                            widget.arrivalFlightResultModel.departureTime,
-                        arrivalTime:
-                            widget.arrivalFlightResultModel.arrivalTime,
+                        flightResultModel: state.arrivalFlightResultModel,
                         airlineName: 'United Airlines',
                         direct: 'direct'),
                     ListTile(
                       title: Text(
-                          widget.arrivalFlightResultModel.arrivalAirportName),
+                          state.arrivalFlightResultModel?.arrivalAirportName ??
+                              ''),
                       subtitle: const Text('Arrival'),
                     ),
                   ]),
@@ -136,8 +120,7 @@ class _BooksScreenState extends State<BooksScreen> {
                         subtitle: Row(
                           children: [
                             const Icon(Icons.attach_money),
-                            Text(
-                                '$totalFare',
+                            Text('$totalFare',
                                 style: const TextStyle(
                                   fontSize: 20,
                                 )),
@@ -152,17 +135,10 @@ class _BooksScreenState extends State<BooksScreen> {
                       onTap: state.isLoading
                           ? () {}
                           : () async {
-                              List<BooksModel> bookIdList = await viewModel
-                                  .postBookData([
-                                widget.departureFlightResultModel,
-                                widget.arrivalFlightResultModel
-                              ]);
-
-                              if (bookIdList.isNotEmpty && mounted) {
-                                context.push('/book/passport',
-                                    extra: {"bookIdList": bookIdList, "totalFare" : totalFare});
+                              if (state.departureFlightResultModel != null &&
+                                  state.arrivalFlightResultModel != null) {
+                                await viewModel.postBookData(context, mounted);
                               }
-                              // logger.info('totalFare: $totalFare');
                             },
                     ),
                   ],

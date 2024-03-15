@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:griffin/presentation/book/seat/seat_view_model.dart';
@@ -6,16 +7,18 @@ import 'package:griffin/presentation/book/seat/widgets/column_number_widget.dart
 import 'package:griffin/presentation/book/seat/widgets/seat_container_widget.dart';
 import 'package:griffin/presentation/book/seat/widgets/seat_label_widget.dart';
 import 'package:provider/provider.dart';
+
 import '../../../domain/model/books/books_model.dart';
 import '../../common/colors.dart';
 import '../../common/common_button.dart';
 
 class SeatScreen extends StatefulWidget {
   final List<BooksModel> bookIdList;
-  final int totalFare;
 
-  const SeatScreen(
-      {super.key, required this.bookIdList, required this.totalFare});
+  const SeatScreen({
+    super.key,
+    required this.bookIdList,
+  });
 
   @override
   State<SeatScreen> createState() => _SeatScreenState();
@@ -28,11 +31,11 @@ class _SeatScreenState extends State<SeatScreen> with TickerProviderStateMixin {
 
   @override
   void initState() {
-    Future.microtask(() {
-      final booksViewModel = context.read<SeatViewModel>();
-      booksViewModel.init();
-    });
     super.initState();
+    Future.microtask(() {
+      final seatViewModel = context.read<SeatViewModel>();
+      seatViewModel.init();
+    });
     _tabController = TabController(
       length: 2,
       vsync: this,
@@ -50,6 +53,7 @@ class _SeatScreenState extends State<SeatScreen> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     final viewModel = context.watch<SeatViewModel>();
     final state = viewModel.state;
+
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
@@ -125,6 +129,7 @@ class _SeatScreenState extends State<SeatScreen> with TickerProviderStateMixin {
                             index: index,
                             list: selectedSeatList,
                             bookIdListLength: widget.bookIdList.length,
+                            isDeparture: _tabController.index == 0,
                           );
                         } else if (adjustedIndex < 21) {
                           // return BusinessClass();
@@ -135,6 +140,7 @@ class _SeatScreenState extends State<SeatScreen> with TickerProviderStateMixin {
                             list: selectedSeatList,
                             index: index,
                             bookIdListLength: widget.bookIdList.length,
+                            isDeparture: _tabController.index == 0,
                           );
                         } else {
                           // return EconomyClass();
@@ -145,6 +151,7 @@ class _SeatScreenState extends State<SeatScreen> with TickerProviderStateMixin {
                             list: selectedSeatList,
                             index: index,
                             bookIdListLength: widget.bookIdList.length,
+                            isDeparture: _tabController.index == 0,
                           );
                         }
                       }),
@@ -162,7 +169,7 @@ class _SeatScreenState extends State<SeatScreen> with TickerProviderStateMixin {
                         subtitle: Row(
                           children: [
                             const Icon(Icons.attach_money),
-                            Text('${widget.totalFare}',
+                            Text('${state.totalFare}',
                                 style: const TextStyle(
                                   fontSize: 20,
                                 )),
@@ -188,24 +195,27 @@ class _SeatScreenState extends State<SeatScreen> with TickerProviderStateMixin {
                                   style: TextStyle(fontSize: 20),
                                 ),
                                 const SizedBox(height: 6),
-                               Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      TextButton(
-                                        onPressed: () {},
-                                        child: const Text('NO'),
-                                      ),
-                                      TextButton(
-                                        onPressed: ()  {
-                                          // await viewModel.updateBookData();
-                                          if (mounted) {
-                                          context.push('/book/passport/seat', extra: {"bookIdList": widget.bookIdList});
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    TextButton(
+                                      onPressed: () {},
+                                      child: const Text('NO'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        if (mounted) {
+                                          context.push('/book/passport/seat',
+                                              extra: {
+                                                "bookIdList": widget.bookIdList
+                                              });
                                         }
-                                          },
-                                        child: const Text('YES'),
-                                      ),
-                                    ],
-                                  ),
+                                      },
+                                      child: const Text('YES'),
+                                    ),
+                                  ],
+                                ),
                               ],
                             ),
                           ),

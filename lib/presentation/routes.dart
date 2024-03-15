@@ -1,7 +1,7 @@
 import 'package:go_router/go_router.dart';
 import 'package:griffin/di/get_it.dart';
 import 'package:griffin/presentation/book/books/books_screen.dart';
-import 'package:griffin/presentation/book/books/books_viewmodel.dart';
+import 'package:griffin/presentation/book/books/books_view_model.dart';
 import 'package:griffin/presentation/book/passport/passport_screen.dart';
 import 'package:griffin/presentation/book/passport/passport_view_model.dart';
 import 'package:griffin/presentation/book/seat/seat_screen.dart';
@@ -81,20 +81,10 @@ final router = GoRouter(
     GoRoute(
       name: 'book',
       path: '/book',
-      builder: (context, state) {
-        if (state.extra != null) {
-          final map = state.extra! as Map<String, dynamic>;
-          return ChangeNotifierProvider(
-            create: (_) => getIt<BooksViewModel>(),
-            child: BooksScreen(
-              departureFlightResultModel: map["departure_flight"],
-              arrivalFlightResultModel: map["arrival_flight"],
-            ),
-          );
-        } else {
-          return const IndexScreen();
-        }
-      },
+      builder: (context, state) => ChangeNotifierProvider(
+        create: (_) => getIt<BooksViewModel>(),
+        child: const BooksScreen(),
+      ),
       routes: [
         GoRoute(
             name: 'passport',
@@ -105,8 +95,9 @@ final router = GoRouter(
                 return ChangeNotifierProvider(
                   create: (_) => getIt<PassportViewModel>(),
                   child: PassportScreen(
-                      bookIdList: map['bookIdList'],
-                      totalFare: map['totalFare']),
+                    departureBookList: map["departure_book"],
+                    arrivalBookList: map["arrival_book"],
+                  ),
                 );
               } else {
                 return const IndexScreen();
@@ -122,8 +113,8 @@ final router = GoRouter(
                       return ChangeNotifierProvider(
                         create: (_) => getIt<SeatViewModel>(),
                         child: SeatScreen(
-                            bookIdList: map['bookIdList'],
-                            totalFare: map['totalFare']),
+                          bookIdList: map['bookIdList'],
+                        ),
                       );
                     } else {
                       return const IndexScreen();
@@ -159,12 +150,15 @@ final router = GoRouter(
     GoRoute(
       name: 'pay',
       path: '/pay',
-      builder: (_, state) => ChangeNotifierProvider(
-        create: (_) => getIt<PayViewModel>(),
-        child: PayScreen(
-          forPayBookIdList: state.extra as List<int>,
-        ),
-      ),
+      builder: (_, state) {
+        final map = state.extra! as Map<String, dynamic>;
+        return ChangeNotifierProvider(
+          create: (_) => getIt<PayViewModel>(),
+          child: PayScreen(
+            forPayBookIdList: map['bookIdList'],
+          ),
+        );
+      },
       routes: const [],
     ),
   ],

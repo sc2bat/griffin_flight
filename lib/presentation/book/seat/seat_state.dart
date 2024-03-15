@@ -10,6 +10,9 @@ class SeatState with _$SeatState {
   factory SeatState({
     FlightResultModel? flightResultModel,
     UserAccountModel? userAccountModel,
+    @Default([]) List<String> departureSelectedSeats,
+    @Default([]) List<String> returnSelectedSeats,
+    @Default(0) int totalFare,
   }) = _SeatState;
 
   factory SeatState.fromJson(Map<String, dynamic> json) =>

@@ -1,23 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:griffin/data/dtos/passport_dto.dart';
+import 'package:griffin/domain/model/books/books_model.dart';
 import 'package:griffin/presentation/book/passport/passport_view_model.dart';
 import 'package:griffin/presentation/book/passport/widgets/country_textfield_widget.dart';
 import 'package:griffin/presentation/book/passport/widgets/custom_textfield_widget.dart';
 import 'package:griffin/presentation/book/passport/widgets/gender_widget.dart';
 import 'package:griffin/presentation/book/passport/widgets/phone_textfield_widget.dart';
+import 'package:griffin/utils/simple_logger.dart';
 import 'package:provider/provider.dart';
 
-import '../../../domain/model/books/books_model.dart';
 import '../../common/colors.dart';
 import '../../common/common_button.dart';
 
 class PassportScreen extends StatefulWidget {
-  final List<BooksModel> bookIdList;
-  final int totalFare;
+  final List<BooksModel> departureBookList;
+  final List<BooksModel> arrivalBookList;
 
-  const PassportScreen(
-      {super.key, required this.bookIdList, required this.totalFare});
+  const PassportScreen({
+    super.key,
+    required this.departureBookList,
+    required this.arrivalBookList,
+  });
 
   @override
   State<PassportScreen> createState() => _PassportScreenState();
@@ -26,7 +29,6 @@ class PassportScreen extends StatefulWidget {
 class _PassportScreenState extends State<PassportScreen>
     with TickerProviderStateMixin {
   late final TabController _tabController;
-  final int _numberOfPeople = 2;
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
   final emailController = TextEditingController();
@@ -40,18 +42,17 @@ class _PassportScreenState extends State<PassportScreen>
   void initState() {
     Future.microtask(() {
       final passportViewModel = context.read<PassportViewModel>();
-      passportViewModel.init();
+      passportViewModel.init(widget.departureBookList, widget.arrivalBookList);
     });
+
+    logger.info(widget.departureBookList.length);
+    _tabController = TabController(
+      initialIndex: 0,
+      length: widget.departureBookList.length,
+      vsync: this,
+      animationDuration: const Duration(milliseconds: 150),
+    );
     super.initState();
-    // _tabController = TabController(
-    //   length: _numberOfPeople,
-    //   vsync: this,
-    //   animationDuration: const Duration(milliseconds: 150),
-    // );
-    // _formKeys =
-    //     List.generate(_numberOfPeople, (index) => GlobalKey<FormState>());
-
-
 
     firstNameController.text = 'test';
     lastNameController.text = 'test';
@@ -85,33 +86,29 @@ class _PassportScreenState extends State<PassportScreen>
           },
           icon: const Icon(Icons.arrow_back_ios),
         ),
-        // bottom: _numberOfPeople > 1
-        //     ? TabBar(
-        //         controller: _tabController,
-        //         tabs: List.generate(
-        //           _numberOfPeople,
-        //           (index) => Tab(text: 'Person ${index + 1}'),
-        //         ),
-        //         isScrollable: true,
-        //         indicatorColor: AppColors.greenColor,
-        //         labelColor: AppColors.greenColor,
-        //         labelStyle: const TextStyle(fontWeight: FontWeight.bold),
-        //         labelPadding: EdgeInsets.only(
-        //             right: MediaQuery.of(context).size.width * 0.2),
-        //         unselectedLabelColor: AppColors.greyText,
-        //         overlayColor:
-        //             const MaterialStatePropertyAll(Colors.transparent),
-        //         splashFactory: NoSplash.splashFactory,
-        //       )
-        //     : null,
+        bottom: TabBar(
+          controller: _tabController,
+          tabs: List.generate(
+            widget.departureBookList.length,
+            (index) => Tab(text: 'Person ${index + 1}'),
+          ),
+          isScrollable: true,
+          indicatorColor: AppColors.greenColor,
+          labelColor: AppColors.greenColor,
+          labelStyle: const TextStyle(fontWeight: FontWeight.bold),
+          labelPadding:
+              EdgeInsets.only(right: MediaQuery.of(context).size.width * 0.2),
+          unselectedLabelColor: AppColors.greyText,
+          overlayColor: const MaterialStatePropertyAll(Colors.transparent),
+          splashFactory: NoSplash.splashFactory,
+          onTap: (index) {},
+        ),
       ),
-      body:
-      // TabBarView(
-      //   controller: _tabController,
-      //   children: List.generate(
-      //     _numberOfPeople,
-      //     (index) =>
-              Padding(
+      body: TabBarView(
+        controller: _tabController,
+        children: List.generate(
+          state.numberOfPeople,
+          (index) => Padding(
             padding: const EdgeInsets.all(16.0),
             child: Form(
               autovalidateMode: AutovalidateMode.always,
@@ -255,7 +252,7 @@ class _PassportScreenState extends State<PassportScreen>
                               subtitle: Row(
                                 children: [
                                   const Icon(Icons.attach_money),
-                                  Text('${widget.totalFare}',
+                                  Text('${state.totalFare}',
                                       style: const TextStyle(
                                         fontSize: 20,
                                       )),
@@ -264,38 +261,48 @@ class _PassportScreenState extends State<PassportScreen>
                             ),
                           ),
                           CommonButton(
-                              width: MediaQuery.of(context).size.width * 0.3,
-                              height: MediaQuery.of(context).size.width * 0.12,
-                              text: state.isLoading ? 'Loading...' : 'Continue',
-                              onTap: state.isLoading
-                                  ? () {}
-                                  : () async {
-                                      if (_formKey
-                                              .currentState
-                                              ?.validate() ??
-                                          false) {
-                                        await viewModel.postPassportData(
-                                            PassportDTO(
-                                                gender: state.selectedGender ==
-                                                        Gender.male
-                                                    ? 0
-                                                    : 1,
-                                                firstName:
-                                                    firstNameController.text,
-                                                lastName:
-                                                    lastNameController.text,
-                                                email: emailController.text,
-                                                birthday:
-                                                    '${state.selectedDate?.year}${state.selectedDate?.month.toString().padLeft(2, '0')}${state.selectedDate?.day.toString().padLeft(2, '0')}',
-                                                phone:
-                                                    phoneNumberController.text,
-                                                isDeleted: 0),
-                                            widget.bookIdList);
-                                        if (mounted) {
-                                          context.push('/book/passport/seat', extra: {"bookIdList": widget.bookIdList, "totalFare" : widget.totalFare});
-                                        }
+                            width: MediaQuery.of(context).size.width * 0.3,
+                            height: MediaQuery.of(context).size.width * 0.12,
+                            text: state.isLoading
+                                ? 'Loading...'
+                                : state.numberOfPeople !=
+                                        state.passportDTOList.length
+                                    ? 'Save'
+                                    : 'Continue',
+                            onTap: state.isLoading
+                                ? () {}
+                                : state.numberOfPeople !=
+                                        state.passportDTOList.length
+                                    ? () {
+                                        viewModel.savePassport(
+                                          firstName: firstNameController.text,
+                                          lastName: lastNameController.text,
+                                          email: emailController.text,
+                                          phone: phoneNumberController.text,
+                                        );
+                                        firstNameController.clear();
+                                        lastNameController.clear();
+                                        emailController.clear();
+                                        phoneNumberController.clear();
                                       }
-                                    }),
+                                    : () async {
+                                        if (_formKey.currentState?.validate() ??
+                                            false) {
+                                          await viewModel.postPassportData();
+                                          if (mounted) {
+                                            context.push(
+                                              '/book/passport/seat',
+                                              extra: {
+                                                "departure_flight":
+                                                    state.departureBookList,
+                                                "arrival_flight":
+                                                    state.arrivalBookList
+                                              },
+                                            );
+                                          }
+                                        }
+                                      },
+                          ),
                         ],
                       ),
                     ],
@@ -304,6 +311,8 @@ class _PassportScreenState extends State<PassportScreen>
               ),
             ),
           ),
-        );
+        ),
+      ),
+    );
   }
 }

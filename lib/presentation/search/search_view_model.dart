@@ -4,8 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:griffin/data/core/result.dart';
 import 'package:griffin/domain/model/airport/airport_model.dart';
+import 'package:griffin/domain/model/flight_result/flight_result_model.dart';
 import 'package:griffin/domain/model/user/user_account_model.dart';
 import 'package:griffin/domain/use_cases/airport/airport_list_use_case.dart';
+import 'package:griffin/domain/use_cases/search/reset_flight_result_use_case.dart';
+import 'package:griffin/domain/use_cases/search/save_number_of_people_use_case.dart';
+import 'package:griffin/domain/use_cases/search/save_seat_class_use_case.dart';
 import 'package:griffin/domain/use_cases/search/search_flight_use_case.dart';
 import 'package:griffin/domain/use_cases/splash/get_session_use_case.dart';
 import 'package:griffin/presentation/common/common.dart';
@@ -19,12 +23,21 @@ class SearchViewModel with ChangeNotifier {
     required GetSessionUseCase getSessionUseCase,
     required AirportListUseCase airportListUseCase,
     required SearchFlightUseCase searchFlightUseCase,
+    required ResetFlightResultUseCase resetFlightResultUseCase,
+    required SaveSeatClassUseCase saveSeatClassUseCase,
+    required SaveNumberOfPeopleUseCase saveNumberOfPeopleUseCase,
   })  : _getSessionUseCase = getSessionUseCase,
         _airportListUseCase = airportListUseCase,
-        _searchFlightUseCase = searchFlightUseCase;
+        _searchFlightUseCase = searchFlightUseCase,
+        _resetFlightResultUseCase = resetFlightResultUseCase,
+        _saveSeatClassUseCase = saveSeatClassUseCase,
+        _saveNumberOfPeopleUseCase = saveNumberOfPeopleUseCase;
   final GetSessionUseCase _getSessionUseCase;
   final AirportListUseCase _airportListUseCase;
   final SearchFlightUseCase _searchFlightUseCase;
+  final ResetFlightResultUseCase _resetFlightResultUseCase;
+  final SaveSeatClassUseCase _saveSeatClassUseCase;
+  final SaveNumberOfPeopleUseCase _saveNumberOfPeopleUseCase;
 
   SearchState _state = SearchState();
   SearchState get state => _state;
@@ -44,6 +57,9 @@ class SearchViewModel with ChangeNotifier {
 
     // airport 가져오기
     await getAirportList();
+
+    // reset result
+    await resetResult();
 
     setClassList();
 
@@ -65,12 +81,16 @@ class SearchViewModel with ChangeNotifier {
                   child: AirportMapWidget(
                     goResultFunction: (context) {
                       context.pop();
-                      context.push('/search/result',
-                          extra: {'search_result': state.searchResult});
+                      context.push(
+                        '/search/result',
+                        extra: {
+                          'search_result': state.searchResult,
+                        },
+                      );
                     },
-                    isLoading: state.isLoading,
                     fromAirport: state.fromAirport!,
                     toAirport: state.toAirport!,
+                    isFlightAvailable: isFlightAvailableValid(),
                   ),
                 );
               },
@@ -79,8 +99,6 @@ class SearchViewModel with ChangeNotifier {
             _searchUiEventStreamController.add(const SearchUiEvent.showSnackBar(
                 'fromAirport || toAirport is Null!'));
           }
-        // context.push('/search/result',
-        //     extra: {'search_result': state.searchResult});
       }
     });
   }
@@ -129,15 +147,22 @@ class SearchViewModel with ChangeNotifier {
     }
   }
 
-  void setClassList() {
-    _state =
-        state.copyWith(selectedClassList: ['Economy', 'Business', 'First']);
-    notifyListeners();
+  Future<void> setNumberOfPeople() async {
+    await _saveNumberOfPeopleUseCase.execute(state.currentPersonValue);
   }
 
-  void onChangeClass(String selectClass) {
+  void setClassList() async {
+    List<String> classList = ['Economy', 'Business', 'First'];
+    _state =
+        state.copyWith(selectClass: classList[0], selectedClassList: classList);
+    notifyListeners();
+    await _saveSeatClassUseCase.execute(classList[0]);
+  }
+
+  void onChangeClass(String selectClass) async {
     _state = state.copyWith(selectClass: selectClass);
     notifyListeners();
+    await _saveSeatClassUseCase.execute(selectClass);
   }
 
   void onTapDirect() {
@@ -213,5 +238,17 @@ class SearchViewModel with ChangeNotifier {
         state.toAirportId != 0 &&
         state.travelDate.isNotEmpty &&
         state.returnDate.isNotEmpty;
+  }
+
+  bool isFlightAvailableValid() {
+    // if(state.searchResult)
+    List<FlightResultModel> fromFlightList = state.searchResult['from_flight'];
+    List<FlightResultModel> toFlightList = state.searchResult['to_flight'];
+    return !(fromFlightList.isNotEmpty && toFlightList.isNotEmpty);
+  }
+
+  Future<void> resetResult() async {
+    final result = await _resetFlightResultUseCase.execute();
+    logger.info('reset result => $result');
   }
 }
