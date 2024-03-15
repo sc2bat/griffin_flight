@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:griffin/domain/use_cases/passport/passport_use_case.dart';
 import 'package:griffin/presentation/book/passport/passport_state.dart';
-import 'package:griffin/presentation/book/passport/widgets/gender_widget.dart';
-
 import '../../../data/core/result.dart';
 import '../../../data/dtos/passport_dto.dart';
 import '../../../domain/model/books/books_model.dart';
@@ -57,35 +55,6 @@ class PassportViewModel extends ChangeNotifier {
     }
   }
 
-// FirstName 유효성 검사
-  String? firstNameValidate(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'First name is required.';
-    }
-    return null;
-  }
-
-// LastName 유효성 검사
-  String? lastNameValidate(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Last name is required.';
-    }
-    return null;
-  }
-
-// Email 유효성 검사
-  String? emailValidate(String? value) {
-    final RegExp emailRegExp =
-        RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$');
-    if (value == null || value.isEmpty) {
-      return 'Email is required.';
-    }
-    if (!emailRegExp.hasMatch(value)) {
-      return 'Please match the requested format.';
-    }
-    return null;
-  }
-
   //post
   Future<void> postPassportData() async {
     _state = state.copyWith(isLoading: true);
@@ -101,24 +70,6 @@ class PassportViewModel extends ChangeNotifier {
       case Error<List<PassportModel>>():
         throw Exception(result.message);
     }
-  }
-
-  //gender change 함수
-  void changeGender(Gender gender) {
-    _state = state.copyWith(selectedGender: gender);
-    notifyListeners();
-  }
-
-//nationality change 함수
-  void changeNationality(String country) {
-    _state = state.copyWith(selectedCountry: country);
-    notifyListeners();
-  }
-
-//dob change 함수
-  void changeDob(DateTime date) {
-    _state = state.copyWith(selectedDate: date);
-    notifyListeners();
   }
 
   void setBookList(
@@ -147,27 +98,12 @@ class PassportViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void savePassport({
-    required String firstName,
-    required String lastName,
-    required String email,
-    required String phone,
-  }) {
+  void savePassport(PassportDTO passportDTO) {
     List<PassportDTO> passportDTOList = List.from(state.passportDTOList);
-    if (state.selectedDate != null) {
-      passportDTOList.add(PassportDTO(
-        gender: state.selectedGender == Gender.male ? 0 : 1,
-        firstName: firstName,
-        lastName: lastName,
-        email: email,
-        phone: phone,
-        birthday:
-            '${state.selectedDate!.year}${state.selectedDate!.month.toString().padLeft(2, '0')}${state.selectedDate!.day.toString().padLeft(2, '0')}',
-      ));
-      changeGender(Gender.male);
-      changeDob(DateTime.now());
-    }
+    passportDTOList.add(passportDTO);
     _state = state.copyWith(passportDTOList: passportDTOList);
+    logger.info(passportDTOList);
     notifyListeners();
+
   }
 }
