@@ -102,8 +102,6 @@ class PassportViewModel extends ChangeNotifier {
     List<PassportDTO> passportDTOList = List.from(state.passportDTOList);
     passportDTOList.add(passportDTO);
     _state = state.copyWith(passportDTOList: passportDTOList);
-    logger.info(passportDTOList);
     notifyListeners();
-
   }
 }
