@@ -26,8 +26,6 @@ class _PassportScreenState extends State<PassportScreen>
     with TickerProviderStateMixin {
   late final TabController _tabController;
   final validationCodeController = TextEditingController();
-  // final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
   List<GlobalKey<FormState>> _formKeyList = [];
 
   @override
@@ -60,6 +58,7 @@ class _PassportScreenState extends State<PassportScreen>
   Widget build(BuildContext context) {
     final viewModel = context.watch<PassportViewModel>();
     final state = viewModel.state;
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -94,14 +93,16 @@ class _PassportScreenState extends State<PassportScreen>
         children: List.generate(
           widget.departureBookList.length,
           (index) {
-            TextEditingController nameController = TextEditingController();
             return Padding(
               padding: const EdgeInsets.all(16.0),
               child: PassportFormWidget(
-                formKeyList: _formKeyList,
-                viewModel: viewModel,
-                state: state,
-                mounted: mounted,
+                savePassportData: (passportDTO) => viewModel.savePassport(passportDTO),
+                numberOfPeople: state.numberOfPeople,
+                postPassportData: () => viewModel.postPassportData(),
+                departureBookList: state.departureBookList,
+                arrivalBookList: state.arrivalBookList,
+                passportDTOList: state.passportDTOList,
+                tabController: _tabController,
               ),
             );
           },

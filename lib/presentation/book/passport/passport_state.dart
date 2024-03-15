@@ -1,10 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:griffin/data/dtos/passport_dto.dart';
 import 'package:griffin/domain/model/books/books_model.dart';
-import 'package:griffin/domain/model/flight_result/flight_result_model.dart';
 import 'package:griffin/domain/model/passport/passport_model.dart';
-import 'package:griffin/presentation/book/passport/widgets/gender_widget.dart';
-
 import '../../../domain/model/user/user_account_model.dart';
 
 part 'passport_state.freezed.dart';
@@ -18,9 +15,6 @@ class PassportState with _$PassportState {
     @Default(0.0) double totalFare,
     PassportModel? passportModel,
     UserAccountModel? userAccountModel,
-    Gender? selectedGender,
-    String? selectedCountry,
-    DateTime? selectedDate,
     @Default([]) List<BooksModel> departureBookList,
     @Default([]) List<BooksModel> arrivalBookList,
     @Default([]) List<PassportDTO> passportDTOList,

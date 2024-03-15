@@ -13,11 +13,13 @@ import '../../common/colors.dart';
 import '../../common/common_button.dart';
 
 class SeatScreen extends StatefulWidget {
-  final List<BooksModel> bookIdList;
+  final List<BooksModel> departureBookList;
+  final List<BooksModel> arrivalBookList;
 
   const SeatScreen({
     super.key,
-    required this.bookIdList,
+    required this.departureBookList,
+    required this.arrivalBookList,
   });
 
   @override
@@ -128,7 +130,7 @@ class _SeatScreenState extends State<SeatScreen> with TickerProviderStateMixin {
                                 selectedSeatList.length < _numberOfPeople,
                             index: index,
                             list: selectedSeatList,
-                            bookIdListLength: widget.bookIdList.length,
+                            bookIdListLength: widget.departureBookList.length,
                             isDeparture: _tabController.index == 0,
                           );
                         } else if (adjustedIndex < 21) {
@@ -139,7 +141,7 @@ class _SeatScreenState extends State<SeatScreen> with TickerProviderStateMixin {
                                 selectedSeatList.length < _numberOfPeople,
                             list: selectedSeatList,
                             index: index,
-                            bookIdListLength: widget.bookIdList.length,
+                            bookIdListLength: widget.departureBookList.length,
                             isDeparture: _tabController.index == 0,
                           );
                         } else {
@@ -150,7 +152,7 @@ class _SeatScreenState extends State<SeatScreen> with TickerProviderStateMixin {
                                 selectedSeatList.length < _numberOfPeople,
                             list: selectedSeatList,
                             index: index,
-                            bookIdListLength: widget.bookIdList.length,
+                            bookIdListLength: widget.departureBookList.length,
                             isDeparture: _tabController.index == 0,
                           );
                         }
@@ -205,12 +207,12 @@ class _SeatScreenState extends State<SeatScreen> with TickerProviderStateMixin {
                                     ),
                                     TextButton(
                                       onPressed: () {
-                                        if (mounted) {
-                                          context.push('/book/passport/seat',
-                                              extra: {
-                                                "bookIdList": widget.bookIdList
-                                              });
-                                        }
+                                        // if (mounted) {
+                                        //   context.push('/book/passport/seat',
+                                        //       extra: {
+                                        //         "bookIdList": widget.bookIdList
+                                        //       });
+                                        // }
                                       },
                                       child: const Text('YES'),
                                     ),

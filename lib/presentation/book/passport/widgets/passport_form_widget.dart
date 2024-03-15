@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:griffin/presentation/book/passport/passport_state.dart';
-import 'package:griffin/presentation/book/passport/passport_view_model.dart';
+import 'package:griffin/data/dtos/passport_dto.dart';
 import 'package:griffin/presentation/book/passport/widgets/country_textfield_widget.dart';
 import 'package:griffin/presentation/book/passport/widgets/custom_textfield_widget.dart';
 import 'package:griffin/presentation/book/passport/widgets/gender_widget.dart';
@@ -9,19 +8,28 @@ import 'package:griffin/presentation/book/passport/widgets/phone_textfield_widge
 import 'package:griffin/presentation/common/colors.dart';
 import 'package:griffin/presentation/common/common_button.dart';
 
+import '../../../../domain/model/books/books_model.dart';
+import '../../../../utils/simple_logger.dart';
+
 class PassportFormWidget extends StatefulWidget {
+  final Function(PassportDTO passportDTO) savePassportData;
+  final Future<void> Function() postPassportData;
+  final List<BooksModel> departureBookList;
+  final List<BooksModel> arrivalBookList;
+  final int numberOfPeople;
+  final List<PassportDTO> passportDTOList;
+  final TabController tabController;
+
   const PassportFormWidget({
     super.key,
-    required List<GlobalKey<FormState>> formKeyList,
-    required this.viewModel,
-    required this.state,
-    required this.mounted,
-  }) : _formKeyList = formKeyList;
-
-  final List<GlobalKey<FormState>> _formKeyList;
-  final PassportViewModel viewModel;
-  final PassportState state;
-  final bool mounted;
+    required this.savePassportData,
+    required this.numberOfPeople,
+    required this.postPassportData,
+    required this.departureBookList,
+    required this.arrivalBookList,
+    required this.passportDTOList,
+    required this.tabController,
+  });
 
   @override
   State<PassportFormWidget> createState() => _PassportFormWidgetState();
@@ -29,13 +37,14 @@ class PassportFormWidget extends StatefulWidget {
 
 class _PassportFormWidgetState extends State<PassportFormWidget> {
   late TextEditingController firstNameController;
-
   late TextEditingController lastNameController;
-
   late TextEditingController emailController;
-
   late TextEditingController phoneNumberController;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool isSaving = false;
+  Gender? selectedGender;
+  String? selectedCountry;
+  DateTime? date;
 
   @override
   void initState() {
@@ -55,205 +64,227 @@ class _PassportFormWidgetState extends State<PassportFormWidget> {
     super.dispose();
   }
 
+  String? firstNameValidate(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'First name is required.';
+    }
+    return null;
+  }
+
+// LastName 유효성 검사
+  String? lastNameValidate(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Last name is required.';
+    }
+    return null;
+  }
+
+// Email 유효성 검사
+  String? emailValidate(String? value) {
+    final RegExp emailRegExp =
+        RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$');
+    if (value == null || value.isEmpty) {
+      return 'Email is required.';
+    }
+    if (!emailRegExp.hasMatch(value)) {
+      return 'Please match the requested format.';
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Form(
-      autovalidateMode: AutovalidateMode.always,
-      // key: _formKeys[index],
-      key: _formKey,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const SizedBox(height: 10),
-          GenderSelectionWidget(
-            onGenderSelected: (Gender gender) {
-              widget.viewModel.changeGender(gender);
-            },
-          ),
-          const SizedBox(height: 20),
-          Row(
-            children: [
-              Expanded(
-                child: CustomTextFieldWidget(
-                  hintText: 'FIRST NAME',
-                  controller: firstNameController,
-                  keyboardType: TextInputType.text,
-                  validator: widget.viewModel.firstNameValidate,
-                ),
-              ),
-              const SizedBox(width: 15),
-              Expanded(
-                child: CustomTextFieldWidget(
-                  hintText: 'LAST NAME',
-                  controller: lastNameController,
-                  keyboardType: TextInputType.text,
-                  validator: widget.viewModel.lastNameValidate,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 30),
-          CustomTextFieldWidget(
-            hintText: 'EMAIL',
-            controller: emailController,
-            validator: widget.viewModel.emailValidate,
-          ),
-          const SizedBox(height: 8),
-          const Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              'Your ticket will be sent to above email',
-              style: TextStyle(color: AppColors.greyText),
+        autovalidateMode: AutovalidateMode.always,
+        key: _formKey,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(height: 10),
+            GenderSelectionWidget(
+              onGenderSelected: (Gender gender) {
+                setState(() {
+                  selectedGender = gender;
+                });
+              },
             ),
-          ),
-          const SizedBox(height: 30),
-          PhoneTextFieldWidget(
-            controller: phoneNumberController,
-            onPhoneNumberChanged: (number) {},
-          ),
-          const SizedBox(height: 30),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: CountryTextFieldWidget(
-                  onCountrySelected: (country) {
-                    widget.viewModel.changeNationality(country);
-                  },
+            const SizedBox(height: 20),
+            Row(
+              children: [
+                Expanded(
+                  child: CustomTextFieldWidget(
+                    hintText: 'FIRST NAME',
+                    controller: firstNameController,
+                    keyboardType: TextInputType.text,
+                    validator: firstNameValidate,
+                  ),
                 ),
+                const SizedBox(width: 15),
+                Expanded(
+                  child: CustomTextFieldWidget(
+                    hintText: 'LAST NAME',
+                    controller: lastNameController,
+                    keyboardType: TextInputType.text,
+                    validator: lastNameValidate,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 30),
+            CustomTextFieldWidget(
+              hintText: 'EMAIL',
+              controller: emailController,
+              validator: emailValidate,
+            ),
+            const SizedBox(height: 8),
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                'Your ticket will be sent to above email',
+                style: TextStyle(color: AppColors.greyText),
               ),
-              const SizedBox(width: 15),
-              Expanded(
-                child: Column(
-                  children: [
-                    Container(
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: AppColors.greyCard,
-                        borderRadius: BorderRadius.circular(3),
-                        border: Border(
-                          bottom: BorderSide(
-                            color: widget.viewModel.state.selectedDate == null
-                                ? const Color(0xFFE5ACA6)
-                                : Colors.transparent,
+            ),
+            const SizedBox(height: 30),
+            PhoneTextFieldWidget(
+              controller: phoneNumberController,
+              onPhoneNumberChanged: (number) {},
+            ),
+            const SizedBox(height: 30),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: CountryTextFieldWidget(
+                    onCountrySelected: (country) {
+                      setState(() {
+                        selectedCountry = country;
+                      });
+                    },
+                  ),
+                ),
+                const SizedBox(width: 15),
+                Expanded(
+                  child: Column(
+                    children: [
+                      Container(
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: AppColors.greyCard,
+                          borderRadius: BorderRadius.circular(3),
+                          border: Border(
+                            bottom: BorderSide(
+                              color: date == null
+                                  ? const Color(0xFFE5ACA6)
+                                  : Colors.transparent,
+                            ),
                           ),
                         ),
-                      ),
-                      child: TextButton(
-                        onPressed: () async {
-                          await showDatePicker(
-                            context: context,
-                            lastDate: DateTime.now(),
-                            firstDate: DateTime(1800),
-                            initialEntryMode: DatePickerEntryMode.calendarOnly,
-                          ).then((date) {
-                            if (date != null) {
-                              widget.viewModel.changeDob(date);
+                        child: TextButton(
+                          onPressed: () async {
+                            final selectedDate = await showDatePicker(
+                              context: context,
+                              lastDate: DateTime.now(),
+                              firstDate: DateTime(1800),
+                              initialEntryMode:
+                                  DatePickerEntryMode.calendarOnly,
+                            );
+                            if (selectedDate != null) {
+                              setState(() {
+                                date = selectedDate;
+                              });
                             }
-                          });
-                        },
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            widget.viewModel.state.selectedDate != null
-                                ? '${widget.viewModel.state.selectedDate!.year.toString()}-${widget.viewModel.state.selectedDate!.month.toString().padLeft(2, '0')}-${widget.viewModel.state.selectedDate!.day.toString().padLeft(2, '0')}'
-                                : 'DOB',
-                            style: TextStyle(
-                                fontSize: 16,
-                                color:
-                                    widget.viewModel.state.selectedDate == null
-                                        ? AppColors.greyText
-                                        : Colors.white),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    widget.viewModel.state.selectedDate == null
-                        ? const Align(
+                          },
+                          child: Align(
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              'DOB is required.',
+                              date != null
+                                  ? '${date!.year.toString()}-${date!.month.toString().padLeft(2, '0')}-${date!.day.toString().padLeft(2, '0')}'
+                                  : 'DOB',
                               style: TextStyle(
-                                  fontSize: 12, color: Color(0xFFE5ACA6)),
+                                  fontSize: 16,
+                                  color: date == null
+                                      ? AppColors.greyText
+                                      : Colors.white),
                             ),
-                          )
-                        : const Text('')
-                  ],
-                ),
-              )
-            ],
-          ),
-          const Spacer(),
-          Column(
-            children: [
-              const Divider(),
-              Row(
-                children: [
-                  Expanded(
-                    child: ListTile(
-                      title: const Text('TOTAL FARE',
-                          style: TextStyle(color: AppColors.greyText)),
-                      subtitle: Row(
-                        children: [
-                          const Icon(Icons.attach_money),
-                          Text('${widget.state.totalFare}',
-                              style: const TextStyle(
-                                fontSize: 20,
-                              )),
-                        ],
+                          ),
+                        ),
                       ),
-                    ),
+                      const SizedBox(height: 10),
+                      date == null
+                          ? const Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                'DOB is required.',
+                                style: TextStyle(
+                                    fontSize: 12, color: Color(0xFFE5ACA6)),
+                              ),
+                            )
+                          : const Text('')
+                    ],
                   ),
-                  CommonButton(
-                    width: MediaQuery.of(context).size.width * 0.3,
-                    height: MediaQuery.of(context).size.width * 0.12,
-                    text: widget.state.isLoading
-                        ? 'Loading...'
-                        : widget.state.numberOfPeople !=
-                                widget.state.passportDTOList.length
+                )
+              ],
+            ),
+            const Spacer(),
+            Column(
+              children: [
+                const Divider(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    CommonButton(
+                        width: MediaQuery.of(context).size.width * 0.3,
+                        height: MediaQuery.of(context).size.width * 0.12,
+                        text: widget.numberOfPeople != widget.tabController.index+1
                             ? 'Save'
                             : 'Continue',
-                    onTap: widget.state.isLoading
-                        ? () {}
-                        : widget.state.numberOfPeople !=
-                                widget.state.passportDTOList.length
-                            ? () {
-                                widget.viewModel.savePassport(
-                                  firstName: firstNameController.text,
-                                  lastName: lastNameController.text,
-                                  email: emailController.text,
-                                  phone: phoneNumberController.text,
-                                );
-                                firstNameController.clear();
-                                lastNameController.clear();
-                                emailController.clear();
-                                phoneNumberController.clear();
+                        onTap: widget.numberOfPeople !=
+                            widget.tabController.index+1
+                            ? () async {
+                                if (_formKey.currentState?.validate() ?? false) {
+                                  await widget.savePassportData(PassportDTO(
+                                    gender: selectedGender == Gender.male ? 0 : 1,
+                                    firstName: firstNameController.text,
+                                    lastName: lastNameController.text,
+                                    birthday:
+                                        '${date?.year}${date?.month.toString().padLeft(2, '0')}${date?.day.toString().padLeft(2, '0')}',
+                                    email: emailController.text,
+                                    phone: phoneNumberController.text,
+                                  ));
+                                }
+                                setState(() {
+                                 widget.tabController.animateTo(widget.tabController.index+1);
+                                });
+                                logger.info('save button');
                               }
                             : () async {
-                                if (_formKey.currentState?.validate() ??
-                                    false) {
-                                  await widget.viewModel.postPassportData();
-                                  if (widget.mounted) {
-                                    context.push(
-                                      '/book/passport/seat',
-                                      extra: {
-                                        "departure_flight":
-                                            widget.state.departureBookList,
-                                        "arrival_flight":
-                                            widget.state.arrivalBookList
-                                      },
-                                    );
-                                  }
+                                if (_formKey.currentState?.validate() ?? false) {
+                                  await widget.savePassportData(PassportDTO(
+                                    gender: selectedGender == Gender.male ? 0 : 1,
+                                    firstName: firstNameController.text,
+                                    lastName: lastNameController.text,
+                                    birthday:
+                                        '${date?.year}${date?.month.toString().padLeft(2, '0')}${date?.day.toString().padLeft(2, '0')}',
+                                    email: emailController.text,
+                                    phone: phoneNumberController.text,
+                                  ));
                                 }
-                              },
-                  ),
-                ],
-              ),
-            ],
-          )
-        ],
-      ),
-    );
+                                await widget.postPassportData();
+                                if (mounted) {
+                                  context.push(
+                                    '/book/passport/seat',
+                                    extra: {
+                                      "departure_flight": widget.departureBookList,
+                                      "arrival_flight": widget.arrivalBookList
+                                    },
+                                  );
+                                }
+                              }),
+                  ],
+                )
+              ],
+            ),
+          ],
+        ));
   }
 }

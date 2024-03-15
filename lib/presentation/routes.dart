@@ -113,7 +113,8 @@ final router = GoRouter(
                       return ChangeNotifierProvider(
                         create: (_) => getIt<SeatViewModel>(),
                         child: SeatScreen(
-                          bookIdList: map['bookIdList'],
+                          departureBookList: map["departure_flight"],
+                          arrivalBookList: map["arrival_flight"],
                         ),
                       );
                     } else {
