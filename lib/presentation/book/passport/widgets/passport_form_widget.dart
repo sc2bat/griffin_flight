@@ -63,6 +63,7 @@ class _PassportFormWidgetState extends State<PassportFormWidget> {
     super.dispose();
   }
 
+  // FirstName 유효성 검사
   String? firstNameValidate(String? value) {
     if (value == null || value.isEmpty) {
       return 'First name is required.';
@@ -149,7 +150,6 @@ class _PassportFormWidgetState extends State<PassportFormWidget> {
               onPhoneNumberChanged: (number) {},
             ),
             const SizedBox(height: 30),
-            const SizedBox(width: 15),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -173,8 +173,7 @@ class _PassportFormWidgetState extends State<PassportFormWidget> {
                         context: context,
                         lastDate: DateTime.now(),
                         firstDate: DateTime(1800),
-                        initialEntryMode:
-                            DatePickerEntryMode.calendarOnly,
+                        initialEntryMode: DatePickerEntryMode.calendarOnly,
                       );
                       if (selectedDate != null) {
                         setState(() {
@@ -198,16 +197,19 @@ class _PassportFormWidgetState extends State<PassportFormWidget> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                date == null
-                    ? const Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          'DOB is required.',
-                          style: TextStyle(
-                              fontSize: 12, color: Color(0xFFE5ACA6)),
-                        ),
-                      )
-                    : const Text('')
+                Visibility(
+                  maintainSize: true,
+                  maintainAnimation: true,
+                  maintainState: true,
+                  visible: date == null,
+                  child: const Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'DOB is required.',
+                      style: TextStyle(fontSize: 12, color: Color(0xFFE5ACA6)),
+                    ),
+                  ),
+                ),
               ],
             ),
             const Spacer(),

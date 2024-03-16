@@ -99,6 +99,7 @@ class _PassportScreenState extends State<PassportScreen>
             : null,
       ),
       body: TabBarView(
+        physics: const NeverScrollableScrollPhysics(),
         controller: _tabController,
         children: List.generate(
           widget.departureBookList.length,
