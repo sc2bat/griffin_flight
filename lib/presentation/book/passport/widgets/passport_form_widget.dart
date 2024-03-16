@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:griffin/data/dtos/passport_dto.dart';
-import 'package:griffin/presentation/book/passport/widgets/country_textfield_widget.dart';
 import 'package:griffin/presentation/book/passport/widgets/custom_textfield_widget.dart';
 import 'package:griffin/presentation/book/passport/widgets/gender_widget.dart';
 import 'package:griffin/presentation/book/passport/widgets/phone_textfield_widget.dart';
@@ -150,79 +149,65 @@ class _PassportFormWidgetState extends State<PassportFormWidget> {
               onPhoneNumberChanged: (number) {},
             ),
             const SizedBox(height: 30),
-            Row(
+            const SizedBox(width: 15),
+            Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  child: CountryTextFieldWidget(
-                    onCountrySelected: (country) {
-                      setState(() {
-                        selectedCountry = country;
-                      });
+                Container(
+                  height: 48,
+                  width: 180,
+                  decoration: BoxDecoration(
+                    color: AppColors.greyCard,
+                    borderRadius: BorderRadius.circular(3),
+                    border: Border(
+                      bottom: BorderSide(
+                        color: date == null
+                            ? const Color(0xFFE5ACA6)
+                            : Colors.transparent,
+                      ),
+                    ),
+                  ),
+                  child: TextButton(
+                    onPressed: () async {
+                      final selectedDate = await showDatePicker(
+                        context: context,
+                        lastDate: DateTime.now(),
+                        firstDate: DateTime(1800),
+                        initialEntryMode:
+                            DatePickerEntryMode.calendarOnly,
+                      );
+                      if (selectedDate != null) {
+                        setState(() {
+                          date = selectedDate;
+                        });
+                      }
                     },
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        date != null
+                            ? '${date!.year.toString()}-${date!.month.toString().padLeft(2, '0')}-${date!.day.toString().padLeft(2, '0')}'
+                            : 'DOB',
+                        style: TextStyle(
+                            fontSize: 16,
+                            color: date == null
+                                ? AppColors.greyText
+                                : Colors.white),
+                      ),
+                    ),
                   ),
                 ),
-                const SizedBox(width: 15),
-                Expanded(
-                  child: Column(
-                    children: [
-                      Container(
-                        height: 40,
-                        decoration: BoxDecoration(
-                          color: AppColors.greyCard,
-                          borderRadius: BorderRadius.circular(3),
-                          border: Border(
-                            bottom: BorderSide(
-                              color: date == null
-                                  ? const Color(0xFFE5ACA6)
-                                  : Colors.transparent,
-                            ),
-                          ),
+                const SizedBox(height: 10),
+                date == null
+                    ? const Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'DOB is required.',
+                          style: TextStyle(
+                              fontSize: 12, color: Color(0xFFE5ACA6)),
                         ),
-                        child: TextButton(
-                          onPressed: () async {
-                            final selectedDate = await showDatePicker(
-                              context: context,
-                              lastDate: DateTime.now(),
-                              firstDate: DateTime(1800),
-                              initialEntryMode:
-                                  DatePickerEntryMode.calendarOnly,
-                            );
-                            if (selectedDate != null) {
-                              setState(() {
-                                date = selectedDate;
-                              });
-                            }
-                          },
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              date != null
-                                  ? '${date!.year.toString()}-${date!.month.toString().padLeft(2, '0')}-${date!.day.toString().padLeft(2, '0')}'
-                                  : 'DOB',
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  color: date == null
-                                      ? AppColors.greyText
-                                      : Colors.white),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      date == null
-                          ? const Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                'DOB is required.',
-                                style: TextStyle(
-                                    fontSize: 12, color: Color(0xFFE5ACA6)),
-                              ),
-                            )
-                          : const Text('')
-                    ],
-                  ),
-                )
+                      )
+                    : const Text('')
               ],
             ),
             const Spacer(),
@@ -235,15 +220,18 @@ class _PassportFormWidgetState extends State<PassportFormWidget> {
                     CommonButton(
                         width: MediaQuery.of(context).size.width * 0.3,
                         height: MediaQuery.of(context).size.width * 0.12,
-                        text: widget.numberOfPeople != widget.tabController.index+1
+                        text: widget.numberOfPeople !=
+                                widget.tabController.index + 1
                             ? 'Save'
                             : 'Continue',
                         onTap: widget.numberOfPeople !=
-                            widget.tabController.index+1
+                                widget.tabController.index + 1
                             ? () async {
-                                if (_formKey.currentState?.validate() ?? false) {
+                                if (_formKey.currentState?.validate() ??
+                                    false) {
                                   await widget.savePassportData(PassportDTO(
-                                    gender: selectedGender == Gender.male ? 0 : 1,
+                                    gender:
+                                        selectedGender == Gender.male ? 0 : 1,
                                     firstName: firstNameController.text,
                                     lastName: lastNameController.text,
                                     birthday:
@@ -253,14 +241,17 @@ class _PassportFormWidgetState extends State<PassportFormWidget> {
                                   ));
                                 }
                                 setState(() {
-                                 widget.tabController.animateTo(widget.tabController.index+1);
+                                  widget.tabController.animateTo(
+                                      widget.tabController.index + 1);
                                 });
                                 logger.info('save button');
                               }
                             : () async {
-                                if (_formKey.currentState?.validate() ?? false) {
+                                if (_formKey.currentState?.validate() ??
+                                    false) {
                                   await widget.savePassportData(PassportDTO(
-                                    gender: selectedGender == Gender.male ? 0 : 1,
+                                    gender:
+                                        selectedGender == Gender.male ? 0 : 1,
                                     firstName: firstNameController.text,
                                     lastName: lastNameController.text,
                                     birthday:
@@ -274,7 +265,8 @@ class _PassportFormWidgetState extends State<PassportFormWidget> {
                                   context.push(
                                     '/book/passport/seat',
                                     extra: {
-                                      "departure_flight": widget.departureBookList,
+                                      "departure_flight":
+                                          widget.departureBookList,
                                       "arrival_flight": widget.arrivalBookList
                                     },
                                   );
