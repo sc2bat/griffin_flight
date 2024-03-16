@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:griffin/domain/model/books/books_model.dart';
 import 'package:griffin/presentation/book/passport/passport_view_model.dart';
+import 'package:griffin/presentation/book/passport/widgets/passport_form_widget.dart';
+import 'package:griffin/presentation/common/common_dialog.dart';
 import 'package:griffin/utils/simple_logger.dart';
 import 'package:provider/provider.dart';
 
 import '../../common/colors.dart';
-import 'widgets/passport_form_widget.dart';
 
 class PassportScreen extends StatefulWidget {
   final List<BooksModel> departureBookList;
@@ -65,28 +66,37 @@ class _PassportScreenState extends State<PassportScreen>
         title: const Text('Traveller Details'),
         centerTitle: true,
         leading: IconButton(
-          onPressed: () {
-            context.go('/book');
-          },
+          onPressed: () => showDialog(
+            context: context,
+            builder: (BuildContext context) => CommonDialog(
+              title: 'Quit Registration?',
+              subtitle: 'Any information you have entered will not be saved.',
+              noOnTap: () => Navigator.pop(context),
+              yesOnTap: () => context.go('/search'),
+            ),
+          ),
           icon: const Icon(Icons.arrow_back_ios),
         ),
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: List.generate(
-            widget.departureBookList.length,
-            (index) => Tab(text: 'Person ${index + 1}'),
-          ),
-          isScrollable: true,
-          indicatorColor: AppColors.greenColor,
-          labelColor: AppColors.greenColor,
-          labelStyle: const TextStyle(fontWeight: FontWeight.bold),
-          labelPadding:
-              EdgeInsets.only(right: MediaQuery.of(context).size.width * 0.2),
-          unselectedLabelColor: AppColors.greyText,
-          overlayColor: const MaterialStatePropertyAll(Colors.transparent),
-          splashFactory: NoSplash.splashFactory,
-          onTap: (index) {},
-        ),
+        bottom: widget.departureBookList.length > 1
+            ? TabBar(
+                controller: _tabController,
+                tabs: List.generate(
+                  widget.departureBookList.length,
+                  (index) => Tab(text: 'Person ${index + 1}'),
+                ),
+                isScrollable: true,
+                indicatorColor: AppColors.greenColor,
+                labelColor: AppColors.greenColor,
+                labelStyle: const TextStyle(fontWeight: FontWeight.bold),
+                labelPadding: EdgeInsets.only(
+                    right: MediaQuery.of(context).size.width * 0.2),
+                unselectedLabelColor: AppColors.greyText,
+                overlayColor:
+                    const MaterialStatePropertyAll(Colors.transparent),
+                splashFactory: NoSplash.splashFactory,
+                onTap: (index) {},
+              )
+            : null,
       ),
       body: TabBarView(
         controller: _tabController,
@@ -96,7 +106,8 @@ class _PassportScreenState extends State<PassportScreen>
             return Padding(
               padding: const EdgeInsets.all(16.0),
               child: PassportFormWidget(
-                savePassportData: (passportDTO) => viewModel.savePassport(passportDTO),
+                savePassportData: (passportDTO) =>
+                    viewModel.savePassport(passportDTO),
                 numberOfPeople: state.numberOfPeople,
                 postPassportData: () => viewModel.postPassportData(),
                 departureBookList: state.departureBookList,
