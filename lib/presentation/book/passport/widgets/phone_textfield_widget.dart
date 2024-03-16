@@ -70,7 +70,7 @@ class _PhoneTextFieldWidgetState extends State<PhoneTextFieldWidget> {
               ? const Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    'Phone number is required.',
+                    '     Phone number is required.',
                     style: TextStyle(fontSize: 12, color: Color(0xFFE5ACA6)),
                   ),
                 )

@@ -196,7 +196,7 @@ class _PassportFormWidgetState extends State<PassportFormWidget> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 8),
                 Visibility(
                   maintainSize: true,
                   maintainAnimation: true,
@@ -205,7 +205,7 @@ class _PassportFormWidgetState extends State<PassportFormWidget> {
                   child: const Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      'DOB is required.',
+                      '     DOB is required.',
                       style: TextStyle(fontSize: 12, color: Color(0xFFE5ACA6)),
                     ),
                   ),
