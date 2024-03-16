@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 import '../../../domain/model/books/books_model.dart';
 import '../../common/colors.dart';
 import '../../common/common_button.dart';
+import '../../common/common_dialog.dart';
 
 class SeatScreen extends StatefulWidget {
   final List<BooksModel> departureBookList;
@@ -61,9 +62,15 @@ class _SeatScreenState extends State<SeatScreen> with TickerProviderStateMixin {
       appBar: AppBar(
         centerTitle: true,
         leading: IconButton(
-          onPressed: () {
-            context.go('/book/passport');
-          },
+          onPressed: () => showDialog(
+            context: context,
+            builder: (BuildContext context) => CommonDialog(
+              title: 'Quit Registration?',
+              subtitle: 'Any information you have entered will not be saved.',
+              noOnTap: () => Navigator.pop(context),
+              yesOnTap: () => context.go('/search'),
+            ),
+          ),
           icon: const Icon(Icons.arrow_back_ios),
         ),
         bottom: TabBar(
