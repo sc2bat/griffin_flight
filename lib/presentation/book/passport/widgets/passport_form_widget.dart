@@ -5,6 +5,7 @@ import 'package:griffin/presentation/book/passport/widgets/custom_textfield_widg
 import 'package:griffin/presentation/book/passport/widgets/gender_widget.dart';
 import 'package:griffin/presentation/book/passport/widgets/phone_textfield_widget.dart';
 import 'package:griffin/presentation/common/colors.dart';
+import 'package:griffin/presentation/common/common.dart';
 import 'package:griffin/presentation/common/common_button.dart';
 
 import '../../../../domain/model/books/books_model.dart';
@@ -241,12 +242,14 @@ class _PassportFormWidgetState extends State<PassportFormWidget> {
                                     email: emailController.text,
                                     phone: phoneNumberController.text,
                                   ));
+                                  setState(() {
+                                    widget.tabController.animateTo(
+                                        widget.tabController.index + 1);
+                                  });
+                                } else {
+                                  showSnackBar(
+                                      context, 'Please complete all fields.');
                                 }
-                                setState(() {
-                                  widget.tabController.animateTo(
-                                      widget.tabController.index + 1);
-                                });
-                                logger.info('save button');
                               }
                             : () async {
                                 if (_formKey.currentState?.validate() ??
@@ -261,17 +264,20 @@ class _PassportFormWidgetState extends State<PassportFormWidget> {
                                     email: emailController.text,
                                     phone: phoneNumberController.text,
                                   ));
-                                }
-                                await widget.postPassportData();
-                                if (mounted) {
-                                  context.push(
-                                    '/book/passport/seat',
-                                    extra: {
-                                      "departure_flight":
-                                          widget.departureBookList,
-                                      "arrival_flight": widget.arrivalBookList
-                                    },
-                                  );
+                                  await widget.postPassportData();
+                                  if (mounted) {
+                                    context.push(
+                                      '/book/passport/seat',
+                                      extra: {
+                                        "departure_flight":
+                                            widget.departureBookList,
+                                        "arrival_flight": widget.arrivalBookList
+                                      },
+                                    );
+                                  }
+                                } else {
+                                  showSnackBar(
+                                      context, 'Please complete all fields.');
                                 }
                               }),
                   ],

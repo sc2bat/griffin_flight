@@ -26,6 +26,7 @@ class SeatContainer extends StatefulWidget {
 }
 
 class _SeatContainerState extends State<SeatContainer> {
+
   @override
   Widget build(BuildContext context) {
     final viewModel = context.watch<SeatViewModel>();

@@ -32,8 +32,6 @@ class PassportViewModel extends ChangeNotifier {
 
     setBookList(departureBookList, arrivalBookList);
 
-    setTotalFare();
-
     setNumberOfPeople();
 
     _state = state.copyWith(isLoading: false);
@@ -78,18 +76,6 @@ class PassportViewModel extends ChangeNotifier {
       departureBookList: departureBookList,
       arrivalBookList: arrivalBookList,
     );
-    notifyListeners();
-  }
-
-  void setTotalFare() {
-    double totalFare = 0.0;
-    for (var item in state.departureBookList) {
-      totalFare += item.payAmount ?? 0.0;
-    }
-    for (var item in state.arrivalBookList) {
-      totalFare += item.payAmount ?? 0.0;
-    }
-    _state = state.copyWith(totalFare: totalFare);
     notifyListeners();
   }
 

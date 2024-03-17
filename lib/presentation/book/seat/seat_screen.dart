@@ -37,7 +37,7 @@ class _SeatScreenState extends State<SeatScreen> with TickerProviderStateMixin {
     super.initState();
     Future.microtask(() {
       final seatViewModel = context.read<SeatViewModel>();
-      seatViewModel.init();
+      seatViewModel.init(widget.departureBookList, widget.arrivalBookList);
     });
     _tabController = TabController(
       length: 2,
@@ -56,6 +56,11 @@ class _SeatScreenState extends State<SeatScreen> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     final viewModel = context.watch<SeatViewModel>();
     final state = viewModel.state;
+
+    int totalFare = ((state.arrivalFlightResultModel?.payAmount ?? 0.0) +
+        (state.departureFlightResultModel?.payAmount ?? 0.0))
+        .floor() *
+        state.numberOfPeople;
 
     return SafeArea(
         child: Scaffold(
@@ -178,7 +183,7 @@ class _SeatScreenState extends State<SeatScreen> with TickerProviderStateMixin {
                         subtitle: Row(
                           children: [
                             const Icon(Icons.attach_money),
-                            Text('${state.totalFare}',
+                            Text('$totalFare',
                                 style: const TextStyle(
                                   fontSize: 20,
                                 )),

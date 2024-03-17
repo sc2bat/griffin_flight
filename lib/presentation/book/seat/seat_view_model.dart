@@ -1,8 +1,6 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:griffin/presentation/book/seat/seat_state.dart';
-
 import '../../../data/core/result.dart';
 import '../../../domain/model/books/books_model.dart';
 import '../../../domain/model/user/user_account_model.dart';
@@ -25,9 +23,16 @@ class SeatViewModel extends ChangeNotifier {
 
   SeatState get state => _state;
 
-  void init() async {
-    // _state = _state.copyWith(totalFare: totalFare);
+  void init(List<BooksModel> departureBookList,
+      List<BooksModel> arrivalBookList) async {
+
     await getSession();
+
+    setBookList(departureBookList, arrivalBookList);
+
+    setTotalFare();
+
+    setNumberOfPeople();
   }
 
   //Get user ID
@@ -59,6 +64,36 @@ class SeatViewModel extends ChangeNotifier {
       }
     }
   }
+
+  //총 금액
+  void setTotalFare() {
+    double totalFare = 0.0;
+    for (var item in state.departureBookList) {
+      totalFare += item.payAmount ?? 0.0;
+    }
+    for (var item in state.arrivalBookList) {
+      totalFare += item.payAmount ?? 0.0;
+    }
+    _state = state.copyWith(totalFare: totalFare);
+    notifyListeners();
+  }
+
+
+  void setBookList(
+      List<BooksModel> departureBookList, List<BooksModel> arrivalBookList) {
+    _state = state.copyWith(
+      departureBookList: departureBookList,
+      arrivalBookList: arrivalBookList,
+    );
+    notifyListeners();
+  }
+
+  //인원
+  void setNumberOfPeople() {
+    _state = state.copyWith(numberOfPeople: state.departureBookList.length);
+    notifyListeners();
+  }
+
 
   //좌석 선택
   void selectSeat(String seat, int bookIdListLength, bool isDeparture) {
@@ -116,7 +151,7 @@ class SeatViewModel extends ChangeNotifier {
       fareChange = 50;
     }
 
-    int updatedTotalFare = state.totalFare;
+    double updatedTotalFare = state.totalFare;
     if (isSelected) {
       updatedTotalFare += fareChange;
     } else {

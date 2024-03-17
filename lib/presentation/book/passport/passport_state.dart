@@ -12,7 +12,6 @@ class PassportState with _$PassportState {
   factory PassportState({
     @Default(false) bool isLoading,
     @Default(0) int numberOfPeople,
-    @Default(0.0) double totalFare,
     PassportModel? passportModel,
     UserAccountModel? userAccountModel,
     @Default([]) List<BooksModel> departureBookList,
