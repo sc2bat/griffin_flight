@@ -96,7 +96,7 @@ class _SeatScreenState extends State<SeatScreen> with TickerProviderStateMixin {
             child: SeatTabWidget(
               numberOfPeople: state.numberOfPeople,
               tabController: _tabController,
-              saveSeatData: (passportDTO) => viewModel.saveSeat(),
+              // saveSeatData: (passportDTO) => viewModel.saveSeat(),
               updateBookData: (booksModelList) =>
                   viewModel.updateBookData(booksModelList),
               departureBookList: state.departureBookList,

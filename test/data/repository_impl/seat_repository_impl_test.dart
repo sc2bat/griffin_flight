@@ -1,9 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:griffin/data/core/result.dart';
 import 'package:griffin/data/dtos/books_dto.dart';
-import 'package:griffin/data/dtos/passport_dto.dart';
 import 'package:griffin/data/repositories/payment_repository_impl.dart';
-import 'package:griffin/utils/simple_logger.dart';
 
 void main() {
   test('seat repository impl post book dto test', () async {

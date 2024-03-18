@@ -51,10 +51,10 @@ class _SeatContainerState extends State<SeatContainer> {
           String selectedSeat = returnSeatString(widget.index);
           if (!isSelected) {
             viewModel.selectSeat(selectedSeat, widget.isDeparture);
+            viewModel.updateFare(widget.index, true);
           } else {
             viewModel.removeSeat(selectedSeat, widget.isDeparture);
           }
-          viewModel.updateFare(widget.index, !isSelected);
           logger.info(widget.isDeparture
               ? viewModel.state.departureSelectedSeats
               : viewModel.state.arrivalSelectedSeats);

@@ -1,8 +1,12 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:griffin/data/mappers/flight_result_mapper.dart';
+import 'package:griffin/domain/model/airplanes/airplanes_model.dart';
+import 'package:griffin/domain/use_cases/airplanes/airplanes_use_case.dart';
 import 'package:griffin/presentation/book/seat/seat_state.dart';
 import '../../../data/core/result.dart';
 import '../../../domain/model/books/books_model.dart';
+import '../../../domain/model/flight_result/flight_result_model.dart';
 import '../../../domain/model/user/user_account_model.dart';
 import '../../../domain/use_cases/seat/seat_use_case.dart';
 import '../../../domain/use_cases/splash/get_session_use_case.dart';
@@ -11,13 +15,16 @@ import '../../../utils/simple_logger.dart';
 class SeatViewModel extends ChangeNotifier {
   final GetSessionUseCase _getSessionUseCase;
   final SeatUseCase _seatUseCase;
+  final AirplanesUseCase _airplanesUseCase;
   int? selectedSeatIndex;
 
-  SeatViewModel(
-      {required GetSessionUseCase getSessionUseCase,
-      required SeatUseCase seatUseCase})
+  SeatViewModel({
+    required GetSessionUseCase getSessionUseCase,
+    required SeatUseCase seatUseCase,
+    required AirplanesUseCase airplanesUseCase,})
       : _getSessionUseCase = getSessionUseCase,
-        _seatUseCase = seatUseCase;
+        _seatUseCase = seatUseCase,
+        _airplanesUseCase = airplanesUseCase;
 
   SeatState _state = SeatState();
 
@@ -25,7 +32,6 @@ class SeatViewModel extends ChangeNotifier {
 
   void init(List<BooksModel> departureBookList,
       List<BooksModel> arrivalBookList) async {
-
     await getSession();
 
     setBookList(departureBookList, arrivalBookList);
@@ -33,6 +39,8 @@ class SeatViewModel extends ChangeNotifier {
     setTotalFare();
 
     setNumberOfPeople();
+
+    getAirplaneData(flightsModel);
   }
 
   //Get user ID
@@ -49,6 +57,17 @@ class SeatViewModel extends ChangeNotifier {
         break;
     }
   }
+
+
+  //Get Airplane data
+  Future<void> getAirplaneData(FlightResultModel flightsModel) async {
+    int airplaneId = flightsModel.airplaneId;
+    List<AirplanesModel> airplanesModel = await _airplanesUseCase.execute(airplaneId);
+    _state = state.copyWith(airplanesModel: airplanesModel);
+    notifyListeners();
+  }
+
+
 
   //Update
   Future<void> updateBookData(List<BooksModel> booksModelList) async {
@@ -89,9 +108,8 @@ class SeatViewModel extends ChangeNotifier {
   }
 
 
-
-  void setBookList(
-      List<BooksModel> departureBookList, List<BooksModel> arrivalBookList) {
+  void setBookList(List<BooksModel> departureBookList,
+      List<BooksModel> arrivalBookList) {
     _state = state.copyWith(
       departureBookList: departureBookList,
       arrivalBookList: arrivalBookList,
@@ -115,11 +133,13 @@ class SeatViewModel extends ChangeNotifier {
         selectedSeats.length < state.departureBookList.length) {
       _state = isDeparture
           ? _state.copyWith(
-              departureSelectedSeats: List.from(selectedSeats)..add(seat),
-            )
+        departureSelectedSeats: List.from(selectedSeats)
+          ..add(seat),
+      )
           : _state.copyWith(
-        arrivalSelectedSeats: List.from(selectedSeats)..add(seat),
-            );
+        arrivalSelectedSeats: List.from(selectedSeats)
+          ..add(seat),
+      );
       notifyListeners();
     }
   }
