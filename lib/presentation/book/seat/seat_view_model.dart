@@ -50,7 +50,7 @@ class SeatViewModel extends ChangeNotifier {
     }
   }
 
-  //Post
+  //Update
   Future<void> updateBookData(List<BooksModel> booksModelList) async {
     if (state.userAccountModel != null && booksModelList.isNotEmpty) {
       for (var item in booksModelList) {
@@ -65,6 +65,7 @@ class SeatViewModel extends ChangeNotifier {
     }
   }
 
+
   //총 금액
   void setTotalFare() {
     double totalFare = 0.0;
@@ -77,6 +78,16 @@ class SeatViewModel extends ChangeNotifier {
     _state = state.copyWith(totalFare: totalFare);
     notifyListeners();
   }
+
+
+//save
+  void saveSeat(BooksModel booksModel) {
+    List<BooksModel> seatList = List.from(state.seatList);
+    seatList.add(booksModel);
+    _state = state.copyWith(seatList: seatList);
+    notifyListeners();
+  }
+
 
 
   void setBookList(
@@ -96,18 +107,18 @@ class SeatViewModel extends ChangeNotifier {
 
 
   //좌석 선택
-  void selectSeat(String seat, int bookIdListLength, bool isDeparture) {
+  void selectSeat(String seat, bool isDeparture) {
     List<String> selectedSeats = isDeparture
         ? _state.departureSelectedSeats
-        : _state.returnSelectedSeats;
+        : _state.arrivalSelectedSeats;
     if (!selectedSeats.contains(seat) &&
-        selectedSeats.length < bookIdListLength ~/ 2) {
+        selectedSeats.length < state.departureBookList.length) {
       _state = isDeparture
           ? _state.copyWith(
               departureSelectedSeats: List.from(selectedSeats)..add(seat),
             )
           : _state.copyWith(
-              returnSelectedSeats: List.from(selectedSeats)..add(seat),
+        arrivalSelectedSeats: List.from(selectedSeats)..add(seat),
             );
       notifyListeners();
     }
@@ -123,9 +134,9 @@ class SeatViewModel extends ChangeNotifier {
         );
       }
     } else {
-      if (_state.returnSelectedSeats.contains(seat)) {
+      if (_state.arrivalSelectedSeats.contains(seat)) {
         _state = _state.copyWith(
-          returnSelectedSeats: List.from(_state.returnSelectedSeats)
+          arrivalSelectedSeats: List.from(_state.arrivalSelectedSeats)
             ..remove(seat),
         );
       }
@@ -133,13 +144,14 @@ class SeatViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  //좌석 선택 여부 확인
+  //departure 좌석 선택 여부 확인
   bool isSeatSelected(String seat, bool isDeparture) {
     List<String> selectedSeats = isDeparture
         ? _state.departureSelectedSeats
-        : _state.returnSelectedSeats;
+        : _state.arrivalSelectedSeats;
     return selectedSeats.contains(seat);
   }
+
 
   //좌석 추가 금액
   void updateFare(int index, bool isSelected) {

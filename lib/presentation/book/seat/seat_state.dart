@@ -17,7 +17,9 @@ class SeatState with _$SeatState {
     @Default([]) List<BooksModel> departureBookList,
     @Default([]) List<BooksModel> arrivalBookList,
     @Default([]) List<String> departureSelectedSeats,
-    @Default([]) List<String> returnSelectedSeats,
+    @Default([]) List<String> arrivalSelectedSeats,
+    @Default([]) List<BooksModel> seatList,
+
   }) = _SeatState;
 
   factory SeatState.fromJson(Map<String, dynamic> json) =>

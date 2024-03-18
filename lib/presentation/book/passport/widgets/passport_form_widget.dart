@@ -41,7 +41,6 @@ class _PassportFormWidgetState extends State<PassportFormWidget> {
   late TextEditingController emailController;
   late TextEditingController phoneNumberController;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  bool isSaving = false;
   Gender? selectedGender;
   String? selectedCountry;
   DateTime? date;

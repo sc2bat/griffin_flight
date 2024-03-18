@@ -31,6 +31,7 @@ class _PassportScreenState extends State<PassportScreen>
 
   @override
   void initState() {
+    super.initState();
     Future.microtask(() {
       final passportViewModel = context.read<PassportViewModel>();
       passportViewModel.init(widget.departureBookList, widget.arrivalBookList);
@@ -45,7 +46,6 @@ class _PassportScreenState extends State<PassportScreen>
       vsync: this,
       animationDuration: const Duration(milliseconds: 150),
     );
-    super.initState();
   }
 
   @override
