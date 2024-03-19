@@ -8,6 +8,7 @@ import 'package:griffin/data/repositories/payment_repository_impl.dart';
 import 'package:griffin/data/repositories/session_repository_impl.dart';
 import 'package:griffin/data/repositories/sign_repository_impl.dart';
 import 'package:griffin/data/repositories/user_repository_impl.dart';
+import 'package:griffin/domain/repositories/airplanes_repository.dart';
 import 'package:griffin/domain/repositories/airport_repository.dart';
 import 'package:griffin/domain/repositories/books_repository.dart';
 import 'package:griffin/domain/repositories/flight_repository.dart';
@@ -47,6 +48,10 @@ import 'package:griffin/presentation/search/search_view_model.dart';
 import 'package:griffin/presentation/sign/sign_view_model.dart';
 import 'package:griffin/presentation/splash/splash_view_model.dart';
 
+import '../data/repositories/airplanes_repository_impl.dart';
+import '../data/repositories/seat_repository_impl.dart';
+import '../domain/repositories/seat_repository.dart';
+import '../domain/use_cases/airplanes/airplanes_use_case.dart';
 import '../domain/use_cases/payment/get_pay_data_use_case.dart';
 import '../domain/use_cases/payment/post_pay_data_use_case.dart';
 import '../domain/use_cases/seat/seat_use_case.dart';
@@ -84,6 +89,12 @@ void setupDependencies() {
     )
     ..registerSingleton<PaymentRepository>(
       PaymentRepositoryImpl(),
+    )
+    ..registerSingleton<SeatRepository>(
+      SeatRepositoryImpl(),
+    )
+    ..registerSingleton<AirplanesRepository>(
+      AirplanesRepositoryImpl(),
     );
 
   // use case
@@ -149,8 +160,12 @@ void setupDependencies() {
         flightRepository: getIt<FlightRepository>(),
       ),
     )
+    ..registerSingleton<SeatUseCase>(
+      SeatUseCase(
+        seatRepository: getIt<SeatRepository>(),
+      ),
+    )
 
-    // book use case
     ..registerSingleton<GetToFlightUseCase>(
       GetToFlightUseCase(
         flightRepository: getIt<FlightRepository>(),
@@ -204,9 +219,9 @@ void setupDependencies() {
         flightRepository: getIt<FlightRepository>(),
       ),
     )
-    ..registerSingleton<SeatUseCase>(
-      SeatUseCase(
-        paymentRepository: getIt<PaymentRepository>(),
+    ..registerSingleton<AirplanesUseCase>(
+      AirplanesUseCase(
+        airplanesRepository: getIt<AirplanesRepository>(),
       ),
     );
 
@@ -283,6 +298,8 @@ void setupDependencies() {
       () => SeatViewModel(
         seatUseCase: getIt<SeatUseCase>(),
         getSessionUseCase: getIt<GetSessionUseCase>(),
+        airplanesUseCase: getIt<AirplanesUseCase>(),
       ),
-    );
+    )
+  ;
 }

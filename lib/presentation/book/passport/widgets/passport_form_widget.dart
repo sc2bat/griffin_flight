@@ -266,7 +266,7 @@ class _PassportFormWidgetState extends State<PassportFormWidget> {
                                   await widget.postPassportData();
                                   if (mounted) {
                                     context.push(
-                                      '/book/passport/seat',
+                                      '/book/seat',
                                       extra: {
                                         "departure_flight":
                                             widget.departureBookList,

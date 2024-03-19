@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:griffin/domain/model/airplanes/airplanes_model.dart';
 import 'package:griffin/domain/model/flight_result/flight_result_model.dart';
+import '../../../data/dtos/books_dto.dart';
 import '../../../domain/model/books/books_model.dart';
 import '../../../domain/model/user/user_account_model.dart';
 
@@ -20,7 +21,7 @@ class SeatState with _$SeatState {
     @Default([]) List<BooksModel> arrivalBookList,
     @Default([]) List<String> departureSelectedSeats,
     @Default([]) List<String> arrivalSelectedSeats,
-    @Default([]) List<BooksModel> seatList,
+    @Default([]) List<BooksDTO> booksDTOList,
 
   }) = _SeatState;
 

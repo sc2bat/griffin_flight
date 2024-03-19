@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:griffin/data/dtos/books_dto.dart';
 import 'package:griffin/presentation/book/seat/widgets/column_number_widget.dart';
 import 'package:griffin/presentation/book/seat/widgets/seat_container_widget.dart';
 import 'package:griffin/presentation/book/seat/widgets/seat_label_widget.dart';
 import 'package:griffin/presentation/common/common.dart';
-import '../../../../data/dtos/passport_dto.dart';
 import '../../../../domain/model/books/books_model.dart';
 import '../../../../domain/model/flight_result/flight_result_model.dart';
 import '../../../../utils/simple_logger.dart';
@@ -12,8 +12,8 @@ import '../../../common/colors.dart';
 import '../../../common/common_button.dart';
 
 class SeatTabWidget extends StatefulWidget {
-  final Function(BooksModel seatList) saveSeatData;
-  final Future<void> Function(List<BooksModel> booksModelList) updateBookData;
+  final Function(BooksDTO booksDTO) saveSeatData;
+  final Future<List<BooksModel>> Function() updateBookData;
   final List<BooksModel> departureBookList;
   final List<BooksModel> arrivalBookList;
   final int numberOfPeople;
@@ -95,7 +95,6 @@ class _SeatTabWidgetState extends State<SeatTabWidget> {
                     isAllSeatsSelected: isAllSeatsSelected,
                   );
                 } else if (adjustedIndex < 21) {
-                  // return BusinessClass();
                   return SeatContainer(
                     color:
                         isAllSeatsSelected ? Colors.grey : AppColors.greenColor,
@@ -105,7 +104,6 @@ class _SeatTabWidgetState extends State<SeatTabWidget> {
                     isAllSeatsSelected: isAllSeatsSelected,
                   );
                 } else {
-                  // return EconomyClass();
                   return SeatContainer(
                     color: isAllSeatsSelected ? Colors.grey : Colors.blue,
                     index: index,
@@ -140,13 +138,24 @@ class _SeatTabWidgetState extends State<SeatTabWidget> {
             CommonButton(
                 width: MediaQuery.of(context).size.width * 0.3,
                 height: MediaQuery.of(context).size.width * 0.12,
-                text: widget.tabController.index == 0
-                    ? 'Save'
-                    : 'Continue',
+                text: widget.tabController.index == 0 ? 'Save' : 'Continue',
                 onTap: widget.tabController.index == 0
-                    ? () async {
+                    ? () {
                         if (widget.departureSelectedSeats.isNotEmpty) {
-                          await widget.saveSeatData;
+                          for (var i = 0;
+                              i < widget.departureBookList.length;
+                              i++) {
+                            widget.saveSeatData(
+                              BooksDTO(
+                                bookId: widget.departureBookList[i].bookId,
+                                classSeat: widget.departureSelectedSeats[i],
+                                status: 1,
+                                payAmount:
+                                    widget.departureBookList[i].payAmount! +
+                                        100,
+                              ),
+                            );
+                          }
                           setState(() {
                             widget.tabController
                                 .animateTo(widget.tabController.index + 1);
@@ -156,60 +165,64 @@ class _SeatTabWidgetState extends State<SeatTabWidget> {
                         }
                       }
                     : () async {
-
                         if (widget.arrivalSelectedSeats.isNotEmpty) {
-                          await widget.saveSeatData(BooksModel(
-                              bookId: ,
-                            classSeat: ,
-
-                          ),
-                          );
-                          await widget.updateBookData(BooksModel(
-                              bookId: 3,
-                            classSeat: '',
-
-                          )
-                          );
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) => Dialog(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    const Text(
-                                      'Proceed to payment?',
-                                      style: TextStyle(fontSize: 20),
-                                    ),
-                                    const SizedBox(height: 6),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        TextButton(
-                                          onPressed: () {
-                                            context.push('/navigation');
-                                          },
-                                          child: const Text('NO'),
-                                        ),
-                                        TextButton(
-                                          onPressed: () {
-                                            // if (mounted) {
-                                            //   context.push('/book/passport/seat',
-                                            //       extra: {"bookIdList": widget.bookIdList});
-                                            // }
-                                          },
-                                          child: const Text('YES'),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+                          for (var i = 0;
+                              i < widget.arrivalBookList.length;
+                              i++) {
+                            widget.saveSeatData(
+                              BooksDTO(
+                                bookId: widget.arrivalBookList[i].bookId,
+                                classSeat: widget.arrivalSelectedSeats[i],
+                                status: 1,
+                                payAmount:
+                                    widget.arrivalBookList[i].payAmount! + 100,
+                              ),
+                            );
+                          }
+                          final List<BooksModel> result =
+                              await widget.updateBookData();
+                          if (context.mounted && result.isNotEmpty) {
+                            await showDialog(
+                              context: context,
+                              builder: (BuildContext context) => Dialog(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      const Text(
+                                        'Proceed to payment?',
+                                        style: TextStyle(fontSize: 20),
+                                      ),
+                                      const SizedBox(height: 6),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          TextButton(
+                                            onPressed: () {
+                                              context.push('/navigation');
+                                            },
+                                            child: const Text('NO'),
+                                          ),
+                                          TextButton(
+                                            onPressed: () {
+                                              if (mounted) {
+                                                context.push('/pay',
+                                                    extra: {"bookIdList": result.map((e) => e.bookId).toList()});
+                                              }
+                                            },
+                                            child: const Text('YES'),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                          );
+                            );
+                          }
                         } else {
                           showSnackBar(context, 'Please select the seat.');
                         }

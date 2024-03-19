@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../../../../utils/simple_logger.dart';
 import '../seat_view_model.dart';
 

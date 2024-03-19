@@ -1,7 +1,7 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:griffin/data/dtos/books_dto.dart';
 import 'package:griffin/presentation/book/seat/seat_view_model.dart';
 import 'package:griffin/presentation/book/seat/widgets/seat_tab_widget.dart';
 import 'package:provider/provider.dart';
@@ -96,14 +96,14 @@ class _SeatScreenState extends State<SeatScreen> with TickerProviderStateMixin {
             child: SeatTabWidget(
               numberOfPeople: state.numberOfPeople,
               tabController: _tabController,
-              // saveSeatData: (passportDTO) => viewModel.saveSeat(),
-              updateBookData: (booksModelList) =>
-                  viewModel.updateBookData(booksModelList),
-              departureBookList: state.departureBookList,
-              arrivalBookList: state.arrivalBookList,
+              saveSeatData: (booksDTO) => viewModel.saveSeat(booksDTO),
+              updateBookData: () =>
+                  viewModel.updateBookData(),
               totalFare: state.totalFare,
               departureSelectedSeats: state.departureSelectedSeats,
               arrivalSelectedSeats: state.arrivalSelectedSeats,
+              departureBookList: state.departureBookList,
+              arrivalBookList: state.arrivalBookList,
             ),
           ),
         ),

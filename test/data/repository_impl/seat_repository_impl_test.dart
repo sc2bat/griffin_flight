@@ -1,19 +1,17 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:griffin/data/dtos/books_dto.dart';
-import 'package:griffin/data/repositories/payment_repository_impl.dart';
+import 'package:griffin/data/repositories/seat_repository_impl.dart';
 
 void main() {
   test('seat repository impl post book dto test', () async {
-    PaymentRepositoryImpl paymentRepositoryImpl = PaymentRepositoryImpl();
+    SeatRepositoryImpl seatRepositoryImpl = SeatRepositoryImpl();
     BooksDTO booksDTO = BooksDTO(
-      bookId: 90,
-      classSeat: 'A2',
+      bookId: 133,
+      classSeat: 'A8',
       status: 1,
-      payAmount: 20,
-      payStatus: 0,
-      isDeleted: 0,
+      payAmount: 200,
     );
 
-    await paymentRepositoryImpl.postPaymentData([booksDTO]);
+    await seatRepositoryImpl.updateSeat(booksDTO);
   });
 }
