@@ -1,31 +1,30 @@
 import 'package:griffin/data/dtos/books_dto.dart';
-import 'package:griffin/domain/repositories/payment_repository.dart';
-
+import 'package:griffin/domain/model/books/books_model.dart';
+import '../../../data/core/result.dart';
+import '../../../data/mappers/books_mapper.dart';
+import '../../../utils/simple_logger.dart';
+import '../../repositories/seat_repository.dart';
 
 class SeatUseCase {
   SeatUseCase({
-    required PaymentRepository paymentRepository,
-  }) : _paymentRepository = paymentRepository;
+    required SeatRepository seatRepository,
+  }) : _seatRepository = seatRepository;
 
-  final PaymentRepository _paymentRepository;
+  final SeatRepository _seatRepository;
 
-  Future<void> execute({
-    required int bookId,
-    required String classSeat,
-    required int status,
-    required double payAmount,
-    required int payStatus,
-    required int isDeleted,
-  }) async {
-    BooksDTO booksDTO = BooksDTO(
-      bookId: bookId,
-      classSeat: classSeat,
-      status: status,
-      payAmount: payAmount,
-      payStatus: payStatus,
-      isDeleted: 0,
-    );
+  Future<Result<List<BooksModel>>> execute(List<BooksDTO> booksDTOList) async {
+    List<BooksModel> booksModelList = [];
+    for (int i = 0; i < booksDTOList.length; i++) {
+      logger.info(booksDTOList[i]);
+      final result = await _seatRepository.updateSeat(booksDTOList[i]);
 
-    await _paymentRepository.postPaymentData([booksDTO]);
+      switch (result) {
+        case Success<BooksDTO>():
+          booksModelList.add(BooksMapper.fromDTO(result.data));
+        case Error<BooksDTO>():
+          return Result.error(result.message);
+      }
+    }
+    return Result.success(booksModelList);
   }
 }

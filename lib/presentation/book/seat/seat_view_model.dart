@@ -1,10 +1,12 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
+import 'package:griffin/domain/model/airplanes/airplanes_model.dart';
+import 'package:griffin/domain/use_cases/airplanes/airplanes_use_case.dart';
 import 'package:griffin/presentation/book/seat/seat_state.dart';
-
 import '../../../data/core/result.dart';
+import '../../../data/dtos/books_dto.dart';
 import '../../../domain/model/books/books_model.dart';
+import '../../../domain/model/flight_result/flight_result_model.dart';
 import '../../../domain/model/user/user_account_model.dart';
 import '../../../domain/use_cases/seat/seat_use_case.dart';
 import '../../../domain/use_cases/splash/get_session_use_case.dart';
@@ -13,21 +15,32 @@ import '../../../utils/simple_logger.dart';
 class SeatViewModel extends ChangeNotifier {
   final GetSessionUseCase _getSessionUseCase;
   final SeatUseCase _seatUseCase;
+  final AirplanesUseCase _airplanesUseCase;
   int? selectedSeatIndex;
 
-  SeatViewModel(
-      {required GetSessionUseCase getSessionUseCase,
-      required SeatUseCase seatUseCase})
-      : _getSessionUseCase = getSessionUseCase,
-        _seatUseCase = seatUseCase;
+  SeatViewModel({
+    required GetSessionUseCase getSessionUseCase,
+    required SeatUseCase seatUseCase,
+    required AirplanesUseCase airplanesUseCase,
+  })  : _getSessionUseCase = getSessionUseCase,
+        _seatUseCase = seatUseCase,
+        _airplanesUseCase = airplanesUseCase;
 
   SeatState _state = SeatState();
 
   SeatState get state => _state;
 
-  void init() async {
-    // _state = _state.copyWith(totalFare: totalFare);
+  void init(List<BooksModel> departureBookList,
+      List<BooksModel> arrivalBookList) async {
     await getSession();
+
+    setBookList(departureBookList, arrivalBookList);
+
+    setTotalFare();
+
+    setNumberOfPeople();
+
+    // getAirplaneData(fligtsModel);
   }
 
   //Get user ID
@@ -45,34 +58,81 @@ class SeatViewModel extends ChangeNotifier {
     }
   }
 
-  //Post
-  Future<void> updateBookData(List<BooksModel> booksModelList) async {
-    if (state.userAccountModel != null && booksModelList.isNotEmpty) {
-      for (var item in booksModelList) {
-        await _seatUseCase.execute(
-            payAmount: item.payAmount ?? 0.0,
-            bookId: item.bookId,
-            classSeat: item.classSeat ?? '',
-            status: 1,
-            payStatus: 0,
-            isDeleted: 0);
+  //Get Airplane data
+  Future<void> getAirplaneData(FlightResultModel flightsModel) async {
+    int airplaneId = flightsModel.airplaneId;
+    List<AirplanesModel> airplanesModel =
+        await _airplanesUseCase.execute(airplaneId);
+    _state = state.copyWith(airplanesModel: airplanesModel);
+    notifyListeners();
+  }
+
+  //Update book data
+  Future<List<BooksModel>> updateBookData() async {
+    if (state.userAccountModel != null && state.booksDTOList.isNotEmpty) {
+      logger.info(state.booksDTOList.length);
+      final result = await _seatUseCase.execute(state.booksDTOList);
+      switch (result) {
+        case Success<List<BooksModel>>():
+          logger.info(result.data);
+          return result.data;
+        case Error<List<BooksModel>>():
+          throw Exception(result.message);
       }
     }
+
+    return [];
+  }
+
+//save seat
+  void saveSeat(BooksDTO booksDTO) {
+    List<BooksDTO> booksDTOList = List.from(state.booksDTOList);
+    booksDTOList.add(booksDTO);
+    _state = state.copyWith(booksDTOList: booksDTOList);
+    notifyListeners();
+  }
+
+  // total fare 계산
+  void setTotalFare() {
+    double totalFare = 0.0;
+    for (var item in state.departureBookList) {
+      totalFare += item.payAmount ?? 0.0;
+    }
+    for (var item in state.arrivalBookList) {
+      totalFare += item.payAmount ?? 0.0;
+    }
+    _state = state.copyWith(totalFare: totalFare);
+    notifyListeners();
+  }
+
+  void setBookList(
+      List<BooksModel> departureBookList, List<BooksModel> arrivalBookList) {
+    _state = state.copyWith(
+      departureBookList: departureBookList,
+      arrivalBookList: arrivalBookList,
+    );
+    notifyListeners();
+  }
+
+  //인원
+  void setNumberOfPeople() {
+    _state = state.copyWith(numberOfPeople: state.departureBookList.length);
+    notifyListeners();
   }
 
   //좌석 선택
-  void selectSeat(String seat, int bookIdListLength, bool isDeparture) {
+  void selectSeat(String seat, bool isDeparture) {
     List<String> selectedSeats = isDeparture
         ? _state.departureSelectedSeats
-        : _state.returnSelectedSeats;
+        : _state.arrivalSelectedSeats;
     if (!selectedSeats.contains(seat) &&
-        selectedSeats.length < bookIdListLength ~/ 2) {
+        selectedSeats.length < state.departureBookList.length) {
       _state = isDeparture
           ? _state.copyWith(
               departureSelectedSeats: List.from(selectedSeats)..add(seat),
             )
           : _state.copyWith(
-              returnSelectedSeats: List.from(selectedSeats)..add(seat),
+              arrivalSelectedSeats: List.from(selectedSeats)..add(seat),
             );
       notifyListeners();
     }
@@ -88,9 +148,9 @@ class SeatViewModel extends ChangeNotifier {
         );
       }
     } else {
-      if (_state.returnSelectedSeats.contains(seat)) {
+      if (_state.arrivalSelectedSeats.contains(seat)) {
         _state = _state.copyWith(
-          returnSelectedSeats: List.from(_state.returnSelectedSeats)
+          arrivalSelectedSeats: List.from(_state.arrivalSelectedSeats)
             ..remove(seat),
         );
       }
@@ -102,7 +162,7 @@ class SeatViewModel extends ChangeNotifier {
   bool isSeatSelected(String seat, bool isDeparture) {
     List<String> selectedSeats = isDeparture
         ? _state.departureSelectedSeats
-        : _state.returnSelectedSeats;
+        : _state.arrivalSelectedSeats;
     return selectedSeats.contains(seat);
   }
 
@@ -116,7 +176,7 @@ class SeatViewModel extends ChangeNotifier {
       fareChange = 50;
     }
 
-    int updatedTotalFare = state.totalFare;
+    double updatedTotalFare = state.totalFare;
     if (isSelected) {
       updatedTotalFare += fareChange;
     } else {

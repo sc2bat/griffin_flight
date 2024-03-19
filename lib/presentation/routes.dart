@@ -87,41 +87,40 @@ final router = GoRouter(
       ),
       routes: [
         GoRoute(
-            name: 'passport',
-            path: 'passport',
+          name: 'passport',
+          path: 'passport',
+          builder: (context, state) {
+            if (state.extra != null) {
+              final map = state.extra! as Map<String, dynamic>;
+              return ChangeNotifierProvider(
+                create: (_) => getIt<PassportViewModel>(),
+                child: PassportScreen(
+                  departureBookList: map["departure_book"],
+                  arrivalBookList: map["arrival_book"],
+                ),
+              );
+            } else {
+              return const IndexScreen();
+            }
+          },
+        ),
+        GoRoute(
+            name: 'seat',
+            path: 'seat',
             builder: (context, state) {
               if (state.extra != null) {
                 final map = state.extra! as Map<String, dynamic>;
                 return ChangeNotifierProvider(
-                  create: (_) => getIt<PassportViewModel>(),
-                  child: PassportScreen(
-                    departureBookList: map["departure_book"],
-                    arrivalBookList: map["arrival_book"],
+                  create: (_) => getIt<SeatViewModel>(),
+                  child: SeatScreen(
+                    departureBookList: map["departure_flight"],
+                    arrivalBookList: map["arrival_flight"],
                   ),
                 );
               } else {
                 return const IndexScreen();
               }
-            },
-            routes: [
-              GoRoute(
-                  name: 'seat',
-                  path: 'seat',
-                  builder: (context, state) {
-                    if (state.extra != null) {
-                      final map = state.extra! as Map<String, dynamic>;
-                      return ChangeNotifierProvider(
-                        create: (_) => getIt<SeatViewModel>(),
-                        child: SeatScreen(
-                          departureBookList: map["departure_flight"],
-                          arrivalBookList: map["arrival_flight"],
-                        ),
-                      );
-                    } else {
-                      return const IndexScreen();
-                    }
-                  }),
-            ]),
+            }),
       ],
     ),
     GoRoute(

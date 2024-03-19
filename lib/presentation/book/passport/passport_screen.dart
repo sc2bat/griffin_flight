@@ -31,6 +31,7 @@ class _PassportScreenState extends State<PassportScreen>
 
   @override
   void initState() {
+    super.initState();
     Future.microtask(() {
       final passportViewModel = context.read<PassportViewModel>();
       passportViewModel.init(widget.departureBookList, widget.arrivalBookList);
@@ -45,7 +46,6 @@ class _PassportScreenState extends State<PassportScreen>
       vsync: this,
       animationDuration: const Duration(milliseconds: 150),
     );
-    super.initState();
   }
 
   @override
@@ -85,9 +85,10 @@ class _PassportScreenState extends State<PassportScreen>
                   (index) => Tab(text: 'Person ${index + 1}'),
                 ),
                 isScrollable: true,
-                indicatorColor: AppColors.greenColor,
-                labelColor: AppColors.greenColor,
-                labelStyle: const TextStyle(fontWeight: FontWeight.bold),
+                indicatorColor: Colors.red[200],
+                labelColor: Colors.red[200],
+                labelStyle:
+                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                 labelPadding: EdgeInsets.only(
                     right: MediaQuery.of(context).size.width * 0.2),
                 unselectedLabelColor: AppColors.greyText,
