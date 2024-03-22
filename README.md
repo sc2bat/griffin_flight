@@ -4,9 +4,7 @@
 2024.02 - 2024.03 (팀 프로젝트)
 <br>
 <br>
-<img src="https://github.com/sc2bat/griffin_flight/assets/49228543/98caf515-8107-4580-b04f-16eb81baba55" width ="200">
-<img src="https://github.com/sc2bat/griffin_flight/assets/49228543/d46589dd-113e-44a3-b874-229a7c17793b" width ="200">
-<img src="https://github.com/sc2bat/griffin_flight/assets/49228543/b54d8635-9326-43ed-94dd-7ac3eae46fac" width ="200">
+![griffin](https://github.com/sc2bat/griffin_flight/assets/49228543/71d8655a-738e-444a-90f9-0042ca6cdd0c)
 <br>
 <br>
 
