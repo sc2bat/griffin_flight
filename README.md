@@ -1,8 +1,27 @@
-# griffin
+# Griffin Flight
 
-A new Flutter project.
+전세계 대형 항공사 비행기 예매 앱 <br>
+2024.02 - 2024.03 (팀 프로젝트)
+<br>
+<br>
+![griffin](https://github.com/sc2bat/griffin_flight/assets/49228543/71d8655a-738e-444a-90f9-0042ca6cdd0c)
+<br>
+<br>
 
-## Getting Started
+
+## Skills
+Dart, Flutter Figma
+<br>
+<br>
+## 상태관리 & 디자인패턴
+Provider, Clean Architecture
+<br>
+<br>
+## 인원 구성
+총 6인 | 플러터 개발자, 서버, PM
+<br>
+<br>
+
 
 ## Collaborators
 <table>
@@ -42,13 +61,14 @@ strangecoderK</b></sub></a><br /></td>
       <td></td>
     </tr>
 </table>
+<br>
 
-### LINKS
+## LINKS
 
 #### github Link
-flutter app : https://github.com/sc2bat/griffin_flight
-flutter web admin page :
-Django API Server :
+flutter app : https://github.com/sc2bat/griffin_flight <br>
+flutter web admin page :  <br>
+Django API Server : <br>
 
 #### figma Link
 https://www.figma.com/file/gKpmKS1cd79DqgLYphCHkN/Griffin_flight?type=design&node-id=0%3A1&mode=design&t=MKmpCuLIjFrEZkFe-1
